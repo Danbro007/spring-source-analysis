@@ -412,17 +412,21 @@ public class BeanDefinitionParserDelegate {
 	 */
 	@Nullable
 	public BeanDefinitionHolder parseBeanDefinitionElement(Element ele, @Nullable BeanDefinition containingBean) {
+		//获取id的属性值
 		String id = ele.getAttribute(ID_ATTRIBUTE);
+		//获取name的属性值
 		String nameAttr = ele.getAttribute(NAME_ATTRIBUTE);
-
 		List<String> aliases = new ArrayList<>();
+		//把name的属性值添加到别名列表里
 		if (StringUtils.hasLength(nameAttr)) {
+			// 将 name 属性的定义按照 “逗号、分号、空格” 切分，形成一个 别名列表数组，
 			String[] nameArr = StringUtils.tokenizeToStringArray(nameAttr, MULTI_VALUE_ATTRIBUTE_DELIMITERS);
 			aliases.addAll(Arrays.asList(nameArr));
 		}
 
 		String beanName = id;
 		if (!StringUtils.hasText(beanName) && !aliases.isEmpty()) {
+			//如果id为空则从别名列表里取第一个别名当做beanName
 			beanName = aliases.remove(0);
 			if (logger.isTraceEnabled()) {
 				logger.trace("No XML 'id' specified - using '" + beanName +
@@ -433,7 +437,8 @@ public class BeanDefinitionParserDelegate {
 		if (containingBean == null) {
 			checkNameUniqueness(beanName, aliases, ele);
 		}
-
+		// 根据 <bean ...>...</bean> 中的配置创建 BeanDefinition，然后把配置中的信息都设置到实例中,
+		// 细节后面细说，先知道下面这行结束后，一个 BeanDefinition 实例就出来了。
 		AbstractBeanDefinition beanDefinition = parseBeanDefinitionElement(ele, beanName, containingBean);
 		if (beanDefinition != null) {
 			if (!StringUtils.hasText(beanName)) {
@@ -493,36 +498,48 @@ public class BeanDefinitionParserDelegate {
 	}
 
 	/**
-	 * Parse the bean definition itself, without regard to name or aliases. May return
+	 * Parse the bean definition itself, without REGARD to name or aliases. May return
 	 * {@code null} if problems occurred during the parsing of the bean definition.
 	 */
 	@Nullable
 	public AbstractBeanDefinition parseBeanDefinitionElement(
 			Element ele, String beanName, @Nullable BeanDefinition containingBean) {
 
+		//解析状态
 		this.parseState.push(new BeanEntry(beanName));
 
 		String className = null;
 		if (ele.hasAttribute(CLASS_ATTRIBUTE)) {
+			//获取标签内的class属性值
 			className = ele.getAttribute(CLASS_ATTRIBUTE).trim();
 		}
 		String parent = null;
+		//获取标签内parent属性值
 		if (ele.hasAttribute(PARENT_ATTRIBUTE)) {
 			parent = ele.getAttribute(PARENT_ATTRIBUTE);
 		}
 
 		try {
+			//通过类名和父类名创建BeanDefinition
 			AbstractBeanDefinition bd = createBeanDefinition(className, parent);
-
+			// 设置 BeanDefinition 的一堆属性，这些属性定义在 AbstractBeanDefinition 中
 			parseBeanDefinitionAttributes(ele, beanName, containingBean, bd);
 			bd.setDescription(DomUtils.getChildElementValueByTagName(ele, DESCRIPTION_ELEMENT));
-
+			/**
+			 * 下面的一堆是解析 <bean>......</bean> 内部的子元素，
+			 * 解析出来以后的信息都放到 bd 的属性中
+			 */
+			//解析<meta/>
 			parseMetaElements(ele, bd);
+			// 解析 <lookup-method />
 			parseLookupOverrideSubElements(ele, bd.getMethodOverrides());
+			// 解析 <replaced-method />
 			parseReplacedMethodSubElements(ele, bd.getMethodOverrides());
-
+			// 解析 <constructor-arg />
 			parseConstructorArgElements(ele, bd);
+			// 解析 <property/>
 			parsePropertyElements(ele, bd);
+			// 解析 <qualifier />
 			parseQualifierElements(ele, bd);
 
 			bd.setResource(this.readerContext.getResource());

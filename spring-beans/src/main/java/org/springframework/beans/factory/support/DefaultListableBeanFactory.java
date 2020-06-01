@@ -348,6 +348,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 	@Override
 	public <T> T getBean(Class<T> requiredType, @Nullable Object... args) throws BeansException {
 		Assert.notNull(requiredType, "Required type must not be null");
+		//解析Bean
 		Object resolved = resolveBean(ResolvableType.forRawClass(requiredType), args, false);
 		if (resolved == null) {
 			throw new NoSuchBeanDefinitionException(requiredType);
@@ -929,12 +930,14 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 						"Validation of bean definition failed", ex);
 			}
 		}
-		//beanDefinitionMap其实就是一个Map<BeanName, BeanDefinition>
+		//beanDefinitionMap其实就是一个Map<BeanName, BeanDefinition>，存储所有的Bean
+		//先在beanDefinitionMap查找有没有你要注册的Bean
 		BeanDefinition existingDefinition = this.beanDefinitionMap.get(beanName);
 		//如果BeanFactory里有你要注册Bean
 		if (existingDefinition != null) {
 			//Bean名重复
 			if (!isAllowBeanDefinitionOverriding()) {
+				// 如果不允许覆盖的话，抛异常
 				throw new BeanDefinitionOverrideException(beanName, beanDefinition, existingDefinition);
 			}
 			//用框架定义的 Bean 覆盖用户自定义的 Bean
@@ -974,7 +977,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 				synchronized (this.beanDefinitionMap) {
 					//注册Bean
 					this.beanDefinitionMap.put(beanName, beanDefinition);
-					//更新beanDefinitionNames列表，按先后顺序把要注册BeanName放在列表尾部。
+					//更新beanDefinitionNames列表，按先后顺序把要注册的BeanName放在列表尾部。
 					List<String> updatedDefinitions = new ArrayList<>(this.beanDefinitionNames.size() + 1);
 					updatedDefinitions.addAll(this.beanDefinitionNames);
 					updatedDefinitions.add(beanName);

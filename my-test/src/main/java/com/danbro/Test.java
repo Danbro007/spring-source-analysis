@@ -1,6 +1,7 @@
 package com.danbro;
 
 import com.danbro.service.FactoryBeanService;
+import com.danbro.service.MessageService;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 /**
@@ -12,7 +13,8 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 public class Test {
 	public static void main(String[] args) {
 		ClassPathXmlApplicationContext applicationContext = new ClassPathXmlApplicationContext("applicationContext.xml");
-		FactoryBeanService service = applicationContext.getBean(FactoryBeanService.class);
-		service.testFactoryBean();
+		MessageService messageService = applicationContext.getBean(MessageService.class);
+		String message = messageService.getMessage();
+		System.out.println(message);
 	}
 }
