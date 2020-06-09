@@ -56,6 +56,7 @@ import org.springframework.beans.factory.Aware;
  * @see org.springframework.context.support.ApplicationObjectSupport
  * @see org.springframework.beans.factory.BeanFactoryAware
  */
+
 public interface ApplicationContextAware extends Aware {
 
 	/**

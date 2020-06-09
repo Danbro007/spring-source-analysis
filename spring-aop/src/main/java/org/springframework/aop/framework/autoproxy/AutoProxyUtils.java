@@ -41,6 +41,10 @@ public abstract class AutoProxyUtils {
 	 * for a specific bean, and want to enforce that bean can always be cast
 	 * to its target class (even if AOP advices get applied through auto-proxying).
 	 * @see #shouldProxyTargetClass
+	 *
+	 * 当前bean是否应该被它目标类代理的BeanDefinition属性（以防它首先被代理）返回值为 True 或者 False。
+	 * 代理工厂如果为一个指定的类创建一个目标类代理则可以设置这个属性，并且可以强制把当前bean类型转换成
+	 * 目标类（即使AOP通过自动代理得到应用）
 	 */
 	public static final String PRESERVE_TARGET_CLASS_ATTRIBUTE =
 			Conventions.getQualifiedAttributeName(AutoProxyUtils.class, "preserveTargetClass");
@@ -69,7 +73,9 @@ public abstract class AutoProxyUtils {
 			ConfigurableListableBeanFactory beanFactory, @Nullable String beanName) {
 
 		if (beanName != null && beanFactory.containsBeanDefinition(beanName)) {
+			//
 			BeanDefinition bd = beanFactory.getBeanDefinition(beanName);
+			//通过bd的PRESERVE_TARGET_CLASS_ATTRIBUTE属性判断是否被它的目标类代理
 			return Boolean.TRUE.equals(bd.getAttribute(PRESERVE_TARGET_CLASS_ATTRIBUTE));
 		}
 		return false;

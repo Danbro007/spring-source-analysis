@@ -1,4 +1,4 @@
-package com.danbro.entities;
+package com.danbro.springCoreAnalysis.entities;
 
 /**
  * @Classname SampleBean
@@ -21,6 +21,7 @@ public class SampleBean {
 	}
 
 	public void setId(int id) {
+		System.out.println("注入属性【id】");
 		this.id = id;
 	}
 }

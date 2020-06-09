@@ -162,10 +162,12 @@ class CglibAopProxy implements AopProxy, Serializable {
 		}
 
 		try {
+			//从代理工厂获取目标类
 			Class<?> rootClass = this.advised.getTargetClass();
 			Assert.state(rootClass != null, "Target class must be available for creating a CGLIB proxy");
 
 			Class<?> proxySuperClass = rootClass;
+			//查看代理的类名字里有没有“$$”这个字符，没有说明现在的类还没被代理
 			if (rootClass.getName().contains(ClassUtils.CGLIB_CLASS_SEPARATOR)) {
 				proxySuperClass = rootClass.getSuperclass();
 				Class<?>[] additionalInterfaces = rootClass.getInterfaces();
@@ -175,9 +177,11 @@ class CglibAopProxy implements AopProxy, Serializable {
 			}
 
 			// Validate the class, writing log messages as necessary.
+			//检查class打日志
 			validateClassIfNecessary(proxySuperClass, classLoader);
 
 			// Configure CGLIB Enhancer...
+			//配置CGLIB增强器
 			Enhancer enhancer = createEnhancer();
 			if (classLoader != null) {
 				enhancer.setClassLoader(classLoader);
@@ -186,22 +190,25 @@ class CglibAopProxy implements AopProxy, Serializable {
 					enhancer.setUseCache(false);
 				}
 			}
+			//给增强器配置
 			enhancer.setSuperclass(proxySuperClass);
 			enhancer.setInterfaces(AopProxyUtils.completeProxiedInterfaces(this.advised));
 			enhancer.setNamingPolicy(SpringNamingPolicy.INSTANCE);
 			enhancer.setStrategy(new ClassLoaderAwareGeneratorStrategy(classLoader));
-
+			//获取代理类的回调函数
 			Callback[] callbacks = getCallbacks(rootClass);
 			Class<?>[] types = new Class<?>[callbacks.length];
 			for (int x = 0; x < types.length; x++) {
 				types[x] = callbacks[x].getClass();
 			}
 			// fixedInterceptorMap only populated at this point, after getCallbacks call above
+			//在获取回调函数之后，此时是唯一填充fixedInterceptorMap的机会。
 			enhancer.setCallbackFilter(new ProxyCallbackFilter(
 					this.advised.getConfigurationOnlyCopy(), this.fixedInterceptorMap, this.fixedInterceptorOffset));
 			enhancer.setCallbackTypes(types);
 
 			// Generate the proxy class and create a proxy instance.
+			//生成代理类和代理实例
 			return createProxyClassAndInstance(enhancer, callbacks);
 		}
 		catch (CodeGenerationException | IllegalArgumentException ex) {
@@ -647,6 +654,7 @@ class CglibAopProxy implements AopProxy, Serializable {
 	/**
 	 * General purpose AOP callback. Used when the target is dynamic or when the
 	 * proxy is not frozen.
+	 * 通用的AOP回调，当目标是动态的或者当代理没有被冻结使用。
 	 */
 	private static class DynamicAdvisedInterceptor implements MethodInterceptor, Serializable {
 
@@ -666,26 +674,36 @@ class CglibAopProxy implements AopProxy, Serializable {
 			try {
 				if (this.advised.exposeProxy) {
 					// Make invocation available if necessary.
+					//设置代理并设置为可用
 					oldProxy = AopContext.setCurrentProxy(proxy);
 					setProxyContext = true;
 				}
 				// Get as late as possible to minimize the time we "own" the target, in case it comes from a pool...
 				target = targetSource.getTarget();
 				Class<?> targetClass = (target != null ? target.getClass() : null);
+				//返回AOP的增强操作(拦截器)列表
 				List<Object> chain = this.advised.getInterceptorsAndDynamicInterceptionAdvice(method, targetClass);
 				Object retVal;
 				// Check whether we only have one InvokerInterceptor: that is,
 				// no real advice, but just reflective invocation of the target.
+				/**
+				 * 检查是否只有一个InvokerInterceptor，它的不是真的advice（增强操作），而是目标类的反射调用。
+				 */
 				if (chain.isEmpty() && Modifier.isPublic(method.getModifiers())) {
 					// We can skip creating a MethodInvocation: just invoke the target directly.
 					// Note that the final invoker must be an InvokerInterceptor, so we know
 					// it does nothing but a reflective operation on the target, and no hot
 					// swapping or fancy proxying.
+					/**
+					 * 我们可以跳过创建调用方法:只直接调用目标。注意，最后的调用者必须是InvokerInterceptor，
+					 * 所以我们知道它只会对目标类做反射操作并且不会对目标类热启动或者进行复杂的代理操作。
+					 */
 					Object[] argsToUse = AopProxyUtils.adaptArgumentsIfNecessary(method, args);
 					retVal = methodProxy.invoke(target, argsToUse);
 				}
 				else {
 					// We need to create a method invocation...
+					//方法调用
 					retVal = new CglibMethodInvocation(proxy, target, method, args, targetClass, chain, methodProxy).proceed();
 				}
 				retVal = processReturnType(proxy, target, method, retVal);

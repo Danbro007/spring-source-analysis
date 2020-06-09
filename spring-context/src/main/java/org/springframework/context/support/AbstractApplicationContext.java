@@ -524,36 +524,34 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 		// 来个锁，不然 refresh() 还没结束，你又来个启动或销毁容器的操作，那不就乱套了嘛
 		synchronized (this.startupShutdownMonitor) {
 			//准备刷新 设置开始的时间和状态标志为启动状态以及属性源的初始化（处理配置文件中的占位符）
+			//
 			prepareRefresh();
 			//创建BeanFactory，读取配置文件里我们设置的Bean的定义，然后在BeanFactory里注册Bean。
+			System.out.println("容器初始化");
+			System.out.println("----------------------------");
 			ConfigurableListableBeanFactory beanFactory = obtainFreshBeanFactory();
 
 			// 准备BeanFactory的环境配置，配置几个PostProcessor和类加载器。
 			prepareBeanFactory(beanFactory);
 
 			try {
-				//里面是空方法，让子类调用自定义实现方法。
+				//让子类来自定义实现配置完BeanFactory后的操作
 				//此时BeanFactory里的Bean都已经被加载但是还没有被初始化。
 				postProcessBeanFactory(beanFactory);
-				//初始化和调用所有已经注册的BeanFactoryPostProcessor实现类的postProcessBeanFactory()方法
+				//初始化和调用刚刚已经注册的BeanFactoryPostProcessor实现类的postProcessBeanFactory()方法
 				invokeBeanFactoryPostProcessors(beanFactory);
 				// Register bean processors that intercept bean creation.
-				//注册一个Bean processors为了给BeanFactory里的所有processor排序注册。
+				//给BeanFactory里的所有BeanPostProcessors排序注册。
 				registerBeanPostProcessors(beanFactory);
-
 				//初始化MessageSource，国际化使用。
 				initMessageSource();
-
 				// 初始化当前 ApplicationContext 的事件广播器，这里也不展开了
 				initApplicationEventMulticaster();
-
 				// Initialize other special beans in specific context subclasses.
 				//空方法，给子类实现。子类可以在单例被实例化之前做一些自定义的操作。
 				onRefresh();
-
-				//检查并注册监听器
+				//把BeanFactory里所有的Listener检查并注册
 				registerListeners();
-
 				// Instantiate all remaining (non-lazy-init) singletons.
 				//初始化所有非懒加载的单例（Bean）
 				finishBeanFactoryInitialization(beanFactory);
@@ -666,14 +664,16 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 		beanFactory.setBeanClassLoader(getClassLoader());
 		//配置Bean表达式解析器 解析xml里的表达式 其实就是Spel解析器
 		beanFactory.setBeanExpressionResolver(new StandardBeanExpressionResolver(beanFactory.getBeanClassLoader()));
-		//配置属性编辑注册中心
+		//配置资源加载器和属性解析器
 		beanFactory.addPropertyEditorRegistrar(new ResourceEditorRegistrar(this, getEnvironment()));
 
-		// 添加一个 BeanPostProcessor，这个 processor 比较简单：
-		// 实现了 Aware 接口的 beans 在初始化的时候，这个 processor 负责回调，
-		// 这个我们很常用，如我们会为了获取 ApplicationContext 而 implement ApplicationContextAware
-		// 注意：它不仅仅回调 ApplicationContextAware，
-		//   还会负责回调 EnvironmentAware、ResourceLoaderAware 等，看下源码就清楚了
+		/**
+		 * 	添加一个 BeanPostProcessor，这个 processor 比较简单：
+		 * 	实现了 Aware 接口的 bean 在实例化之前，这个 processor 负责回调
+		 * 	这个我们很常用，如我们会为了获取 ApplicationContext 而 实现了 ApplicationContextAware 接口
+		 * 	注意：它不仅仅回调 ApplicationContextAware，
+		 * 	还会负责回调 EnvironmentAware、ResourceLoaderAware 等，看下源码就清楚了
+		 */
 		beanFactory.addBeanPostProcessor(new ApplicationContextAwareProcessor(this));
 		//忽略一些依赖的自动装配接口 如果某个 bean 依赖于以下几个接口的实现类，在自动装配的时候忽略它们。
 		beanFactory.ignoreDependencyInterface(EnvironmentAware.class);
@@ -744,8 +744,8 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	 * <p>Must be called before singleton instantiation.
 	 */
 	protected void invokeBeanFactoryPostProcessors(ConfigurableListableBeanFactory beanFactory) {
+		//实例化和调用所有的BeanFactoryPostProcessor
 		PostProcessorRegistrationDelegate.invokeBeanFactoryPostProcessors(beanFactory, getBeanFactoryPostProcessors());
-
 		// Detect a LoadTimeWeaver and prepare for weaving, if found in the meantime
 		// (e.g. through an @Bean method registered by ConfigurationClassPostProcessor)
 		if (beanFactory.getTempClassLoader() == null && beanFactory.containsBean(LOAD_TIME_WEAVER_BEAN_NAME)) {
@@ -894,15 +894,17 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	/**
 	 * Finish the initialization of this context's bean factory,
 	 * initializing all remaining singleton beans.
-	 * 完成BeanFactory的吃石化，初始化剩余的单例Bean。
+	 * 完成BeanFactory的实例化，初始化剩余的单例Bean。
 	 */
 	protected void finishBeanFactoryInitialization(ConfigurableListableBeanFactory beanFactory) {
 		// Initialize conversion service for this context.
 		if (beanFactory.containsBean(CONVERSION_SERVICE_BEAN_NAME) &&
-				//ConversionService接口最有用的场景就是，它用来将前端传过来的参数和后端的 controller 方法上的参数进行绑定的时候用。
-				//像前端传过来的字符串、整数要转换为后端的 String、Integer 很容易，
-				// 但是如果 controller 方法需要的是一个枚举值，或者是 Date 这些非基础类型（含基础类型包装类）值的时候，
-				// 我们就可以考虑采用 ConversionService 来进行转换。
+				/**
+				 * 	ConversionService接口最有用的场景就是，它用来将前端传过来的参数和后端的 controller 方法上的参数进行绑定的时候用。
+				 * 	像前端传过来的字符串、整数要转换为后端的 String、Integer 很容易，
+				 * 	但是如果 controller 方法需要的是一个枚举值，或者是 Date 这些非基础类型（含基础类型包装类）值的时候，
+				 * 	我们就可以考虑采用 ConversionService 来进行转换。
+				 */
 				beanFactory.isTypeMatch(CONVERSION_SERVICE_BEAN_NAME, ConversionService.class)) {
 			beanFactory.setConversionService(
 					beanFactory.getBean(CONVERSION_SERVICE_BEAN_NAME, ConversionService.class));
@@ -911,11 +913,13 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 		// Register a default embedded value resolver if no bean post-processor
 		// (such as a PropertyPlaceholderConfigurer bean) registered any before:
 		// at this point, primarily for resolution in annotation attribute values.
+		//配置BeanFactory默认解析器来解析注解里的value
 		if (!beanFactory.hasEmbeddedValueResolver()) {
 			beanFactory.addEmbeddedValueResolver(strVal -> getEnvironment().resolvePlaceholders(strVal));
 		}
 
 		// Initialize LoadTimeWeaverAware beans early to allow for registering their transformers early.
+
 		String[] weaverAwareNames = beanFactory.getBeanNamesForType(LoadTimeWeaverAware.class, false, false);
 		for (String weaverAwareName : weaverAwareNames) {
 			getBean(weaverAwareName);
@@ -931,6 +935,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 
 		// Instantiate all remaining (non-lazy-init) singletons.
 		//实例化所有非懒加载的单例
+		System.out.println("开始IndexService的初始化");
 		beanFactory.preInstantiateSingletons();
 	}
 

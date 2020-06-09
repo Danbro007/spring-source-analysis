@@ -72,7 +72,7 @@ public abstract class AbstractAdvisorAutoProxyCreator extends AbstractAutoProxyC
 	@Nullable
 	protected Object[] getAdvicesAndAdvisorsForBean(
 			Class<?> beanClass, String beanName, @Nullable TargetSource targetSource) {
-
+		//获取作用在当前bean的所有advisor
 		List<Advisor> advisors = findEligibleAdvisors(beanClass, beanName);
 		if (advisors.isEmpty()) {
 			return DO_NOT_PROXY;
@@ -90,11 +90,17 @@ public abstract class AbstractAdvisorAutoProxyCreator extends AbstractAutoProxyC
 	 * @see #sortAdvisors
 	 * @see #extendAdvisors
 	 */
+	//找到所有动态代理该类的所有合适Advisors
 	protected List<Advisor> findEligibleAdvisors(Class<?> beanClass, String beanName) {
+		//找到所有在动态代理中使用的Advisors
 		List<Advisor> candidateAdvisors = findCandidateAdvisors();
+		//过滤出指定bean的Advisors
 		List<Advisor> eligibleAdvisors = findAdvisorsThatCanApply(candidateAdvisors, beanClass, beanName);
+		//扩展方法 内部子类实现
 		extendAdvisors(eligibleAdvisors);
+		//给获取的Advisors排序
 		if (!eligibleAdvisors.isEmpty()) {
+
 			eligibleAdvisors = sortAdvisors(eligibleAdvisors);
 		}
 		return eligibleAdvisors;

@@ -1109,6 +1109,7 @@ public abstract class AbstractBeanDefinition extends BeanMetadataAttributeAccess
 	 */
 	public void prepareMethodOverrides() throws BeanDefinitionValidationException {
 		// Check that lookup methods exist and determine their overloaded status.
+		//检查每个重写方法，如果本来标记为重写的方法没找到则把这个重写方法标记为不重写。
 		if (hasMethodOverrides()) {
 			getMethodOverrides().getOverrides().forEach(this::prepareMethodOverride);
 		}
@@ -1121,6 +1122,7 @@ public abstract class AbstractBeanDefinition extends BeanMetadataAttributeAccess
 	 * @param mo the MethodOverride object to validate
 	 * @throws BeanDefinitionValidationException in case of validation failure
 	 */
+	//查找指定的重写方法，如果找不到则把这个方法标记为不重写
 	protected void prepareMethodOverride(MethodOverride mo) throws BeanDefinitionValidationException {
 		int count = ClassUtils.getMethodCountForName(getBeanClass(), mo.getMethodName());
 		if (count == 0) {
