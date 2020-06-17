@@ -109,6 +109,10 @@ public class ModelAttributeMethodProcessor implements HandlerMethodArgumentResol
 	 * its default if it is available. The model attribute is then populated
 	 * with request values via data binding and optionally validated
 	 * if {@code @java.validation.Valid} is present on the argument.
+	 *
+	 * 从模型中解析参数，或者如果没有找到，用来实例化它，如果它是可用的，那么它是默认的。
+	 * 然后，通过数据绑定和可选的验证来填充模型属性，如果验证有效则出现在参数中。
+	 * 这个解析器是来解析 @ModelAttribute 注解的方法参数
 	 * @throws BindException if data binding and validation result in an error
 	 * and the next method parameter is not of type {@link Errors}
 	 * @throws Exception if WebDataBinder initialization fails
@@ -120,10 +124,11 @@ public class ModelAttributeMethodProcessor implements HandlerMethodArgumentResol
 
 		Assert.state(mavContainer != null, "ModelAttributeMethodProcessor requires ModelAndViewContainer");
 		Assert.state(binderFactory != null, "ModelAttributeMethodProcessor requires WebDataBinderFactory");
-
+		// 获取参数名和参数上的注解信息（里面有注解的值）
 		String name = ModelFactory.getNameForParameter(parameter);
 		ModelAttribute ann = parameter.getParameterAnnotation(ModelAttribute.class);
 		if (ann != null) {
+			// 把参数从未绑定的参数列表里删除
 			mavContainer.setBinding(name, ann.binding());
 		}
 
@@ -134,7 +139,7 @@ public class ModelAttributeMethodProcessor implements HandlerMethodArgumentResol
 			attribute = mavContainer.getModel().get(name);
 		}
 		else {
-			// Create attribute instance
+			// Create attribute instance 创建属性实例
 			try {
 				attribute = createAttribute(name, parameter, binderFactory, webRequest);
 			}
@@ -152,13 +157,15 @@ public class ModelAttributeMethodProcessor implements HandlerMethodArgumentResol
 		}
 
 		if (bindingResult == null) {
-			// Bean property binding and validation;
-			// skipped in case of binding failure on construction.
+			// Bean property binding and validation; Bean属性绑定和验证;
+			// skipped in case of binding failure on construction. 在构造绑定失败时跳过。
+			// 数据绑定器里面包含了我们的接收请求的模型属性
 			WebDataBinder binder = binderFactory.createBinder(webRequest, attribute, name);
 			if (binder.getTarget() != null) {
 				if (!mavContainer.isBindingDisabled(name)) {
 					bindRequestParameters(binder, webRequest);
 				}
+				// 如果参数有 @Validated 注解对参数进行校验
 				validateIfApplicable(binder, parameter);
 				if (binder.getBindingResult().hasErrors() && isBindExceptionRequired(binder, parameter)) {
 					throw new BindException(binder.getBindingResult());

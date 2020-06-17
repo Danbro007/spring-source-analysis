@@ -31,6 +31,10 @@ import org.springframework.util.StringUtils;
  * the redirect (typically in the session) and is made available after the
  * redirect and removed immediately.
  *
+ * FlashMap给一个请求提供一个存储属性方法，以便下次使用。这通常使用在当一个url重定向到另一个url时。
+ * 例如：Post、Redirect、Get方式。FlashMap 被保存在重定向前（通常在session里），
+ * 在被重定向和被立即删除后还是可以使用的。
+ *
  * <p>A FlashMap can be set up with a request path and request parameters to
  * help identify the target request. Without this information, a FlashMap is
  * made available to the next request, which may or may not be the intended

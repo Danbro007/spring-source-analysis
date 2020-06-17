@@ -355,6 +355,9 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 
 	/**
 	 * Publish the given event to all listeners.
+	 *
+	 * 发布给定的事件给所有的监听器
+	 *
 	 * <p>Note: Listeners get initialized after the MessageSource, to be able
 	 * to access it within listener implementations. Thus, MessageSource
 	 * implementations cannot publish events.
@@ -381,16 +384,20 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 
 	/**
 	 * Publish the given event to all listeners.
+	 *
+	 * 将给定的事件发布给所有监听器
+	 *
 	 * @param event the event to publish (may be an {@link ApplicationEvent}
 	 * or a payload object to be turned into a {@link PayloadApplicationEvent})
 	 * @param eventType the resolved event type, if known
 	 * @since 4.2
 	 */
-	//将给定的事件转发给所有监听器
+
 	protected void publishEvent(Object event, @Nullable ResolvableType eventType) {
 		Assert.notNull(event, "Event must not be null");
 
 		// Decorate event as an ApplicationEvent if necessary
+		//把事件转换为 ApplicationEvent
 		ApplicationEvent applicationEvent;
 		if (event instanceof ApplicationEvent) {
 			applicationEvent = (ApplicationEvent) event;
@@ -407,10 +414,14 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 			this.earlyApplicationEvents.add(applicationEvent);
 		}
 		else {
+			//广播给定的事件给适合的监听器
 			getApplicationEventMulticaster().multicastEvent(applicationEvent, eventType);
 		}
 
 		// Publish event via parent context as well...
+		/**
+		 * 如果有父 context 则通过它来发布事件给监听器
+		 */
 		if (this.parent != null) {
 			if (this.parent instanceof AbstractApplicationContext) {
 				((AbstractApplicationContext) this.parent).publishEvent(event, eventType);
@@ -524,11 +535,8 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 		// 来个锁，不然 refresh() 还没结束，你又来个启动或销毁容器的操作，那不就乱套了嘛
 		synchronized (this.startupShutdownMonitor) {
 			//准备刷新 设置开始的时间和状态标志为启动状态以及属性源的初始化（处理配置文件中的占位符）
-			//
 			prepareRefresh();
 			//创建BeanFactory，读取配置文件里我们设置的Bean的定义，然后在BeanFactory里注册Bean。
-			System.out.println("容器初始化");
-			System.out.println("----------------------------");
 			ConfigurableListableBeanFactory beanFactory = obtainFreshBeanFactory();
 
 			// 准备BeanFactory的环境配置，配置几个PostProcessor和类加载器。
@@ -581,6 +589,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 			finally {
 				// Reset common introspection caches in Spring's core, since we
 				// might not ever need metadata for singleton beans anymore...
+				//在SpringCore中重置常见的默认缓存，因为我们可能不再需要单例bean的元数据了……
 				resetCommonCaches();
 			}
 		}
@@ -592,7 +601,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	 */
 	protected void prepareRefresh() {
 		// Switch to active.
-		//
+		//切换BeanFactory为激活状态
 		this.startupDate = System.currentTimeMillis();
 		this.closed.set(false);
 		this.active.set(true);
@@ -900,9 +909,9 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 		// Initialize conversion service for this context.
 		if (beanFactory.containsBean(CONVERSION_SERVICE_BEAN_NAME) &&
 				/**
-				 * 	ConversionService接口最有用的场景就是，它用来将前端传过来的参数和后端的 controller 方法上的参数进行绑定的时候用。
+				 * 	ConversionService接口最有用的场景就是，它用来将前端传过来的参数和后端的 com.danbro.springmvc.controller 方法上的参数进行绑定的时候用。
 				 * 	像前端传过来的字符串、整数要转换为后端的 String、Integer 很容易，
-				 * 	但是如果 controller 方法需要的是一个枚举值，或者是 Date 这些非基础类型（含基础类型包装类）值的时候，
+				 * 	但是如果 com.danbro.springmvc.controller 方法需要的是一个枚举值，或者是 Date 这些非基础类型（含基础类型包装类）值的时候，
 				 * 	我们就可以考虑采用 ConversionService 来进行转换。
 				 */
 				beanFactory.isTypeMatch(CONVERSION_SERVICE_BEAN_NAME, ConversionService.class)) {
@@ -925,7 +934,6 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 			getBean(weaverAwareName);
 		}
 
-		// Stop using the temporary ClassLoader for type matching.
 		//停止使用用于类型匹配的临时类加载器
 		beanFactory.setTempClassLoader(null);
 
@@ -935,7 +943,6 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 
 		// Instantiate all remaining (non-lazy-init) singletons.
 		//实例化所有非懒加载的单例
-		System.out.println("开始IndexService的初始化");
 		beanFactory.preInstantiateSingletons();
 	}
 
@@ -954,10 +961,11 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 		initLifecycleProcessor();
 
 		// Propagate refresh to lifecycle processor first.
+		//首先将刷新传播到生命周期处理器
 		getLifecycleProcessor().onRefresh();
 
 		// Publish the final event.
-		//把refresh这个事件发布给所有的监听器
+		//把 refresh 这个事件发布给所有的监听器
 		publishEvent(new ContextRefreshedEvent(this));
 
 		// Participate in LiveBeansView MBean, if active.

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xmlns:context="http://www.springframework.org/schema/context"
+	   xmlns:p="http://www.springframework.org/schema/p"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd">
+
+	<bean id="sampleBean" class="com.danbro.springLifeCycleAnalysis.entities.SampleBean" scope="singleton"
+          init-method="initMethod"
+          destroy-method="destroyMethod" p:id="1" p:name="danbro"/>
+
+	<bean id="myBeanFactoryPostProcessor" class="com.danbro.springLifeCycleAnalysis.processor.MyBeanFactoryPostProcessor"/>
+
+	<bean id="myBeanPostProcessor" class="com.danbro.springLifeCycleAnalysis.processor.MyBeanPostProcessor"/>
+
+	<bean id="myInstantiationAwareBeanPostProcessor"
+		  class="com.danbro.springLifeCycleAnalysis.processor.MyInstantiationAwareBeanPostProcessor"/>
+
+	<context:component-scan base-package="com.danbro.springLifeCycleAnalysis"/>
+</beans>

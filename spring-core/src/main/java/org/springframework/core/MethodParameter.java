@@ -424,8 +424,8 @@ public class MethodParameter {
 
 	/**
 	 * Return a variant of this {@code MethodParameter} which points to
-	 * the same parameter but one nesting level deeper in case of a
-	 * {@link java.util.Optional} declaration.
+	 * 	 * the same parameter but one nesting level deeper in case of a
+	 * 	 * {@link java.util.Optional} declaration.
 	 * @since 4.3
 	 * @see #isOptional()
 	 * @see #nested()

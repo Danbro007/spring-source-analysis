@@ -48,10 +48,17 @@ import org.springframework.web.bind.annotation.ResponseStatus;
  * Provides convenient access to method parameters, the method return value,
  * method annotations, etc.
  *
+ * 封装有关一个处理程序方法的信息，该处理程序由一个 getMethod()方法和一个 getBean() bean组成。
+ * 提供了对方法参数、方法返回值、方法注释等的方便访问。
+ *
  * <p>The class may be created with a bean instance or with a bean name
  * (e.g. lazy-init bean, prototype bean). Use {@link #createWithResolvedBean()}
  * to obtain a {@code HandlerMethod} instance with a bean instance resolved
  * through the associated {@link BeanFactory}.
+ *
+ * 这个类可以用一个 bean 实例创建，也可以用一个 bean 名称创建(例如延迟-init bean、原型bean)。
+ * 使用 createWithResolvedBean() 方法来获取一个 HandlerMethod，该实例带有一个通过关联的
+ * BeanFactory 解析的bean实例。
  *
  * @author Arjen Poutsma
  * @author Rossen Stoyanchev
@@ -327,6 +334,9 @@ public class HandlerMethod {
 	/**
 	 * If the provided instance contains a bean name rather than an object instance,
 	 * the bean name is resolved before a {@link HandlerMethod} is created and returned.
+	 *
+	 * 如果提供的实例包含一个 bean 名而不是一个对象实例，那么在创建和返回 HandlerMethod 之前就解析 bean 名。
+	 * 如果 handler 只是一个 String 类型，则从 IOC 容器获取 bean 既 handler。然后返回一个 HandlerMethod 对象。
 	 */
 	public HandlerMethod createWithResolvedBean() {
 		Object handler = this.bean;
@@ -427,7 +437,7 @@ public class HandlerMethod {
 
 	/**
 	 * Assert that the target bean class is an instance of the class where the given
-	 * method is declared. In some cases the actual controller instance at request-
+	 * method is declared. In some cases the actual com.danbro.springmvc.controller instance at request-
 	 * processing time may be a JDK dynamic proxy (lazy initialization, prototype
 	 * beans, and others). {@code @Controller}'s that require proxying should prefer
 	 * class-based proxy mechanisms.
@@ -437,8 +447,8 @@ public class HandlerMethod {
 		Class<?> targetBeanClass = targetBean.getClass();
 		if (!methodDeclaringClass.isAssignableFrom(targetBeanClass)) {
 			String text = "The mapped handler method class '" + methodDeclaringClass.getName() +
-					"' is not an instance of the actual controller bean class '" +
-					targetBeanClass.getName() + "'. If the controller requires proxying " +
+					"' is not an instance of the actual com.danbro.springmvc.controller bean class '" +
+					targetBeanClass.getName() + "'. If the com.danbro.springmvc.controller requires proxying " +
 					"(e.g. due to @Transactional), please use class-based proxying.";
 			throw new IllegalStateException(formatInvokeError(text, args));
 		}

@@ -35,6 +35,8 @@ import org.springframework.util.StringUtils;
  * A container for CORS configuration along with methods to check against the
  * actual origin, HTTP methods, and headers of a given request.
  *
+ * 一个用于CORS（跨域）配置的容器，以及用于检查给定请求的实际原点、HTTP方法和头的方法。
+ *
  * <p>By default a newly created {@code CorsConfiguration} does not permit any
  * cross-origin requests and must be configured explicitly to indicate what
  * should be allowed. Use {@link #applyPermitDefaultValues()} to flip the

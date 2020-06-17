@@ -44,14 +44,20 @@ import org.springframework.web.method.support.InvocableHandlerMethod;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
 /**
- * Assist with initialization of the {@link Model} before controller method
+ * Assist with initialization of the {@link Model} before com.danbro.springmvc.controller method
  * invocation and with updates to it after the invocation.
+ *
+ *  com.danbro.springmvc.controller 方法调用之前 和 调用之后对其更新 协助初始化 Model ，
  *
  * <p>On initialization the model is populated with attributes temporarily stored
  * in the session and through the invocation of {@code @ModelAttribute} methods.
  *
+ * 在 Model 初始化时通过调用 ModelAttribute() 方法填充临时存储在 session 的属性，
+ *
  * <p>On update model attributes are synchronized with the session and also
  * {@link BindingResult} attributes are added if missing.
+ *
+ * 更新 Model 上的属性会与 session 同步，如果缺少 BindingResult 属性也会添加。
  *
  * @author Rossen Stoyanchev
  * @since 3.1

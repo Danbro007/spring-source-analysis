@@ -24,6 +24,8 @@ import org.springframework.lang.Nullable;
  * Interface to be implemented by objects that define a mapping between
  * requests and handler objects.
  *
+ * 被对象实现的接口，这个接口定义了请求和处理对象的映射关系。
+ *
  * <p>This class can be implemented by application developers, although this is not
  * necessary, as {@link org.springframework.web.servlet.handler.BeanNameUrlHandlerMapping}
  * and {@link org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping}
@@ -79,6 +81,12 @@ public interface HandlerMapping {
 	 * HandlerMapping implementations. URL-based HandlerMappings will
 	 * typically support it, but handlers should not necessarily expect
 	 * this request attribute to be present in all scenarios.
+	 *
+	 * HttpServletRequest 的属性名称，该属性在模式匹配的情况下包含处理器映射中的路径，
+	 * 或完整的相关 URI (通常在 DispatcherServlet 的映射中)的其他属性。
+	 *
+	 * 注意：所有的 HandlerMapping 实现都不需要支持该属性。基于 url 的处理器映射将通常支持它，
+	 * 但是 handler 不应该期望这个请求属性出现在所有场景中。
 	 */
 	String PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE = HandlerMapping.class.getName() + ".pathWithinHandlerMapping";
 
@@ -132,18 +140,32 @@ public interface HandlerMapping {
 	/**
 	 * Return a handler and any interceptors for this request. The choice may be made
 	 * on request URL, session state, or any factor the implementing class chooses.
+	 *
+	 * 返回当前请求的的处理器和拦截器。可以根据请求URL、session 状态或实现类选择的任何因素做出选择。
+	 *
 	 * <p>The returned HandlerExecutionChain contains a handler Object, rather than
 	 * even a tag interface, so that handlers are not constrained in any way.
+	 *
+	 * 返回的 HandlerExecutionChain 包含一个处理器对象，而不是甚至是一个标记接口，因此处理器不受任何方式的约束。
+	 *
 	 * For example, a HandlerAdapter could be written to allow another framework's
 	 * handler objects to be used.
+	 *
+	 * 例如，可以编写一个 HandlerAdapter 来允许使用另一个框架的处理器对象。
+	 *
 	 * <p>Returns {@code null} if no match was found. This is not an error.
 	 * The DispatcherServlet will query all registered HandlerMapping beans to find
 	 * a match, and only decide there is an error if none can find a handler.
+	 *
+	 * 如果没有匹配到则返回 null。这不是错误。DispatcherServlet 将查询所有已注册的 HandlerMapping bean以找到匹配，
+	 * 并且只有在没有能找到处理器时才确定存在错误。
+	 *
 	 * @param request current HTTP request
 	 * @return a HandlerExecutionChain instance containing handler object and
 	 * any interceptors, or {@code null} if no mapping found
 	 * @throws Exception if there is an internal error
 	 */
+
 	@Nullable
 	HandlerExecutionChain getHandler(HttpServletRequest request) throws Exception;
 

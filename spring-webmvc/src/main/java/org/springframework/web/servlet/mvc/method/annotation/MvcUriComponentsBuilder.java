@@ -146,12 +146,12 @@ public class MvcUriComponentsBuilder {
 
 
 	/**
-	 * Create a {@link UriComponentsBuilder} from the mapping of a controller class
-	 * and current request information including Servlet mapping. If the controller
+	 * Create a {@link UriComponentsBuilder} from the mapping of a com.danbro.springmvc.controller class
+	 * and current request information including Servlet mapping. If the com.danbro.springmvc.controller
 	 * contains multiple mappings, only the first one is used.
 	 * <p><strong>Note:</strong> This method extracts values from "Forwarded"
 	 * and "X-Forwarded-*" headers if found. See class-level docs.
-	 * @param controllerType the controller to build a URI for
+	 * @param controllerType the com.danbro.springmvc.controller to build a URI for
 	 * @return a UriComponentsBuilder instance (never {@code null})
 	 */
 	public static UriComponentsBuilder fromController(Class<?> controllerType) {
@@ -167,7 +167,7 @@ public class MvcUriComponentsBuilder {
 	 * and "X-Forwarded-*" headers if found. See class-level docs.
 	 * @param builder the builder for the base URL; the builder will be cloned
 	 * and therefore not modified and may be re-used for further calls.
-	 * @param controllerType the controller to build a URI for
+	 * @param controllerType the com.danbro.springmvc.controller to build a URI for
 	 * @return a UriComponentsBuilder instance (never {@code null})
 	 */
 	public static UriComponentsBuilder fromController(@Nullable UriComponentsBuilder builder,
@@ -186,12 +186,12 @@ public class MvcUriComponentsBuilder {
 	}
 
 	/**
-	 * Create a {@link UriComponentsBuilder} from the mapping of a controller
+	 * Create a {@link UriComponentsBuilder} from the mapping of a com.danbro.springmvc.controller
 	 * method and an array of method argument values. This method delegates
 	 * to {@link #fromMethod(Class, Method, Object...)}.
 	 * <p><strong>Note:</strong> This method extracts values from "Forwarded"
 	 * and "X-Forwarded-*" headers if found. See class-level docs.
-	 * @param controllerType the controller
+	 * @param controllerType the com.danbro.springmvc.controller
 	 * @param methodName the method name
 	 * @param args the argument values
 	 * @return a UriComponentsBuilder instance, never {@code null}
@@ -214,7 +214,7 @@ public class MvcUriComponentsBuilder {
 	 * and "X-Forwarded-*" headers if found. See class-level docs.
 	 * @param builder the builder for the base URL; the builder will be cloned
 	 * and therefore not modified and may be re-used for further calls.
-	 * @param controllerType the controller
+	 * @param controllerType the com.danbro.springmvc.controller
 	 * @param methodName the method name
 	 * @param args the argument values
 	 * @return a UriComponentsBuilder instance, never {@code null}
@@ -229,18 +229,18 @@ public class MvcUriComponentsBuilder {
 	}
 
 	/**
-	 * Create a {@link UriComponentsBuilder} from the mapping of a controller method
+	 * Create a {@link UriComponentsBuilder} from the mapping of a com.danbro.springmvc.controller method
 	 * and an array of method argument values. The array of values  must match the
-	 * signature of the controller method. Values for {@code @RequestParam} and
+	 * signature of the com.danbro.springmvc.controller method. Values for {@code @RequestParam} and
 	 * {@code @PathVariable} are used for building the URI (via implementations of
 	 * {@link org.springframework.web.method.support.UriComponentsContributor
 	 * UriComponentsContributor}) while remaining argument values are ignored and
 	 * can be {@code null}.
 	 * <p><strong>Note:</strong> This method extracts values from "Forwarded"
 	 * and "X-Forwarded-*" headers if found. See class-level docs.
-	 * @param controllerType the controller type
-	 * @param method the controller method
-	 * @param args argument values for the controller method
+	 * @param controllerType the com.danbro.springmvc.controller type
+	 * @param method the com.danbro.springmvc.controller method
+	 * @param args argument values for the com.danbro.springmvc.controller method
 	 * @return a UriComponentsBuilder instance, never {@code null}
 	 * @since 4.2
 	 */
@@ -258,9 +258,9 @@ public class MvcUriComponentsBuilder {
 	 * and "X-Forwarded-*" headers if found. See class-level docs.
 	 * @param baseUrl the builder for the base URL; the builder will be cloned
 	 * and therefore not modified and may be re-used for further calls.
-	 * @param controllerType the controller type
-	 * @param method the controller method
-	 * @param args argument values for the controller method
+	 * @param controllerType the com.danbro.springmvc.controller type
+	 * @param method the com.danbro.springmvc.controller method
+	 * @param args argument values for the com.danbro.springmvc.controller method
 	 * @return a UriComponentsBuilder instance (never {@code null})
 	 * @since 4.2
 	 */
@@ -272,10 +272,10 @@ public class MvcUriComponentsBuilder {
 	}
 
 	/**
-	 * Create a {@link UriComponentsBuilder} by invoking a "mock" controller method.
-	 * The controller method and the supplied argument values are then used to
+	 * Create a {@link UriComponentsBuilder} by invoking a "mock" com.danbro.springmvc.controller method.
+	 * The com.danbro.springmvc.controller method and the supplied argument values are then used to
 	 * delegate to {@link #fromMethod(Class, Method, Object...)}.
-	 * <p>For example, given this controller:
+	 * <p>For example, given this com.danbro.springmvc.controller:
 	 * <pre class="code">
 	 * &#064;RequestMapping("/people/{id}/addresses")
 	 * class AddressController {
@@ -294,18 +294,18 @@ public class MvcUriComponentsBuilder {
 	 * MvcUriComponentsBuilder.fromMethodCall(
 	 * 		on(AddressController.class).getAddressesForCountry("US")).buildAndExpand(1);
 	 *
-	 * // Longer form useful for repeated invocation (and void controller methods)
+	 * // Longer form useful for repeated invocation (and void com.danbro.springmvc.controller methods)
 	 *
-	 * AddressController controller = MvcUriComponentsBuilder.on(AddressController.class);
-	 * controller.addAddress(null);
-	 * builder = MvcUriComponentsBuilder.fromMethodCall(controller);
-	 * controller.getAddressesForCountry("US")
-	 * builder = MvcUriComponentsBuilder.fromMethodCall(controller);
+	 * AddressController com.danbro.springmvc.controller = MvcUriComponentsBuilder.on(AddressController.class);
+	 * com.danbro.springmvc.controller.addAddress(null);
+	 * builder = MvcUriComponentsBuilder.fromMethodCall(com.danbro.springmvc.controller);
+	 * com.danbro.springmvc.controller.getAddressesForCountry("US")
+	 * builder = MvcUriComponentsBuilder.fromMethodCall(com.danbro.springmvc.controller);
 	 * </pre>
 	 * <p><strong>Note:</strong> This method extracts values from "Forwarded"
 	 * and "X-Forwarded-*" headers if found. See class-level docs.
-	 * @param info either the value returned from a "mock" controller
-	 * invocation or the "mock" controller itself after an invocation
+	 * @param info either the value returned from a "mock" com.danbro.springmvc.controller
+	 * invocation or the "mock" com.danbro.springmvc.controller itself after an invocation
 	 * @return a UriComponents instance
 	 * @see #on(Class)
 	 * @see #controller(Class)
@@ -328,8 +328,8 @@ public class MvcUriComponentsBuilder {
 	 * and "X-Forwarded-*" headers if found. See class-level docs.
 	 * @param builder the builder for the base URL; the builder will be cloned
 	 * and therefore not modified and may be re-used for further calls.
-	 * @param info either the value returned from a "mock" controller
-	 * invocation or the "mock" controller itself after an invocation
+	 * @param info either the value returned from a "mock" com.danbro.springmvc.controller
+	 * invocation or the "mock" com.danbro.springmvc.controller itself after an invocation
 	 * @return a UriComponents instance
 	 */
 	public static UriComponentsBuilder fromMethodCall(UriComponentsBuilder builder, Object info) {
@@ -342,8 +342,8 @@ public class MvcUriComponentsBuilder {
 	}
 
 	/**
-	 * Return a "mock" controller instance. When an {@code @RequestMapping} method
-	 * on the controller is invoked, the supplied argument values are remembered
+	 * Return a "mock" com.danbro.springmvc.controller instance. When an {@code @RequestMapping} method
+	 * on the com.danbro.springmvc.controller is invoked, the supplied argument values are remembered
 	 * and the result can then be used to create a {@code UriComponentsBuilder}
 	 * via {@link #fromMethodCall(Object)}.
 	 * <p>Note that this is a shorthand version of {@link #controller(Class)} intended
@@ -354,21 +354,21 @@ public class MvcUriComponentsBuilder {
 	 * <p><strong>Note:</strong> This method extracts values from "Forwarded"
 	 * and "X-Forwarded-*" headers if found. See class-level docs.
 	 *
-	 * @param controllerType the target controller
+	 * @param controllerType the target com.danbro.springmvc.controller
 	 */
 	public static <T> T on(Class<T> controllerType) {
 		return controller(controllerType);
 	}
 
 	/**
-	 * Return a "mock" controller instance. When an {@code @RequestMapping} method
-	 * on the controller is invoked, the supplied argument values are remembered
+	 * Return a "mock" com.danbro.springmvc.controller instance. When an {@code @RequestMapping} method
+	 * on the com.danbro.springmvc.controller is invoked, the supplied argument values are remembered
 	 * and the result can then be used to create {@code UriComponentsBuilder} via
 	 * {@link #fromMethodCall(Object)}.
-	 * <p>This is a longer version of {@link #on(Class)}. It is needed with controller
+	 * <p>This is a longer version of {@link #on(Class)}. It is needed with com.danbro.springmvc.controller
 	 * methods returning void as well for repeated invocations.
 	 * <pre class="code">
-	 * FooController fooController = controller(FooController.class);
+	 * FooController fooController = com.danbro.springmvc.controller(FooController.class);
 	 *
 	 * fooController.saveFoo(1, null);
 	 * builder = MvcUriComponentsBuilder.fromMethodCall(fooController);
@@ -378,7 +378,7 @@ public class MvcUriComponentsBuilder {
 	 * </pre>
 	 * <p><strong>Note:</strong> This method extracts values from "Forwarded"
 	 * and "X-Forwarded-*" headers if found. See class-level docs.
-	 * @param controllerType the target controller
+	 * @param controllerType the target com.danbro.springmvc.controller
 	 */
 	public static <T> T controller(Class<T> controllerType) {
 		Assert.notNull(controllerType, "'controllerType' must not be null");
@@ -386,10 +386,10 @@ public class MvcUriComponentsBuilder {
 	}
 
 	/**
-	 * Create a URL from the name of a Spring MVC controller method's request mapping.
+	 * Create a URL from the name of a Spring MVC com.danbro.springmvc.controller method's request mapping.
 	 * <p>The configured
 	 * {@link org.springframework.web.servlet.handler.HandlerMethodMappingNamingStrategy
-	 * HandlerMethodMappingNamingStrategy} determines the names of controller
+	 * HandlerMethodMappingNamingStrategy} determines the names of com.danbro.springmvc.controller
 	 * method request mappings at startup. By default all mappings are assigned
 	 * a name based on the capital letters of the class name, followed by "#" as
 	 * separator, and then the method name. For example "PC#getPerson"
@@ -400,7 +400,7 @@ public class MvcUriComponentsBuilder {
 	 * <p>This is aimed primarily for use in view rendering technologies and EL
 	 * expressions. The Spring URL tag library registers this method as a function
 	 * called "mvcUrl".
-	 * <p>For example, given this controller:
+	 * <p>For example, given this com.danbro.springmvc.controller:
 	 * <pre class="code">
 	 * &#064;RequestMapping("/people")
 	 * class PersonController {
@@ -411,7 +411,7 @@ public class MvcUriComponentsBuilder {
 	 * }
 	 * </pre>
 	 *
-	 * A JSP can prepare a URL to the controller method as follows:
+	 * A JSP can prepare a URL to the com.danbro.springmvc.controller method as follows:
 	 *
 	 * <pre class="code">
 	 * <%@ taglib uri="http://www.springframework.org/tags" prefix="s" %>
@@ -616,12 +616,12 @@ public class MvcUriComponentsBuilder {
 		}
 		else if (methods.size() > 1) {
 			throw new IllegalArgumentException(String.format(
-					"Found two methods named '%s' accepting arguments %s in controller %s: [%s]",
+					"Found two methods named '%s' accepting arguments %s in com.danbro.springmvc.controller %s: [%s]",
 					methodName, Arrays.asList(args), controllerType.getName(), methods));
 		}
 		else {
 			throw new IllegalArgumentException("No method named '" + methodName + "' with " + args.length +
-					" arguments found in controller " + controllerType.getName());
+					" arguments found in com.danbro.springmvc.controller " + controllerType.getName());
 		}
 	}
 
@@ -682,12 +682,12 @@ public class MvcUriComponentsBuilder {
 	public interface MethodInvocationInfo {
 
 		/**
-		 * Return the controller types.
+		 * Return the com.danbro.springmvc.controller types.
 		 */
 		Class<?> getControllerType();
 
 		/**
-		 * Return the controller method.
+		 * Return the com.danbro.springmvc.controller method.
 		 */
 		Method getControllerMethod();
 
@@ -737,7 +737,7 @@ public class MvcUriComponentsBuilder {
 				}
 				catch (Throwable ex) {
 					throw new IllegalStateException(
-							"Failed to create proxy for controller method return type: " + method, ex);
+							"Failed to create proxy for com.danbro.springmvc.controller method return type: " + method, ex);
 				}
 			}
 		}
@@ -800,7 +800,7 @@ public class MvcUriComponentsBuilder {
 						proxy = objenesis.newInstance(proxyClass, enhancer.getUseCache());
 					}
 					catch (ObjenesisException ex) {
-						logger.debug("Failed to create controller proxy, falling back on default constructor", ex);
+						logger.debug("Failed to create com.danbro.springmvc.controller proxy, falling back on default constructor", ex);
 					}
 				}
 
@@ -810,7 +810,7 @@ public class MvcUriComponentsBuilder {
 					}
 					catch (Throwable ex) {
 						throw new IllegalStateException(
-								"Failed to create controller proxy or use default constructor", ex);
+								"Failed to create com.danbro.springmvc.controller proxy or use default constructor", ex);
 					}
 				}
 

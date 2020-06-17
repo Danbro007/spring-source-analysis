@@ -73,7 +73,7 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
  * A {@code MockMvcBuilder} that accepts {@code @Controller} registrations
  * thus allowing full control over the instantiation and initialization of
  * controllers and their dependencies similar to plain unit tests, and also
- * making it possible to test one controller at a time.
+ * making it possible to test one com.danbro.springmvc.controller at a time.
  *
  * <p>This builder creates the minimum infrastructure required by the
  * {@link DispatcherServlet} to serve requests with annotated controllers and
@@ -238,7 +238,7 @@ public class StandaloneMockMvcBuilder extends AbstractMockMvcBuilder<StandaloneM
 	}
 
 	/**
-	 * Provide custom resolvers for controller method arguments.
+	 * Provide custom resolvers for com.danbro.springmvc.controller method arguments.
 	 */
 	public StandaloneMockMvcBuilder setCustomArgumentResolvers(HandlerMethodArgumentResolver... argumentResolvers) {
 		this.customArgumentResolvers = Arrays.asList(argumentResolvers);
@@ -246,7 +246,7 @@ public class StandaloneMockMvcBuilder extends AbstractMockMvcBuilder<StandaloneM
 	}
 
 	/**
-	 * Provide custom handlers for controller method return values.
+	 * Provide custom handlers for com.danbro.springmvc.controller method return values.
 	 */
 	public StandaloneMockMvcBuilder setCustomReturnValueHandlers(HandlerMethodReturnValueHandler... handlers) {
 		this.customReturnValueHandlers = Arrays.asList(handlers);

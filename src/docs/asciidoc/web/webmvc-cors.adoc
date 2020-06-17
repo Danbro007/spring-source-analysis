@@ -75,12 +75,12 @@ To learn more from the source or make advanced customizations, check the code be
 
 
 
-[[mvc-cors-controller]]
+[[mvc-cors-com.danbro.springmvc.controller]]
 == `@CrossOrigin`
-[.small]#<<web-reactive.adoc#webflux-cors-controller, Same as in Spring WebFlux>>#
+[.small]#<<web-reactive.adoc#webflux-cors-com.danbro.springmvc.controller, Same as in Spring WebFlux>>#
 
 The {api-spring-framework}/web/bind/annotation/CrossOrigin.html[`@CrossOrigin`]
-annotation enables cross-origin requests on annotated controller methods,
+annotation enables cross-origin requests on annotated com.danbro.springmvc.controller methods,
 as the following example shows:
 
 [source,java,indent=0,subs="verbatim,quotes",role="primary"]
@@ -126,7 +126,7 @@ By default, `@CrossOrigin` allows:
 
 * All origins.
 * All headers.
-* All HTTP methods to which the controller method is mapped.
+* All HTTP methods to which the com.danbro.springmvc.controller method is mapped.
 
 `allowedCredentials` is not enabled by default, since that establishes a trust level
 that exposes sensitive user-specific information (such as cookies and CSRF tokens) and
@@ -226,7 +226,7 @@ as the following example shows:
 == Global Configuration
 [.small]#<<web-reactive.adoc#webflux-cors-global, Same as in Spring WebFlux>>#
 
-In addition to fine-grained, controller method level configuration, you probably want to
+In addition to fine-grained, com.danbro.springmvc.controller method level configuration, you probably want to
 define some global CORS configuration, too. You can set URL-based `CorsConfiguration`
 mappings individually on any `HandlerMapping`. Most applications, however, use the
 MVC Java configuration or the MVC XML namespace to do that.

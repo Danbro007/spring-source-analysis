@@ -28,6 +28,8 @@ import org.springframework.util.Assert;
  * Implementation of {@link java.util.Map} for use when building model data for use
  * with UI tools. Supports chained calls and generation of model attribute names.
  *
+ * Map的实现类用于使用UI工具构建模型数据时。支持链式调用和模型属性名的生成。
+ *
  * <p>This class serves as generic model holder for Servlet MVC but is not tied to it.
  * Check out the {@link Model} interface for an interface variant.
  *

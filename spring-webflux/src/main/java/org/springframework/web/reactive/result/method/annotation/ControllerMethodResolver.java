@@ -268,7 +268,7 @@ class ControllerMethodResolver {
 
 	/**
 	 * Find {@code @InitBinder} methods in {@code @ControllerAdvice} components
-	 * or in the controller of the given {@code @RequestMapping} method.
+	 * or in the com.danbro.springmvc.controller of the given {@code @RequestMapping} method.
 	 */
 	public List<SyncInvocableHandlerMethod> getInitBinderMethods(HandlerMethod handlerMethod) {
 		List<SyncInvocableHandlerMethod> result = new ArrayList<>();
@@ -301,7 +301,7 @@ class ControllerMethodResolver {
 
 	/**
 	 * Find {@code @ModelAttribute} methods in {@code @ControllerAdvice}
-	 * components or in the controller of the given {@code @RequestMapping} method.
+	 * components or in the com.danbro.springmvc.controller of the given {@code @RequestMapping} method.
 	 */
 	public List<InvocableHandlerMethod> getModelAttributeMethods(HandlerMethod handlerMethod) {
 		List<InvocableHandlerMethod> result = new ArrayList<>();
@@ -334,7 +334,7 @@ class ControllerMethodResolver {
 
 	/**
 	 * Find an {@code @ExceptionHandler} method in {@code @ControllerAdvice}
-	 * components or in the controller of the given {@code @RequestMapping} method.
+	 * components or in the com.danbro.springmvc.controller of the given {@code @RequestMapping} method.
 	 */
 	@Nullable
 	public InvocableHandlerMethod getExceptionHandlerMethod(Throwable ex, HandlerMethod handlerMethod) {
@@ -371,7 +371,7 @@ class ControllerMethodResolver {
 
 	/**
 	 * Return the handler for the type-level {@code @SessionAttributes} annotation
-	 * based on the given controller method.
+	 * based on the given com.danbro.springmvc.controller method.
 	 */
 	public SessionAttributesHandler getSessionAttributesHandler(HandlerMethod handlerMethod) {
 		Class<?> handlerType = handlerMethod.getBeanType();

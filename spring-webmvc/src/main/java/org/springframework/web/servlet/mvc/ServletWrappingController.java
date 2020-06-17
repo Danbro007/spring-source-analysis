@@ -35,7 +35,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 /**
  * Spring Controller implementation that wraps a servlet instance which it manages
- * internally. Such a wrapped servlet is not known outside of this controller;
+ * internally. Such a wrapped servlet is not known outside of this com.danbro.springmvc.controller;
  * its entire lifecycle is covered here (in contrast to {@link ServletForwardingController}).
  *
  * <p>Useful to invoke an existing servlet via Spring's dispatching infrastructure,
@@ -43,7 +43,7 @@ import org.springframework.web.servlet.ModelAndView;
  *
  * <p>Note that Struts has a special requirement in that it parses {@code web.xml}
  * to find its servlet mapping. Therefore, you need to specify the DispatcherServlet's
- * servlet name as "servletName" on this controller, so that Struts finds the
+ * servlet name as "servletName" on this com.danbro.springmvc.controller, so that Struts finds the
  * DispatcherServlet's mapping (thinking that it refers to the ActionServlet).
  *
  * <p><b>Example:</b> a DispatcherServlet XML context, forwarding "*.do" to the Struts
@@ -117,7 +117,7 @@ public class ServletWrappingController extends AbstractController
 
 	/**
 	 * Set the name of the servlet to wrap.
-	 * Default is the bean name of this controller.
+	 * Default is the bean name of this com.danbro.springmvc.controller.
 	 */
 	public void setServletName(String servletName) {
 		this.servletName = servletName;

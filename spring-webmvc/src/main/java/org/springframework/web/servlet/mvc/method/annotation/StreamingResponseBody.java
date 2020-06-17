@@ -20,7 +20,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 /**
- * A controller method return value type for asynchronous request processing
+ * A com.danbro.springmvc.controller method return value type for asynchronous request processing
  * where the application can write directly to the response {@code OutputStream}
  * without holding up the Servlet container thread.
  *

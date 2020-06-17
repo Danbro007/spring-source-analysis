@@ -54,7 +54,7 @@ public class RequestResultMatchers {
 
 	/**
 	 * Assert whether asynchronous processing started, usually as a result of a
-	 * controller method returning {@link Callable} or {@link DeferredResult}.
+	 * com.danbro.springmvc.controller method returning {@link Callable} or {@link DeferredResult}.
 	 * <p>The test will await the completion of a {@code Callable} so that
 	 * {@link #asyncResult(Matcher)} can be used to assert the resulting value.
 	 * Neither a {@code Callable} nor a {@code DeferredResult} will complete
@@ -81,7 +81,7 @@ public class RequestResultMatchers {
 
 	/**
 	 * Assert the result from asynchronous processing with the given matcher.
-	 * <p>This method can be used when a controller method returns {@link Callable}
+	 * <p>This method can be used when a com.danbro.springmvc.controller method returns {@link Callable}
 	 * or {@link WebAsyncTask}.
 	 */
 	@SuppressWarnings("unchecked")
@@ -95,7 +95,7 @@ public class RequestResultMatchers {
 
 	/**
 	 * Assert the result from asynchronous processing.
-	 * <p>This method can be used when a controller method returns {@link Callable}
+	 * <p>This method can be used when a com.danbro.springmvc.controller method returns {@link Callable}
 	 * or {@link WebAsyncTask}. The value matched is the value returned from the
 	 * {@code Callable} or the exception raised.
 	 */

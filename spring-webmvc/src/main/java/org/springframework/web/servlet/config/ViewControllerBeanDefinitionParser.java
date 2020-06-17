@@ -37,9 +37,9 @@ import org.springframework.web.servlet.view.RedirectView;
  * {@link org.springframework.beans.factory.xml.BeanDefinitionParser} that
  * parses the following MVC namespace elements:
  * <ul>
- * <li>{@code <view-controller>}
- * <li>{@code <redirect-view-controller>}
- * <li>{@code <status-controller>}
+ * <li>{@code <view-com.danbro.springmvc.controller>}
+ * <li>{@code <redirect-view-com.danbro.springmvc.controller>}
+ * <li>{@code <status-com.danbro.springmvc.controller>}
  * </ul>
  *
  * <p>All elements result in the registration of a
@@ -70,7 +70,7 @@ class ViewControllerBeanDefinitionParser implements BeanDefinitionParser {
 		// Ensure BeanNameUrlHandlerMapping (SPR-8289) and default HandlerAdapters are not "turned off"
 		MvcNamespaceUtils.registerDefaultComponents(parserContext, source);
 
-		// Create view controller bean definition
+		// Create view com.danbro.springmvc.controller bean definition
 		RootBeanDefinition controller = new RootBeanDefinition(ParameterizableViewController.class);
 		controller.setSource(source);
 
@@ -81,7 +81,7 @@ class ViewControllerBeanDefinitionParser implements BeanDefinitionParser {
 		}
 
 		String name = element.getLocalName();
-		if (name.equals("view-controller")) {
+		if (name.equals("view-com.danbro.springmvc.controller")) {
 			if (element.hasAttribute("view-name")) {
 				controller.getPropertyValues().add("viewName", element.getAttribute("view-name"));
 			}
@@ -89,10 +89,10 @@ class ViewControllerBeanDefinitionParser implements BeanDefinitionParser {
 				controller.getPropertyValues().add("statusCode", statusCode);
 			}
 		}
-		else if (name.equals("redirect-view-controller")) {
+		else if (name.equals("redirect-view-com.danbro.springmvc.controller")) {
 			controller.getPropertyValues().add("view", getRedirectView(element, statusCode, source));
 		}
-		else if (name.equals("status-controller")) {
+		else if (name.equals("status-com.danbro.springmvc.controller")) {
 			controller.getPropertyValues().add("statusCode", statusCode);
 			controller.getPropertyValues().add("statusOnly", true);
 		}

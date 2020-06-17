@@ -349,7 +349,7 @@ public class RequestMappingHandlerAdapterTests {
 
 	/**
 	 * This class additionally implements {@link RequestBodyAdvice} solely for the purpose
-	 * of verifying that controller advice implementing both {@link ResponseBodyAdvice}
+	 * of verifying that com.danbro.springmvc.controller advice implementing both {@link ResponseBodyAdvice}
 	 * and {@link RequestBodyAdvice} does not get registered twice.
 	 *
 	 * @see <a href="https://github.com/spring-projects/spring-framework/pull/22638">gh-22638</a>

@@ -41,6 +41,8 @@ import org.springframework.web.context.request.async.DeferredResult.DeferredResu
  * The central class for managing asynchronous request processing, mainly intended
  * as an SPI and not typically used directly by application classes.
  *
+ * 用于管理异步请求处理的中央类，主要用作SPI(?)，通常不被应用程序类直接使用。
+ *
  * <p>An async scenario starts with request processing as usual in a thread (T1).
  * Concurrent request handling can be initiated by calling
  * {@link #startCallableProcessing(Callable, Object...) startCallableProcessing} or
@@ -50,6 +52,12 @@ import org.springframework.web.context.request.async.DeferredResult.DeferredResu
  * result in a third thread (T3). Within the dispatched thread (T3), the saved
  * result can be accessed via {@link #getConcurrentResult()} or its presence
  * detected via {@link #hasConcurrentResult()}.
+ *
+ * 异步场景从线程(T1)中的请求处理开始。
+ * 并发请求处理可以通过调用 startCallableProcessing(Callable, Object...)
+ * 或者 startDeferredResultProcessing(DeferredResult, Object...) 来发起
+ * 两者都在单独的线程(T2)中产生结果。结果被保存并将请求分派给容器，以便在第三个线程中继续处理保存的结果(T3)，
+ * 可以通过 getConcurrentResult() 或通过 hasConcurrentResult() 检测到保存的结果。
  *
  * @author Rossen Stoyanchev
  * @author Juergen Hoeller
@@ -131,6 +139,11 @@ public final class WebAsyncManager {
 	 * of "false" means concurrent handling was either not started or possibly
 	 * that it has completed and the request was dispatched for further
 	 * processing of the concurrent result.
+	 *
+	 * 当前请求选择的处理程序是否选择异步处理请求。返回值为“true”表示正在进行并发处理，
+	 * 并且响应将保持打开状态。如果返回值为“false”，则表示并发处理没有启动，或者可能已经完成，
+	 * 请求已经被分派进行并发结果的进一步处理。
+	 *
 	 */
 	public boolean isConcurrentHandlingStarted() {
 		return (this.asyncWebRequest != null && this.asyncWebRequest.isAsyncStarted());

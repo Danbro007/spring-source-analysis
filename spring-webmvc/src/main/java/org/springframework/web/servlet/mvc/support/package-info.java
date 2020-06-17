@@ -1,6 +1,6 @@
 /**
  * Support package for MVC controllers.
- * Contains a special HandlerMapping for controller conventions.
+ * Contains a special HandlerMapping for com.danbro.springmvc.controller conventions.
  */
 @NonNullApi
 @NonNullFields

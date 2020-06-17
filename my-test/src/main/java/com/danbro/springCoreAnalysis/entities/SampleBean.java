@@ -3,17 +3,16 @@ package com.danbro.springCoreAnalysis.entities;
 /**
  * @Classname SampleBean
  * @Description TODO
- * @Date 2020/5/28 22:29
+ * @Date 2020/6/9 19:48
  * @Author Danrbo
  */
+
 public class SampleBean {
 	private int id;
+	private String name;
 
-	@Override
-	public String toString() {
-		return "SampleBean{" +
-				"id=" + id +
-				'}';
+	public SampleBean() {
+		System.out.println("SampleBean构造器");
 	}
 
 	public int getId() {
@@ -21,7 +20,22 @@ public class SampleBean {
 	}
 
 	public void setId(int id) {
-		System.out.println("注入属性【id】");
 		this.id = id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	@Override
+	public String toString() {
+		return "SampleBean{" +
+				"id=" + id +
+				", name='" + name + '\'' +
+				'}';
 	}
 }

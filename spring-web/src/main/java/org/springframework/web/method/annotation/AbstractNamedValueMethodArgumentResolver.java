@@ -95,16 +95,17 @@ public abstract class AbstractNamedValueMethodArgumentResolver implements Handle
 	@Nullable
 	public final Object resolveArgument(MethodParameter parameter, @Nullable ModelAndViewContainer mavContainer,
 			NativeWebRequest webRequest, @Nullable WebDataBinderFactory binderFactory) throws Exception {
-
+		// 找到参数名相关的信息
 		NamedValueInfo namedValueInfo = getNamedValueInfo(parameter);
+		// 返回一个 MethodParameter 变体
 		MethodParameter nestedParameter = parameter.nestedIfOptional();
-
+		// 解析出参数名
 		Object resolvedName = resolveStringValue(namedValueInfo.name);
 		if (resolvedName == null) {
 			throw new IllegalArgumentException(
 					"Specified name must not resolve to null: [" + namedValueInfo.name + "]");
 		}
-
+		// resolveName() 方法是抽象方法让子类自己实现
 		Object arg = resolveName(resolvedName.toString(), nestedParameter, webRequest);
 		if (arg == null) {
 			if (namedValueInfo.defaultValue != null) {

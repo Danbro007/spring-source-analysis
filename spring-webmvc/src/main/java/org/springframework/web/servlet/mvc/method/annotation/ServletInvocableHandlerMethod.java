@@ -51,6 +51,10 @@ import org.springframework.web.util.NestedServletException;
  * also supports setting the response status based on a method-level
  * {@code @ResponseStatus} annotation.
  *
+ * 扩展了 InvocableHandlerMethod ，能够通过注册的 HandlerMethodReturnValueHandler 处理返回值，
+ * 还支持基于方法级 @ResponseStatus 注解设置响应状态。
+ *
+ *
  * <p>A {@code null} return value (including void) may be interpreted as the
  * end of request processing in combination with a {@code @ResponseStatus}
  * annotation, a not-modified check condition
@@ -96,13 +100,16 @@ public class ServletInvocableHandlerMethod extends InvocableHandlerMethod {
 	/**
 	 * Invoke the method and handle the return value through one of the
 	 * configured {@link HandlerMethodReturnValueHandler HandlerMethodReturnValueHandlers}.
+	 *
+	 * 调用方法并通过配置的 HandlerMethodReturnValueHandler 处理返回值
+	 *
 	 * @param webRequest the current request
 	 * @param mavContainer the ModelAndViewContainer for this request
 	 * @param providedArgs "given" arguments matched by type (not resolved)
 	 */
 	public void invokeAndHandle(ServletWebRequest webRequest, ModelAndViewContainer mavContainer,
 			Object... providedArgs) throws Exception {
-
+		//是用 HandlerMethodArgumentResolver 解析参数
 		Object returnValue = invokeForRequest(webRequest, mavContainer, providedArgs);
 		setResponseStatus(webRequest);
 
@@ -186,7 +193,7 @@ public class ServletInvocableHandlerMethod extends InvocableHandlerMethod {
 	/**
 	 * Create a nested ServletInvocableHandlerMethod subclass that returns the
 	 * the given value (or raises an Exception if the value is one) rather than
-	 * actually invoking the controller method. This is useful when processing
+	 * actually invoking the com.danbro.springmvc.controller method. This is useful when processing
 	 * async return values (e.g. Callable, DeferredResult, ListenableFuture).
 	 */
 	ServletInvocableHandlerMethod wrapConcurrentResult(Object result) {
@@ -196,7 +203,7 @@ public class ServletInvocableHandlerMethod extends InvocableHandlerMethod {
 
 	/**
 	 * A nested subclass of {@code ServletInvocableHandlerMethod} that uses a
-	 * simple {@link Callable} instead of the original controller as the handler in
+	 * simple {@link Callable} instead of the original com.danbro.springmvc.controller as the handler in
 	 * order to return the fixed (concurrent) result value given to it. Effectively
 	 * "resumes" processing with the asynchronously produced return value.
 	 */
@@ -222,7 +229,7 @@ public class ServletInvocableHandlerMethod extends InvocableHandlerMethod {
 		}
 
 		/**
-		 * Bridge to actual controller type-level annotations.
+		 * Bridge to actual com.danbro.springmvc.controller type-level annotations.
 		 */
 		@Override
 		public Class<?> getBeanType() {
@@ -239,7 +246,7 @@ public class ServletInvocableHandlerMethod extends InvocableHandlerMethod {
 		}
 
 		/**
-		 * Bridge to controller method-level annotations.
+		 * Bridge to com.danbro.springmvc.controller method-level annotations.
 		 */
 		@Override
 		public <A extends Annotation> A getMethodAnnotation(Class<A> annotationType) {
@@ -247,7 +254,7 @@ public class ServletInvocableHandlerMethod extends InvocableHandlerMethod {
 		}
 
 		/**
-		 * Bridge to controller method-level annotations.
+		 * Bridge to com.danbro.springmvc.controller method-level annotations.
 		 */
 		@Override
 		public <A extends Annotation> boolean hasMethodAnnotation(Class<A> annotationType) {

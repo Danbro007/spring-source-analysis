@@ -1,10 +1,12 @@
-package com.danbro.springCoreAnalysis.service;
+package com.danbro.springLifeCycleAnalysis.entities;
 
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.*;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
-import org.springframework.stereotype.Component;
+import org.springframework.context.*;
+import org.springframework.context.annotation.ImportAware;
+import org.springframework.core.env.Environment;
+import org.springframework.core.io.ResourceLoader;
+import org.springframework.core.type.AnnotationMetadata;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -15,9 +17,10 @@ import javax.annotation.PreDestroy;
  * @Date 2020/6/1 10:34git
  * @Author Danrbo
  */
-public class IndexService implements ApplicationContextAware, BeanNameAware, BeanFactoryAware, InitializingBean, BeanClassLoaderAware,DisposableBean {
-//	@Autowired
-//	UserService userService;
+public class SampleBean implements ApplicationContextAware, BeanNameAware, BeanFactoryAware,
+		InitializingBean, BeanClassLoaderAware, DisposableBean, EnvironmentAware,
+		ImportAware, ResourceLoaderAware,
+		ApplicationEventPublisherAware {
 	private int id;
 	private String name;
 
@@ -26,8 +29,11 @@ public class IndexService implements ApplicationContextAware, BeanNameAware, Bea
 	}
 
 	public void setName(String name) {
+
 		System.out.println("注入属性[name]");
 		this.name = name;
+		System.out.println("bean的属性注入完毕");
+		System.out.println("----------------------------");
 	}
 
 	public int getId() {
@@ -35,28 +41,26 @@ public class IndexService implements ApplicationContextAware, BeanNameAware, Bea
 	}
 
 	public void setId(int id) {
+		System.out.println("----------------------------");
+		System.out.println("开始bean的属性注入");
 		System.out.println("注入属性[id]");
 		this.id = id;
 	}
 
-	public void testAop1() {
-		System.out.println("this is IndexService AOP1");
-	}
-	public void testAop2() {
-		System.out.println("this is IndexService AOP2");
-	}
 
-	public IndexService() {
-		System.out.println("IndexService 无参构造器");
+	public SampleBean() {
+		System.out.println("----------------------------");
+		System.out.println("SampleBean实例化完毕");
+		System.out.println("----------------------------");
 	}
 
 	@PostConstruct
-	public void post(){
+	public void post() {
 		System.out.println("调用@PostConstruct注解的方法");
 	}
 
 	@PreDestroy
-	public void preDestroy(){
+	public void preDestroy() {
 		System.out.println("执行 PreDestroy");
 	}
 
@@ -86,15 +90,15 @@ public class IndexService implements ApplicationContextAware, BeanNameAware, Bea
 	}
 
 	@Override
-	public void destroy() throws Exception{
+	public void destroy() throws Exception {
 		System.out.println("执行 Destroy");
 	}
 
-	public void destroyMethod(){
+	public void destroyMethod() {
 		System.out.println("执行 destroyMethod");
 	}
 
-	public void initMethod(){
+	public void initMethod() {
 		System.out.println("执行 initMethod");
 	}
 
@@ -104,6 +108,27 @@ public class IndexService implements ApplicationContextAware, BeanNameAware, Bea
 				"id=" + id +
 				", name='" + name + '\'' +
 				'}';
+	}
+
+	@Override
+	public void setEnvironment(Environment environment) {
+		System.out.println("调用EnvironmentAware接口的setEnvironment()方法");
+	}
+
+	@Override
+	public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher) {
+		System.out.println("调用ApplicationEventPublisherAware接口的setApplicationEventPublisher()方法");
+	}
+
+	@Override
+	public void setResourceLoader(ResourceLoader resourceLoader) {
+		System.out.println("调用ResourceLoaderAware接口的setResourceLoader()方法");
+
+	}
+
+	@Override
+	public void setImportMetadata(AnnotationMetadata importMetadata) {
+		System.out.println("调用ImportAware接口的setImportMetadata()方法");
 	}
 }
 

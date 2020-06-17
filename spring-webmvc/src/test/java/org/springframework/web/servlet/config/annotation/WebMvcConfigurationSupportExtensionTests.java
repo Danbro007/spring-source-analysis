@@ -117,7 +117,7 @@ public class WebMvcConfigurationSupportExtensionTests {
 	public void setUp() {
 		this.context = new StaticWebApplicationContext();
 		this.context.setServletContext(new MockServletContext(new FileSystemResourceLoader()));
-		this.context.registerSingleton("controller", TestController.class);
+		this.context.registerSingleton("com.danbro.springmvc.controller", TestController.class);
 		this.context.registerSingleton("userController", UserController.class);
 
 		this.config = new TestWebMvcConfigurationSupport();

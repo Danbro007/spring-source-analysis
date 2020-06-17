@@ -193,7 +193,7 @@ understand. However, special considerations apply with regards to JSR-356 runtim
 The Java WebSocket API (JSR-356) provides two deployment mechanisms. The first
 involves a Servlet container classpath scan (a Servlet 3 feature) at startup.
 The other is a registration API to use at Servlet container initialization.
-Neither of these mechanism makes it possible to use a single "`front controller`"
+Neither of these mechanism makes it possible to use a single "`front com.danbro.springmvc.controller`"
 for all HTTP processing -- including WebSocket handshake and all other HTTP
 requests -- such as Spring MVC's `DispatcherServlet`.
 
@@ -1174,7 +1174,7 @@ to the message broker.
 An annotated `@Controller` that handles a STOMP message from a client may send a message to
 the message broker through the `brokerChannel`, and the broker broadcasts the
 message to matching subscribers through the `clientOutboundChannel`. The same
-controller can also do the same in response to HTTP requests, so a client can perform an
+com.danbro.springmvc.controller can also do the same in response to HTTP requests, so a client can perform an
 HTTP POST, and then a `@PostMapping` method can send a message to the message broker
 to broadcast to subscribed clients.
 
@@ -1251,7 +1251,7 @@ methods, as described in the following topics:
 You can use `@MessageMapping` to annotate methods that route messages based on their
 destination. It is supported at the method level as well as at the type level. At the type
 level, `@MessageMapping` is used to express shared mappings across all methods in a
-controller.
+com.danbro.springmvc.controller.
 
 By default, the mapping values are Ant-style path patterns (for example `/thing*`, `/thing/**`),
 including support for template variables (for example, `/thing/{id}`). The values can be
@@ -1345,7 +1345,7 @@ When is this useful? Assume that the broker is mapped to `/topic` and `/queue`, 
 application controllers are mapped to `/app`. In this setup, the broker stores all
 subscriptions to `/topic` and `/queue` that are intended for repeated broadcasts, and
 there is no need for the application to get involved. A client could also also subscribe to
-some `/app` destination, and a controller could return a value in response to that
+some `/app` destination, and a com.danbro.springmvc.controller could return a value in response to that
 subscription without involving the broker without storing or using the subscription again
 (effectively a one-time request-reply exchange). One use case for this is populating a UI
 with initial data on startup.
@@ -1353,7 +1353,7 @@ with initial data on startup.
 When is this not useful? Do not try to map broker and controllers to the same destination
 prefix unless you want both to independently process messages, including subscriptions,
 for some reason. Inbound messages are handled in parallel. There are no guarantees whether
-a broker or a controller processes a given message first. If the goal is to be notified
+a broker or a com.danbro.springmvc.controller processes a given message first. If the goal is to be notified
 when a subscription is stored and ready for broadcasts, a client should ask for a
 receipt if the server supports it (simple broker does not). For example, with the Java
 <<websocket-stomp-client, STOMP client>>, you could do the following to add a receipt:
@@ -1414,7 +1414,7 @@ Typically, `@MessageExceptionHandler` methods apply within the `@Controller` cla
 (or class hierarchy) in which they are declared. If you want such methods to apply
 more globally (across controllers), you can declare them in a class marked with
 `@ControllerAdvice`. This is comparable to the
-<<web.adoc#mvc-ann-controller-advice, similar support>> available in Spring MVC.
+<<web.adoc#mvc-ann-com.danbro.springmvc.controller-advice, similar support>> available in Spring MVC.
 
 
 
@@ -1702,7 +1702,7 @@ The following example shows the XML configuration equivalent of the preceding ex
 	</beans>
 ----
 
-After that, a controller can use a dot (`.`) as the separator in `@MessageMapping` methods,
+After that, a com.danbro.springmvc.controller can use a dot (`.`) as the separator in `@MessageMapping` methods,
 as the following example shows:
 
 [source,java,indent=0]
@@ -2221,7 +2221,7 @@ transport-level errors including `ConnectionLostException`.
 === WebSocket Scope
 
 Each WebSocket session has a map of attributes. The map is attached as a header to
-inbound client messages and may be accessed from a controller method, as the following example shows:
+inbound client messages and may be accessed from a com.danbro.springmvc.controller method, as the following example shows:
 
 [source,java,indent=0]
 [subs="verbatim,quotes"]
@@ -2281,7 +2281,7 @@ scope proxy mode for WebSocket-scoped beans, as the following example shows:
 ----
 
 As with any custom scope, Spring initializes a new `MyBean` instance the first
-time it is accessed from the controller and stores the instance in the WebSocket
+time it is accessed from the com.danbro.springmvc.controller and stores the instance in the WebSocket
 session attributes. The same instance is subsequently returned until the session
 ends. WebSocket-scoped beans have all Spring lifecycle methods invoked, as
 shown in the preceding examples.
@@ -2527,8 +2527,8 @@ in an overall test strategy. Server-side tests are more focused and easier to wr
 and maintain. End-to-end integration tests, on the other hand, are more complete and
 test much more, but they are also more involved to write and maintain.
 
-The simplest form of server-side tests is to write controller unit tests. However,
-this is not useful enough, since much of what a controller does depends on its
+The simplest form of server-side tests is to write com.danbro.springmvc.controller unit tests. However,
+this is not useful enough, since much of what a com.danbro.springmvc.controller does depends on its
 annotations. Pure unit tests simply cannot test that.
 
 Ideally, controllers under test should be invoked as they are at runtime, much like
@@ -2539,7 +2539,7 @@ two possible alternatives here, either use a "`context-based`" or use a "`standa
 
 * Load the actual Spring configuration with the help of the
 Spring TestContext framework, inject `clientInboundChannel` as a test field, and
-use it to send messages to be handled by controller methods.
+use it to send messages to be handled by com.danbro.springmvc.controller methods.
 
 * Manually set up the minimum Spring framework infrastructure required to invoke
 controllers (namely the `SimpAnnotationMethodMessageHandler`) and pass messages for

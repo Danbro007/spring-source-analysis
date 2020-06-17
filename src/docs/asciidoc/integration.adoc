@@ -1319,7 +1319,7 @@ a hand-coded Business Delegate unless you actually add real value in such code.
 [[ejb-access-local]]
 ==== Accessing Local SLSBs
 
-Assume that we have a web controller that needs to use a local EJB. We follow best
+Assume that we have a web com.danbro.springmvc.controller that needs to use a local EJB. We follow best
 practice and use the EJB Business Methods Interface pattern, so that the EJB's local
 interface extends a non-EJB-specific business methods interface. We call this
 business methods interface `MyComponent`. The following example shows such an interface:
@@ -1339,9 +1339,9 @@ switch to a POJO (plain old Java object) implementation of the service if it mak
 to do so. We also need to implement the local home interface and provide an
 implementation class that implements `SessionBean` and the `MyComponent` business
 methods interface. Now, the only Java coding we need to do to hook up our web tier
-controller to the EJB implementation is to expose a setter method of type `MyComponent`
-on the controller. This saves the reference as an instance variable in the
-controller. The following example shows how to do so:
+com.danbro.springmvc.controller to the EJB implementation is to expose a setter method of type `MyComponent`
+on the com.danbro.springmvc.controller. This saves the reference as an instance variable in the
+com.danbro.springmvc.controller. The following example shows how to do so:
 
 [source,java,indent=0]
 [subs="verbatim,quotes"]
@@ -1353,11 +1353,11 @@ controller. The following example shows how to do so:
 	}
 ----
 
-We can subsequently use this instance variable in any business method in the controller.
-Now, assuming we obtain our controller object out of a Spring container, we can
+We can subsequently use this instance variable in any business method in the com.danbro.springmvc.controller.
+Now, assuming we obtain our com.danbro.springmvc.controller object out of a Spring container, we can
 (in the same context) configure a `LocalStatelessSessionProxyFactoryBean` instance,
 which is the EJB proxy object. We configure the proxy and set the
-`myComponent` property of the controller with the following configuration entry:
+`myComponent` property of the com.danbro.springmvc.controller with the following configuration entry:
 
 [source,xml,indent=0]
 [subs="verbatim,quotes"]
@@ -1380,7 +1380,7 @@ method interface. The EJB local home is cached on startup, so there is only a si
 lookup. Each time the EJB is invoked, the proxy invokes the `classname` method on the
 local EJB and invokes the	corresponding business method on the EJB.
 
-The `myController` bean definition sets the `myComponent` property of the controller
+The `myController` bean definition sets the `myComponent` property of the com.danbro.springmvc.controller
 class to the EJB proxy.
 
 Alternatively (and preferably in case of many such proxy definitions), consider using

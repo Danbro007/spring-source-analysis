@@ -558,11 +558,11 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 
 		// Instantiate the bean.
 		BeanWrapper instanceWrapper = null;
-		//如果是单例则到factoryBean实例缓存里去取
+		//如果当前bean是单例则尝试到factoryBean实例缓存里去取
 		if (mbd.isSingleton()) {
 			instanceWrapper = this.factoryBeanInstanceCache.remove(beanName);
 		}
-		// 说明不是 FactoryBean，这里给Bean找到构造器并用构造器实例化然后用InstanceWrapper封装。
+		// factoryBean实例缓存里获取不到说明是第一次创建，这里给Bean找到构造器并用构造器实例化然后用InstanceWrapper封装。
 		if (instanceWrapper == null) {
 			//完成bean的实例化，但是还没有初始化，只是一个java普通对象还不是spring的bean，依赖还没有注入。
 			instanceWrapper = createBeanInstance(beanName, mbd, args);

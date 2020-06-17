@@ -346,6 +346,10 @@ public abstract class BeanFactoryUtils {
 	 * Return all beans of the given type or subtypes, also picking up beans defined in
 	 * ancestor bean factories if the current bean factory is a HierarchicalBeanFactory.
 	 * The returned Map will only contain beans of this type.
+	 *
+	 * 返回给定的类型或者子类型的所有bean。如果当前的bean工厂是一个HierarchicalBeanFactory，还可以获取在祖先bean工厂中定义的bean。
+	 * 返回的 Map 将只包含这种类型的bean。
+	 *
 	 * <p>Does consider objects created by FactoryBeans if the "allowEagerInit" flag is set,
 	 * which means that FactoryBeans will get initialized. If the object created by the
 	 * FactoryBean doesn't match, the raw FactoryBean itself will be matched against the
@@ -375,10 +379,13 @@ public abstract class BeanFactoryUtils {
 
 		Assert.notNull(lbf, "ListableBeanFactory must not be null");
 		Map<String, T> result = new LinkedHashMap<>(4);
+		// 到 IOC 容器里获取所有符合 type 类型的 bean 放入 result 里
 		result.putAll(lbf.getBeansOfType(type, includeNonSingletons, allowEagerInit));
+		//如果当前的 bean 工厂是一个 HierarchicalBeanFactory，还可以获取在祖先bean工厂中定义的bean。
 		if (lbf instanceof HierarchicalBeanFactory) {
 			HierarchicalBeanFactory hbf = (HierarchicalBeanFactory) lbf;
 			if (hbf.getParentBeanFactory() instanceof ListableBeanFactory) {
+				//到父BeanFactory里获取
 				Map<String, T> parentResult = beansOfTypeIncludingAncestors(
 						(ListableBeanFactory) hbf.getParentBeanFactory(), type, includeNonSingletons, allowEagerInit);
 				parentResult.forEach((beanName, beanInstance) -> {

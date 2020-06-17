@@ -915,10 +915,10 @@ inter-dependent, without ever blocking until the end.
 
 [NOTE]
 ====
-With `Flux` or `Mono`, you should never have to block in a Spring MVC or Spring WebFlux controller.
-Simply return the resulting reactive type from the controller method. The same principle apply to
+With `Flux` or `Mono`, you should never have to block in a Spring MVC or Spring WebFlux com.danbro.springmvc.controller.
+Simply return the resulting reactive type from the com.danbro.springmvc.controller method. The same principle apply to
 Kotlin Coroutines and Spring WebFlux, just use suspending function or return `Flow` in your
-controller method . 
+com.danbro.springmvc.controller method .
 ====
 
 

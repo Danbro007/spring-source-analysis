@@ -59,6 +59,8 @@ public class SourceFilteringListener implements GenericApplicationListener, Smar
 	 * Create a SourceFilteringListener for the given event source,
 	 * expecting subclasses to override the {@link #onApplicationEventInternal}
 	 * method (instead of specifying a delegate listener).
+	 *
+	 * 通过给定的事件源创建 SourceFilteringListener。期望子类重写 onApplicationEventInternal() 方法（而不是指定一个委托监听器）
 	 * @param source the event source that this listener filters for,
 	 * only processing events from this source
 	 */
@@ -98,6 +100,9 @@ public class SourceFilteringListener implements GenericApplicationListener, Smar
 	/**
 	 * Actually process the event, after having filtered according to the
 	 * desired event source already.
+	 *
+	 * 根据期望的事件源过滤后，实际处理事件。
+	 *
 	 * <p>The default implementation invokes the specified delegate, if any.
 	 * @param event the event to process (matching the specified source)
 	 */

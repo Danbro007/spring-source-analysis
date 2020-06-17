@@ -1822,7 +1822,8 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 			Object beanInstance, String name, String beanName, @Nullable RootBeanDefinition mbd) {
 
 		// Don't let calling code try to dereference the factory if the bean isn't a factory.
-		//判断是不是工厂Bean通过BeanName开头是不是“&”
+		//通过BeanName开头是不是“&”判断是不是FactoryBean
+		//如果是则返回FactoryBean本身
 		if (BeanFactoryUtils.isFactoryDereference(name)) {
 			if (beanInstance instanceof NullBean) {
 				return beanInstance;
@@ -1841,11 +1842,15 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 		// Now we have the bean instance, which may be a normal bean or a FactoryBean.
 		// If it's a FactoryBean, we use it to create a bean instance, unless the
 		// caller actually wants a reference to the factory.
-		//如果不是工厂Bean返回自身
+		//如果不是FactoryBean返回自身
 		if (!(beanInstance instanceof FactoryBean)) {
 			return beanInstance;
 		}
-		//如果之前不是FactoryBean则把这个bean的BeanDefinition设置为FactoryBean
+		/**
+		 * 当前bean的beanName不是“&”开头但是又是FactoryBean实现类
+		 * 说明这个FactoryBean是用getObject()方法生产bean
+		 * 如果之前不是FactoryBean则把这个bean的BeanDefinition设置为FactoryBean
+		 */
 		Object object = null;
 		if (mbd != null) {
 			mbd.isFactoryBean = true;
@@ -1859,11 +1864,12 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 			// Return bean instance from factory.
 			FactoryBean<?> factory = (FactoryBean<?>) beanInstance;
 			// Caches object obtained from FactoryBean if it is a singleton.
-			//
+			//如果是单例则缓存从FactoryBean获取对象
 			if (mbd == null && containsBeanDefinition(beanName)) {
 				mbd = getMergedLocalBeanDefinition(beanName);
 			}
 			boolean synthetic = (mbd != null && mbd.isSynthetic());
+			//通过FactoryBean生产bean
 			object = getObjectFromFactoryBean(factory, beanName, !synthetic);
 		}
 		return object;

@@ -57,7 +57,7 @@ public final class MockMvcBuilders {
 	 * programmatically.
 	 * <p>This allows full control over the instantiation and initialization of
 	 * controllers and their dependencies, similar to plain unit tests while
-	 * also making it possible to test one controller at a time.
+	 * also making it possible to test one com.danbro.springmvc.controller at a time.
 	 * <p>When this builder is used, the minimum infrastructure required by the
 	 * {@link org.springframework.web.servlet.DispatcherServlet DispatcherServlet}
 	 * to serve requests with annotated controllers is created automatically

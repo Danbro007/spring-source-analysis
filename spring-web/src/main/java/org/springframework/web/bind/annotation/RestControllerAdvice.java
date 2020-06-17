@@ -30,7 +30,7 @@ import org.springframework.core.annotation.AliasFor;
  * {@link ControllerAdvice @ControllerAdvice}
  * and {@link ResponseBody @ResponseBody}.
  *
- * <p>Types that carry this annotation are treated as controller advice where
+ * <p>Types that carry this annotation are treated as com.danbro.springmvc.controller advice where
  * {@link ExceptionHandler @ExceptionHandler} methods assume
  * {@link ResponseBody @ResponseBody} semantics by default.
  *

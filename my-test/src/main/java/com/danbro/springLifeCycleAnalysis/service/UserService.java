@@ -1,7 +1,4 @@
-package com.danbro.springCoreAnalysis.service;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+package com.danbro.springLifeCycleAnalysis.service;
 
 /**
  * @Classname MessageServiceImpl

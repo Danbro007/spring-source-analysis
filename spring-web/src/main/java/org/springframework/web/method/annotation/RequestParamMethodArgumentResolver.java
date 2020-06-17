@@ -116,7 +116,13 @@ public class RequestParamMethodArgumentResolver extends AbstractNamedValueMethod
 	 * Supports the following:
 	 * <ul>
 	 * <li>@RequestParam-annotated method arguments.
+	 *
+	 * 被 @RequestParam 注解的方法参数
+	 *
 	 * This excludes {@link Map} params where the annotation does not specify a name.
+	 *
+	 * 这排除了 Map 参数类型 ，这个类型注解没有指定名称的参数。
+	 *
 	 * See {@link RequestParamMapMethodArgumentResolver} instead for such params.
 	 * <li>Arguments of type {@link MultipartFile} unless annotated with @{@link RequestPart}.
 	 * <li>Arguments of type {@code Part} unless annotated with @{@link RequestPart}.
@@ -125,6 +131,7 @@ public class RequestParamMethodArgumentResolver extends AbstractNamedValueMethod
 	 */
 	@Override
 	public boolean supportsParameter(MethodParameter parameter) {
+		//
 		if (parameter.hasParameterAnnotation(RequestParam.class)) {
 			if (Map.class.isAssignableFrom(parameter.nestedIfOptional().getNestedParameterType())) {
 				RequestParam requestParam = parameter.getParameterAnnotation(RequestParam.class);
@@ -161,7 +168,7 @@ public class RequestParamMethodArgumentResolver extends AbstractNamedValueMethod
 	@Nullable
 	protected Object resolveName(String name, MethodParameter parameter, NativeWebRequest request) throws Exception {
 		HttpServletRequest servletRequest = request.getNativeRequest(HttpServletRequest.class);
-
+		// 尝试解析参数是不是上传文件请求
 		if (servletRequest != null) {
 			Object mpArg = MultipartResolutionDelegate.resolveMultipartArgument(name, parameter, servletRequest);
 			if (mpArg != MultipartResolutionDelegate.UNRESOLVABLE) {
@@ -178,6 +185,7 @@ public class RequestParamMethodArgumentResolver extends AbstractNamedValueMethod
 			}
 		}
 		if (arg == null) {
+			// 真正解析参数的方法
 			String[] paramValues = request.getParameterValues(name);
 			if (paramValues != null) {
 				arg = (paramValues.length == 1 ? paramValues[0] : paramValues);

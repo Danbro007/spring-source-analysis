@@ -77,10 +77,10 @@ import org.springframework.messaging.Message;
  * type-level {@code @MessageMapping} for declaring a common pattern prefix
  * (or prefixes).
  *
- * <p><b>NOTE:</b> When using controller interfaces (e.g. for AOP proxying),
+ * <p><b>NOTE:</b> When using com.danbro.springmvc.controller interfaces (e.g. for AOP proxying),
  * make sure to consistently put <i>all</i> your mapping annotations - such as
  * {@code @MessageMapping} and {@code @SubscribeMapping} - on
- * the controller <i>interface</i> rather than on the implementation class.
+ * the com.danbro.springmvc.controller <i>interface</i> rather than on the implementation class.
  *
  * @author Rossen Stoyanchev
  * @since 4.0

@@ -614,16 +614,28 @@ public class AntPathMatcher implements PathMatcher {
 	/**
 	 * Given a full path, returns a {@link Comparator} suitable for sorting patterns in order of
 	 * explicitness.
+	 *
+	 * 给定一个完整的路径，返回一个适合按明确顺序排序模式的 Comparator。
+	 *
 	 * <p>This{@code Comparator} will {@linkplain java.util.List#sort(Comparator) sort}
 	 * a list so that more specific patterns (without uri templates or wild cards) come before
 	 * generic patterns. So given a list with the following patterns:
+	 *
+	 * 	这个 Comparator 将排序一个更具体模式（没有 uri 模板或者通配符 ）的列表。给定一个具有以下模式的列表：
+	 *
 	 * <ol>
 	 * <li>{@code /hotels/new}</li>
 	 * <li>{@code /hotels/{hotel}}</li> <li>{@code /hotels/*}</li>
 	 * </ol>
+	 *
 	 * the returned comparator will sort this list so that the order will be as indicated.
 	 * <p>The full path given as parameter is used to test for exact matches. So when the given path
 	 * is {@code /hotels/2}, the pattern {@code /hotels/2} will be sorted before {@code /hotels/1}.
+	 *
+	 * 返回的 Comparator 将对该列表进行排序，以便按照指示的顺序进行排序。
+	 * 作为参数给出的完整路径用于测试精确匹配。
+	 * 所以当给定的路径是 /hotels/2,则模式 /hotels/2 会排在 /hotels/1 之前。
+	 *
 	 * @param path the full path to use for comparison
 	 * @return a comparator capable of sorting patterns in order of explicitness
 	 */

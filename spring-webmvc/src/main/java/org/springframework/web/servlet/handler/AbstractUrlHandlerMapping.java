@@ -93,6 +93,7 @@ public abstract class AbstractUrlHandlerMapping extends AbstractHandlerMapping i
 
 	/**
 	 * Whether to match to URLs irrespective of the presence of a trailing slash.
+	 * 是否匹配 URL，而不考虑是否有尾随斜杠。
 	 */
 	public boolean useTrailingSlashMatch() {
 		return this.useTrailingSlashMatch;
@@ -102,7 +103,7 @@ public abstract class AbstractUrlHandlerMapping extends AbstractHandlerMapping i
 	 * Set whether to lazily initialize handlers. Only applicable to
 	 * singleton handlers, as prototypes are always lazily initialized.
 	 * Default is "false", as eager initialization allows for more efficiency
-	 * through referencing the controller objects directly.
+	 * through referencing the com.danbro.springmvc.controller objects directly.
 	 * <p>If you want to allow your controllers to be lazily initialized,
 	 * make them "lazy-init" and set this flag to true. Just making them
 	 * "lazy-init" will not work, as they are initialized through the
@@ -114,6 +115,9 @@ public abstract class AbstractUrlHandlerMapping extends AbstractHandlerMapping i
 
 	/**
 	 * Look up a handler for the URL path of the given request.
+	 *
+	 * 通过请求的 URL 路径查找出相应的 handler
+	 *
 	 * @param request current HTTP request
 	 * @return the handler instance, or {@code null} if none found
 	 */
@@ -153,6 +157,12 @@ public abstract class AbstractUrlHandlerMapping extends AbstractHandlerMapping i
 	 * both "/test" and "/team". For details, see the AntPathMatcher class.
 	 * <p>Looks for the most exact pattern, where most exact is defined as
 	 * the longest path pattern.
+	 *
+	 * 通过给定的 URl 路径 找到 handler 的实例。
+	 * 支持直接匹配模式，比如已注册的是 “/test” 会匹配到 "/test" 这个 URL 路径。还支持各种各样的 Ant 风格的 模式匹配，
+	 * 比如：已注册的是 "/t*" 则会匹配到 "/test" 和 "/team" 这两个 URl。详细的请看 AntPathMatcher 这个类。
+	 * 寻找最精确的模式，其中最精确的被定义为 最长路径模式
+	 *
 	 * @param urlPath the URL the bean is mapped to
 	 * @param request current HTTP request (to expose the path within the mapping to)
 	 * @return the associated handler instance, or {@code null} if not found
@@ -161,19 +171,21 @@ public abstract class AbstractUrlHandlerMapping extends AbstractHandlerMapping i
 	 */
 	@Nullable
 	protected Object lookupHandler(String urlPath, HttpServletRequest request) throws Exception {
-		// Direct match?
+		// 先尝试直接匹配模式，从handlerMap里查找
 		Object handler = this.handlerMap.get(urlPath);
 		if (handler != null) {
-			// Bean name or resolved handler?
+			// 如果找到的处理器是 String 类型则到 IOC 容器去取
 			if (handler instanceof String) {
 				String handlerName = (String) handler;
 				handler = obtainApplicationContext().getBean(handlerName);
 			}
+			// 空方法，子类可以实现，来校验处理器
 			validateHandler(handler, request);
+			//返回一个带有一个拦截器的执行链，这个拦截器能暴露路径属性和 uri 变量。
 			return buildPathExposingHandler(handler, urlPath, urlPath, null);
 		}
 
-		// Pattern match?
+		// 尝试 Ant 风格模式匹配
 		List<String> matchingPatterns = new ArrayList<>();
 		for (String registeredPattern : this.handlerMap.keySet()) {
 			if (getPathMatcher().match(registeredPattern, urlPath)) {
@@ -249,8 +261,15 @@ public abstract class AbstractUrlHandlerMapping extends AbstractHandlerMapping i
 	 * Build a handler object for the given raw handler, exposing the actual
 	 * handler, the {@link #PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE}, as well as
 	 * the {@link #URI_TEMPLATE_VARIABLES_ATTRIBUTE} before executing the handler.
+	 *
+	 * 通过给定的原始的处理器构建一个处理器对象，在执行处理器之前暴露实际的处理器，PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE和
+	 * URI_TEMPLATE_VARIABLES_ATTRIBUTE
+	 *
 	 * <p>The default implementation builds a {@link HandlerExecutionChain}
 	 * with a special interceptor that exposes the path attribute and uri template variables
+	 *
+	 * 默认的实现是构建一个带有一个拦截器的执行链，这个拦截器能暴露路径属性和 uri 变量。
+	 *
 	 * @param rawHandler the raw handler to expose
 	 * @param pathWithinMapping the path to expose before executing the handler
 	 * @param uriTemplateVariables the URI template variables, can be {@code null} if no variables found

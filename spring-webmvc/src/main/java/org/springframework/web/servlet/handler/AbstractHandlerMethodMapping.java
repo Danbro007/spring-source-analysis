@@ -207,6 +207,10 @@ public abstract class AbstractHandlerMethodMapping<T> extends AbstractHandlerMap
 
 	/**
 	 * Scan beans in the ApplicationContext, detect and register handler methods.
+	 *
+	 * 扫描在 ApplicationContext 里的带 @Controller 或者 @RequestMapping 注解的 bean 的所有方法
+	 * 并以<Method,HandleMapping> 的形式注册进 mappingRegistry 里
+	 *
 	 * @see #getCandidateBeanNames()
 	 * @see #processCandidateBean
 	 * @see #handlerMethodsInitialized
@@ -217,6 +221,7 @@ public abstract class AbstractHandlerMethodMapping<T> extends AbstractHandlerMap
 				processCandidateBean(beanName);
 			}
 		}
+		// 统计方法的总数
 		handlerMethodsInitialized(getHandlerMethods());
 	}
 
@@ -254,6 +259,8 @@ public abstract class AbstractHandlerMethodMapping<T> extends AbstractHandlerMap
 				logger.trace("Could not resolve type for bean '" + beanName + "'", ex);
 			}
 		}
+		// 判断是不是 Handler 的依据 bean 有没有 @Controller 注解或者 @RequestMapping 注解
+		// 如果是的话则以<Method,HandleMapping> 的形式注册到 mappingRegistry 里
 		if (beanType != null && isHandler(beanType)) {
 			detectHandlerMethods(beanName);
 		}
@@ -261,15 +268,22 @@ public abstract class AbstractHandlerMethodMapping<T> extends AbstractHandlerMap
 
 	/**
 	 * Look for handler methods in the specified handler bean.
+	 *
+	 * 在指定的处理器 bean (也就是我们写的controller)里查找所有处理器方法
+	 * 然后注册到 mappingRegistry 里
+	 *
 	 * @param handler either a bean name or an actual handler instance
 	 * @see #getMappingForMethod
 	 */
 	protected void detectHandlerMethods(Object handler) {
+		// 如果这个处理器是 String 类型则从 IOC 通过 beanName 获取 handler 类型
 		Class<?> handlerType = (handler instanceof String ?
 				obtainApplicationContext().getType((String) handler) : handler.getClass());
 
 		if (handlerType != null) {
+			// 如果这个处理器类是 cglib 代理的类则代理的父类，不是的话则返回给定的类
 			Class<?> userType = ClassUtils.getUserClass(handlerType);
+			// 通过处理器类找到该处理器里的所有方法
 			Map<Method, T> methods = MethodIntrospector.selectMethods(userType,
 					(MethodIntrospector.MetadataLookup<T>) method -> {
 						try {
@@ -283,6 +297,7 @@ public abstract class AbstractHandlerMethodMapping<T> extends AbstractHandlerMap
 			if (logger.isTraceEnabled()) {
 				logger.trace(formatMappings(userType, methods));
 			}
+			// 遍历每个方法然后注册到 mappingRegistry 里
 			methods.forEach((method, mapping) -> {
 				Method invocableMethod = AopUtils.selectInvocableMethod(method, userType);
 				registerHandlerMethod(handler, invocableMethod, mapping);
@@ -357,17 +372,26 @@ public abstract class AbstractHandlerMethodMapping<T> extends AbstractHandlerMap
 
 	/**
 	 * Look up a handler method for the given request.
+	 *
+	 * 通过请求URL返回一个相应的 Handler
 	 */
 	@Override
 	protected HandlerMethod getHandlerInternal(HttpServletRequest request) throws Exception {
+		// 获取请求的URL，默认是返回请求的URI
 		String lookupPath = getUrlPathHelper().getLookupPathForRequest(request);
+		// LOOKUP_PATH 属性设置到请求里，LOOKUP_PATH是用来匹配 handler 的
 		request.setAttribute(LOOKUP_PATH, lookupPath);
+		//  对 mappingRegistry 加读锁
 		this.mappingRegistry.acquireReadLock();
 		try {
+			// 通过 lookupPath 到 mappingRegistry 里查找，可能会找出多个具体的处理器方法，返回最匹配的一个。
 			HandlerMethod handlerMethod = lookupHandlerMethod(lookupPath, request);
+			// 匹配出的处理器方法可能只是一个 String 类型，我们需要通过名字从 IOC 容器获取对应的处理器，
+			// 然后实例化出一个处理器方法。
 			return (handlerMethod != null ? handlerMethod.createWithResolvedBean() : null);
 		}
 		finally {
+			// 释放 mappingRegistry 读锁
 			this.mappingRegistry.releaseReadLock();
 		}
 	}
@@ -375,6 +399,9 @@ public abstract class AbstractHandlerMethodMapping<T> extends AbstractHandlerMap
 	/**
 	 * Look up the best-matching handler method for the current request.
 	 * If multiple matches are found, the best match is selected.
+	 *
+	 * 查找当前请求最匹配的 HandlerMethod，如果匹配多个则选择最匹配的。
+	 *
 	 * @param lookupPath mapping lookup path within the current servlet mapping
 	 * @param request the current request
 	 * @return the best-matching handler method, or {@code null} if no match
@@ -384,15 +411,16 @@ public abstract class AbstractHandlerMethodMapping<T> extends AbstractHandlerMap
 	@Nullable
 	protected HandlerMethod lookupHandlerMethod(String lookupPath, HttpServletRequest request) throws Exception {
 		List<Match> matches = new ArrayList<>();
+		// 先通过 URI 查找 处理器，如果找到了则放到 matches 里
 		List<T> directPathMatches = this.mappingRegistry.getMappingsByUrl(lookupPath);
 		if (directPathMatches != null) {
 			addMatchingMappings(directPathMatches, matches, request);
 		}
 		if (matches.isEmpty()) {
-			// No choice but to go through all mappings...
+			// 找不到的话只能遍历遍历所有的 HandleMapping
 			addMatchingMappings(this.mappingRegistry.getMappings().keySet(), matches, request);
 		}
-
+		//对多个匹配上的 HandlerMethod 进行排序取排在第一个的既最匹配的一个
 		if (!matches.isEmpty()) {
 			Comparator<Match> comparator = new MatchComparator(getMappingComparator(request));
 			matches.sort(comparator);
@@ -413,6 +441,7 @@ public abstract class AbstractHandlerMethodMapping<T> extends AbstractHandlerMap
 							"Ambiguous handler methods mapped for '" + uri + "': {" + m1 + ", " + m2 + "}");
 				}
 			}
+			//在请求的 bestMatchingHandler 属性设置为当前的 HandlerMethod
 			request.setAttribute(BEST_MATCHING_HANDLER_ATTRIBUTE, bestMatch.handlerMethod);
 			handleMatch(bestMatch.mapping, lookupPath, request);
 			return bestMatch.handlerMethod;
@@ -507,6 +536,9 @@ public abstract class AbstractHandlerMethodMapping<T> extends AbstractHandlerMap
 	/**
 	 * Check if a mapping matches the current request and return a (potentially
 	 * new) mapping with conditions relevant to the current request.
+	 *
+	 * 检查映射是否与当前请求匹配，并且返回一个与当前请求相关的条件的映射(可能是新的)。
+	 *
 	 * @param mapping the mapping to get a match for
 	 * @param request the current HTTP servlet request
 	 * @return the match, or {@code null} if the mapping doesn't match
@@ -588,7 +620,7 @@ public abstract class AbstractHandlerMethodMapping<T> extends AbstractHandlerMap
 		public void releaseReadLock() {
 			this.readWriteLock.readLock().unlock();
 		}
-
+		// 注册处理器的方法到 mappingRegistry
 		public void register(T mapping, Object handler, Method method) {
 			// Assert that the handler method is not a suspending one.
 			if (KotlinDetector.isKotlinType(method.getDeclaringClass()) && KotlinDelegate.isSuspend(method)) {
@@ -623,6 +655,7 @@ public abstract class AbstractHandlerMethodMapping<T> extends AbstractHandlerMap
 			}
 		}
 
+
 		private void validateMethodMapping(HandlerMethod handlerMethod, T mapping) {
 			// Assert that the supplied mapping is unique.
 			HandlerMethod existingHandlerMethod = this.mappingLookup.get(mapping);
@@ -643,7 +676,12 @@ public abstract class AbstractHandlerMethodMapping<T> extends AbstractHandlerMap
 			}
 			return urls;
 		}
-
+		/**
+		 *
+		 * 添加新的 HandlerMapping,如果有则不添加。
+		 * 如果原来没有这个 HandleMapping 则创建一个新的列表先把原来的列表（存储与请求url相应的所有HandlerMethod）
+		 * 里的 HandlerMethod 复制进去最后再把新添加的HandlerMethod加在列表尾部。
+		 */
 		private void addMappingName(String name, HandlerMethod handlerMethod) {
 			List<HandlerMethod> oldList = this.nameLookup.get(name);
 			if (oldList == null) {
@@ -655,7 +693,7 @@ public abstract class AbstractHandlerMethodMapping<T> extends AbstractHandlerMap
 					return;
 				}
 			}
-
+			//
 			List<HandlerMethod> newList = new ArrayList<>(oldList.size() + 1);
 			newList.addAll(oldList);
 			newList.add(handlerMethod);

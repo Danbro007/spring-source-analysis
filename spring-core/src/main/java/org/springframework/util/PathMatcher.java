@@ -49,6 +49,8 @@ public interface PathMatcher {
 	/**
 	 * Match the given {@code path} against the given {@code pattern},
 	 * according to this PathMatcher's matching strategy.
+	 *
+	 * 根据此 PathMatcher（路径匹配器）的匹配策略将给定的路径与给定的模式匹配
 	 * @param pattern the pattern to match against
 	 * @param path the path to test
 	 * @return {@code true} if the supplied {@code path} matched,

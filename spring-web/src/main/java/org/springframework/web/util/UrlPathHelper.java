@@ -164,7 +164,7 @@ public class UrlPathHelper {
 	 * @see #getPathWithinApplication
 	 */
 	public String getLookupPathForRequest(HttpServletRequest request) {
-		// Always use full path within current servlet context?
+		// 总是在当前servlet context 中使用完整路径? 默认是 false。
 		if (this.alwaysUseFullPath) {
 			return getPathWithinApplication(request);
 		}
@@ -202,6 +202,9 @@ public class UrlPathHelper {
 	 * Return the path within the servlet mapping for the given request,
 	 * i.e. the part of the request's URL beyond the part that called the servlet,
 	 * or "" if the whole URL has been used to identify the servlet.
+	 *
+	 * 返回给定的请求的 servlet 映射的路径，也就是说，请求URL的一部分超出了调用servlet的部分，或者 “ ”如果整个URL已用于标识servlet。
+	 *
 	 * <p>Detects include request URL if called within a RequestDispatcher include.
 	 * <p>E.g.: servlet mapping = "/*"; request URI = "/test/a" -> "/test/a".
 	 * <p>E.g.: servlet mapping = "/"; request URI = "/test/a" -> "/test/a".
@@ -213,12 +216,16 @@ public class UrlPathHelper {
 	 * @see #getLookupPathForRequest
 	 */
 	public String getPathWithinServletMapping(HttpServletRequest request) {
+		// 获取应用路径
 		String pathWithinApp = getPathWithinApplication(request);
+		// 获取 servlet 路径
 		String servletPath = getServletPath(request);
+		//净化路径既把路径里的 “//” 替换为 “/”
 		String sanitizedPathWithinApp = getSanitizedPath(pathWithinApp);
 		String path;
 
 		// If the app container sanitized the servletPath, check against the sanitized version
+		// 如果应用容器净化了 servlet 的路径则要检查净化的版本
 		if (servletPath.contains(sanitizedPathWithinApp)) {
 			path = getRemainingPath(sanitizedPathWithinApp, servletPath, false);
 		}
@@ -256,6 +263,9 @@ public class UrlPathHelper {
 	/**
 	 * Return the path within the web application for the given request.
 	 * <p>Detects include request URL if called within a RequestDispatcher include.
+	 *
+	 * 返回web应用程序中给定请求的路径。检测包含请求 URL 如果调用了 RequestDispatcher include()方法。
+	 *
 	 * @param request current HTTP request
 	 * @return the path within the web application
 	 * @see #getLookupPathForRequest
@@ -265,7 +275,7 @@ public class UrlPathHelper {
 		String requestUri = getRequestUri(request);
 		String path = getRemainingPath(requestUri, contextPath, true);
 		if (path != null) {
-			// Normal case: URI contains context path.
+			// 如果path是空则返回 “/”
 			return (StringUtils.hasText(path) ? path : "/");
 		}
 		else {
@@ -278,6 +288,12 @@ public class UrlPathHelper {
 	 * is a match return the extra part. This method is needed because the
 	 * context path and the servlet path returned by the HttpServletRequest are
 	 * stripped of semicolon content unlike the requestUri.
+	 *
+	 *
+	 * 匹配给定的“映射”到“requestUri”的开始，如果有匹配，返回额外的部分。
+	 * 这个方法是必需的，因为 HttpServletRequest 返回的 context 路径和 servlet 路径被剥离了
+	 * 与 requestUri 不同的分号内容。
+	 *
 	 */
 	@Nullable
 	private String getRemainingPath(String requestUri, String mapping, boolean ignoreCase) {

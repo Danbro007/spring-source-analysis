@@ -319,7 +319,7 @@ public class RequestMappingHandlerAdapter extends AbstractHandlerMethodAdapter
 	 * to always being invoked at the end after all other return value
 	 * handlers have been given a chance.
 	 * <p>A {@code HandlerMethodReturnValueHandler} provides better access to
-	 * the return type and controller method information and can be ordered
+	 * the return type and com.danbro.springmvc.controller method information and can be ordered
 	 * freely relative to other return value handlers.
 	 */
 	public void setModelAndViewResolvers(@Nullable List<ModelAndViewResolver> modelAndViewResolvers) {
@@ -397,7 +397,7 @@ public class RequestMappingHandlerAdapter extends AbstractHandlerMethodAdapter
 	}
 
 	/**
-	 * Set the default {@link AsyncTaskExecutor} to use when a controller method
+	 * Set the default {@link AsyncTaskExecutor} to use when a com.danbro.springmvc.controller method
 	 * return a {@link Callable}. Controller methods can override this default on
 	 * a per-request basis by returning an {@link WebAsyncTask}.
 	 * <p>By default a {@link SimpleAsyncTaskExecutor} instance is used.
@@ -439,7 +439,7 @@ public class RequestMappingHandlerAdapter extends AbstractHandlerMethodAdapter
 
 	/**
 	 * Configure the registry for reactive library types to be supported as
-	 * return values from controller methods.
+	 * return values from com.danbro.springmvc.controller methods.
 	 * @since 5.0.5
 	 */
 	public void setReactiveAdapterRegistry(ReactiveAdapterRegistry reactiveAdapterRegistry) {
@@ -456,13 +456,13 @@ public class RequestMappingHandlerAdapter extends AbstractHandlerMethodAdapter
 
 	/**
 	 * By default the content of the "default" model is used both during
-	 * rendering and redirect scenarios. Alternatively a controller method
+	 * rendering and redirect scenarios. Alternatively a com.danbro.springmvc.controller method
 	 * can declare a {@link RedirectAttributes} argument and use it to provide
 	 * attributes for a redirect.
 	 * <p>Setting this flag to {@code true} guarantees the "default" model is
 	 * never used in a redirect scenario even if a RedirectAttributes argument
 	 * is not declared. Setting it to {@code false} means the "default" model
-	 * may be used in a redirect if the controller method doesn't declare a
+	 * may be used in a redirect if the com.danbro.springmvc.controller method doesn't declare a
 	 * RedirectAttributes argument.
 	 * <p>The default setting is {@code false} but new applications should
 	 * consider setting it to {@code true}.
@@ -503,7 +503,7 @@ public class RequestMappingHandlerAdapter extends AbstractHandlerMethodAdapter
 	}
 
 	/**
-	 * Set if controller execution should be synchronized on the session,
+	 * Set if com.danbro.springmvc.controller execution should be synchronized on the session,
 	 * to serialize parallel invocations from the same client.
 	 * <p>More specifically, the execution of the {@code handleRequestInternal}
 	 * method will get synchronized if this flag is "true". The best available
@@ -557,7 +557,7 @@ public class RequestMappingHandlerAdapter extends AbstractHandlerMethodAdapter
 	public void afterPropertiesSet() {
 		// Do this first, it may add ResponseBody advice beans
 		initControllerAdviceCache();
-
+		// 添加默认的参数解析器
 		if (this.argumentResolvers == null) {
 			List<HandlerMethodArgumentResolver> resolvers = getDefaultArgumentResolvers();
 			this.argumentResolvers = new HandlerMethodArgumentResolverComposite().addResolvers(resolvers);
@@ -630,11 +630,16 @@ public class RequestMappingHandlerAdapter extends AbstractHandlerMethodAdapter
 	/**
 	 * Return the list of argument resolvers to use including built-in resolvers
 	 * and custom resolvers provided via {@link #setCustomArgumentResolvers}.
+	 *
+	 * 返回要使用的参数解析器列表，包括内置解析器和通过 setCustomArgumentResolvers()
+	 * 方法提供的定制解析器。
+	 *
 	 */
 	private List<HandlerMethodArgumentResolver> getDefaultArgumentResolvers() {
 		List<HandlerMethodArgumentResolver> resolvers = new ArrayList<>();
 
 		// Annotation-based argument resolution
+		// 基于注解的参数解析器，比如参数带有：@RequestParam、@ModelAttribute、@PathVariable等注解的
 		resolvers.add(new RequestParamMethodArgumentResolver(getBeanFactory(), false));
 		resolvers.add(new RequestParamMapMethodArgumentResolver());
 		resolvers.add(new PathVariableMethodArgumentResolver());
@@ -652,6 +657,7 @@ public class RequestMappingHandlerAdapter extends AbstractHandlerMethodAdapter
 		resolvers.add(new RequestAttributeMethodArgumentResolver());
 
 		// Type-based argument resolution
+		// 基于类型的参数解析比如方法参数类型是 HttpServletRequest、Map、Model等
 		resolvers.add(new ServletRequestMethodArgumentResolver());
 		resolvers.add(new ServletResponseMethodArgumentResolver());
 		resolvers.add(new HttpEntityMethodProcessor(getMessageConverters(), this.requestResponseBodyAdvice));
@@ -663,6 +669,7 @@ public class RequestMappingHandlerAdapter extends AbstractHandlerMethodAdapter
 		resolvers.add(new UriComponentsBuilderMethodArgumentResolver());
 
 		// Custom arguments
+		// 自定义的参数
 		if (getCustomArgumentResolvers() != null) {
 			resolvers.addAll(getCustomArgumentResolvers());
 		}
@@ -772,8 +779,9 @@ public class RequestMappingHandlerAdapter extends AbstractHandlerMethodAdapter
 			HttpServletResponse response, HandlerMethod handlerMethod) throws Exception {
 
 		ModelAndView mav;
+		//检查是否支持当前的请求方式以及 session 是否是必须的。
 		checkRequest(request);
-
+		//如果需要的话在同步块里执行 invokeHandlerMethod() 方法，默认是 false。
 		// Execute invokeHandlerMethod in synchronized block if required.
 		if (this.synchronizeOnSession) {
 			HttpSession session = request.getSession(false);
@@ -790,6 +798,7 @@ public class RequestMappingHandlerAdapter extends AbstractHandlerMethodAdapter
 		}
 		else {
 			// No synchronization on session demanded at all...
+			// session上不需要加锁
 			mav = invokeHandlerMethod(request, response, handlerMethod);
 		}
 
@@ -798,6 +807,7 @@ public class RequestMappingHandlerAdapter extends AbstractHandlerMethodAdapter
 				applyCacheSeconds(response, this.cacheSecondsForSessionAttributeHandlers);
 			}
 			else {
+				//准备响应
 				prepareResponse(response);
 			}
 		}
@@ -838,6 +848,8 @@ public class RequestMappingHandlerAdapter extends AbstractHandlerMethodAdapter
 	/**
 	 * Invoke the {@link RequestMapping} handler method preparing a {@link ModelAndView}
 	 * if view resolution is required.
+	 *
+	 * 如果需要视图解析，调用 RequestMapping() 处理器方法准备一个 ModelAndView。
 	 * @since 4.2
 	 * @see #createInvocableHandlerMethod(HandlerMethod)
 	 */
@@ -847,14 +859,20 @@ public class RequestMappingHandlerAdapter extends AbstractHandlerMethodAdapter
 
 		ServletWebRequest webRequest = new ServletWebRequest(request, response);
 		try {
+			// binderFactory 是为了把请求里的参数绑定到 JavaBean 上
 			WebDataBinderFactory binderFactory = getDataBinderFactory(handlerMethod);
+			// 用来临时填充存储在 session 的属性
 			ModelFactory modelFactory = getModelFactory(handlerMethod, binderFactory);
-
+			// ServletInvocableHandlerMethod 是 HandlerMethod 的子类，
+			// 其实就是把 HandlerMethod 对象转换成 ServletInvocableHandlerMethod 对象，
+			// 好接下来调用 invokeAndHandle() 方法
 			ServletInvocableHandlerMethod invocableMethod = createInvocableHandlerMethod(handlerMethod);
 			if (this.argumentResolvers != null) {
+				//给处理器方法配置上方法参数解析器用来解析方法里的参数值
 				invocableMethod.setHandlerMethodArgumentResolvers(this.argumentResolvers);
 			}
 			if (this.returnValueHandlers != null) {
+				//给处理器方法配置上方法返回值处理器用来处理返回值
 				invocableMethod.setHandlerMethodReturnValueHandlers(this.returnValueHandlers);
 			}
 			invocableMethod.setDataBinderFactory(binderFactory);
@@ -884,7 +902,7 @@ public class RequestMappingHandlerAdapter extends AbstractHandlerMethodAdapter
 				});
 				invocableMethod = invocableMethod.wrapConcurrentResult(result);
 			}
-
+			// 执行处理器里的方法
 			invocableMethod.invokeAndHandle(webRequest, mavContainer);
 			if (asyncManager.isConcurrentHandlingStarted()) {
 				return null;
@@ -893,6 +911,7 @@ public class RequestMappingHandlerAdapter extends AbstractHandlerMethodAdapter
 			return getModelAndView(mavContainer, modelFactory, webRequest);
 		}
 		finally {
+			//请求被完成的信号
 			webRequest.requestCompleted();
 		}
 	}
@@ -998,11 +1017,14 @@ public class RequestMappingHandlerAdapter extends AbstractHandlerMethodAdapter
 		if (mavContainer.isRequestHandled()) {
 			return null;
 		}
+		//返回模式，默认或者重定向模式。
 		ModelMap model = mavContainer.getModel();
+		//通过视图名、模式和状态码创建 ModelAndView 对象
 		ModelAndView mav = new ModelAndView(mavContainer.getViewName(), model, mavContainer.getStatus());
 		if (!mavContainer.isViewReference()) {
 			mav.setView((View) mavContainer.getView());
 		}
+		//如果是重定向
 		if (model instanceof RedirectAttributes) {
 			Map<String, ?> flashAttributes = ((RedirectAttributes) model).getFlashAttributes();
 			HttpServletRequest request = webRequest.getNativeRequest(HttpServletRequest.class);

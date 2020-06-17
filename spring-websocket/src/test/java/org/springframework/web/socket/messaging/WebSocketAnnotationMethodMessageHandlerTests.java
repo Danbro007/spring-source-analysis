@@ -51,7 +51,7 @@ public class WebSocketAnnotationMethodMessageHandlerTests {
 	@BeforeEach
 	public void setUp() throws Exception {
 		this.applicationContext = new StaticApplicationContext();
-		this.applicationContext.registerSingleton("controller", TestController.class);
+		this.applicationContext.registerSingleton("com.danbro.springmvc.controller", TestController.class);
 		this.applicationContext.registerSingleton("controllerAdvice", TestControllerAdvice.class);
 		this.applicationContext.refresh();
 

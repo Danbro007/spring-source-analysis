@@ -33,7 +33,7 @@ import org.springframework.web.reactive.config.EnableWebFlux;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
- * {@code @RequestMapping} integration focusing on controller method parameters.
+ * {@code @RequestMapping} integration focusing on com.danbro.springmvc.controller method parameters.
  * Also see:
  * <ul>
  * <li>{@link RequestMappingDataBindingIntegrationTests}

@@ -25,7 +25,7 @@ import org.springframework.lang.Nullable;
  * MVC framework SPI, allowing parameterization of the core MVC workflow.
  *
  * <p>Interface that must be implemented for each handler type to handle a request.
- * This interface is used to allow the {@link DispatcherServlet} to be indefinitely
+ * This interface is used to allow the {@link DispatcherServlet} to be INDEFINITELY
  * extensible. The {@code DispatcherServlet} accesses all installed handlers through
  * this interface, meaning that it does not contain code specific to any handler type.
  *
@@ -80,6 +80,10 @@ public interface HandlerAdapter {
 	/**
 	 * Same contract as for HttpServlet's {@code getLastModified} method.
 	 * Can simply return -1 if there's no support in the handler class.
+	 *
+	 * 与 HttpServlet 的 getLastModified()方法 相同的协议。
+	 * 如果不支持当前处理器则返回 -1
+	 *
 	 * @param request current HTTP request
 	 * @param handler handler to use
 	 * @return the lastModified value for the given handler

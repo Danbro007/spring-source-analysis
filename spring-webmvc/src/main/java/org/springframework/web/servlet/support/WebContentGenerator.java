@@ -149,7 +149,7 @@ public abstract class WebContentGenerator extends WebApplicationObjectSupport {
 
 	/**
 	 * Set the HTTP methods that this content generator should support.
-	 * <p>Default is GET, HEAD and POST for simple form controller types;
+	 * <p>Default is GET, HEAD and POST for simple form com.danbro.springmvc.controller types;
 	 * unrestricted for general controllers and interceptors.
 	 */
 	public final void setSupportedMethods(@Nullable String... methods) {
@@ -347,7 +347,7 @@ public abstract class WebContentGenerator extends WebApplicationObjectSupport {
 
 	/**
 	 * An option to add 'must-revalidate' to every Cache-Control header.
-	 * This may be useful with annotated controller methods, which can
+	 * This may be useful with annotated com.danbro.springmvc.controller methods, which can
 	 * programmatically do a last-modified calculation as described in
 	 * {@link org.springframework.web.context.request.WebRequest#checkNotModified(long)}.
 	 * <p>Default is "false".
@@ -389,7 +389,11 @@ public abstract class WebContentGenerator extends WebApplicationObjectSupport {
 
 	/**
 	 * Prepare the given response according to the settings of this generator.
-	 * Applies the number of cache seconds specified for this generator.
+	 * Applies the number of cache seconds specified for this generator.、
+	 *
+	 * 根据这个 generator 的设置准备指定的响应。
+	 *
+	 *
 	 * @param response current HTTP response
 	 * @since 4.2
 	 */
@@ -435,6 +439,10 @@ public abstract class WebContentGenerator extends WebApplicationObjectSupport {
 	 * i.e. allow caching for the given number of seconds in case of a positive
 	 * value, prevent caching if given a 0 value, do nothing else.
 	 * Does not tell the browser to revalidate the resource.
+	 *
+	 * 应用指定的缓存秒数和生成指定的相应的 HTTP headers。如果值为正，则允许缓存给定的秒数，
+	 * 如果值为0，则阻止缓存，其他什么都不做。不会告诉浏览器重新验证资源。
+	 *
 	 * @param response current HTTP response
 	 * @param cacheSeconds positive number of seconds into the future that the
 	 * response should be cacheable for, 0 to prevent caching

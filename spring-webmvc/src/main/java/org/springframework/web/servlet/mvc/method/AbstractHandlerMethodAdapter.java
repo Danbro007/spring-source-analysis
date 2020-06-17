@@ -61,6 +61,9 @@ public abstract class AbstractHandlerMethodAdapter extends WebContentGenerator i
 
 	/**
 	 * This implementation expects the handler to be an {@link HandlerMethod}.
+	 *
+	 * 实现类期待把 handler 转换成 HandlerMethod
+	 *
 	 * @param handler the handler instance to check
 	 * @return whether or not this adapter can adapt the given handler
 	 */
@@ -78,6 +81,9 @@ public abstract class AbstractHandlerMethodAdapter extends WebContentGenerator i
 
 	/**
 	 * This implementation expects the handler to be an {@link HandlerMethod}.
+	 *
+	 * 这个实现类期望把 handler 变成 HandlerMethod
+	 *
 	 */
 	@Override
 	@Nullable

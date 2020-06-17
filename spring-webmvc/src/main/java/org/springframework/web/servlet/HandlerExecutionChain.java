@@ -129,6 +129,11 @@ public class HandlerExecutionChain {
 
 	/**
 	 * Apply preHandle methods of registered interceptors.
+	 *
+	 * 应用已注册的拦截器的 preHandle() 方法
+	 * 如果执行链应该继续下一个拦截器或处理器本身则返回 true。
+	 * 否则 DispatcherServlet 假设这个拦截器已经处理了响应本身。
+	 *
 	 * @return {@code true} if the execution chain should proceed with the
 	 * next interceptor or the handler itself. Else, DispatcherServlet assumes
 	 * that this interceptor has already dealt with the response itself.
@@ -138,6 +143,7 @@ public class HandlerExecutionChain {
 		if (!ObjectUtils.isEmpty(interceptors)) {
 			for (int i = 0; i < interceptors.length; i++) {
 				HandlerInterceptor interceptor = interceptors[i];
+				// 如果拦截器的 preHandle() 返回 false 则表示不执行后面的拦截器，直接去执行上一个拦截器及之前拦截器的 afterCompletion() 方法
 				if (!interceptor.preHandle(request, response, this.handler)) {
 					triggerAfterCompletion(request, response, null);
 					return false;
@@ -150,6 +156,9 @@ public class HandlerExecutionChain {
 
 	/**
 	 * Apply postHandle methods of registered interceptors.
+	 *
+	 * 应用已注册拦截器的后处理方法
+	 *
 	 */
 	void applyPostHandle(HttpServletRequest request, HttpServletResponse response, @Nullable ModelAndView mv)
 			throws Exception {

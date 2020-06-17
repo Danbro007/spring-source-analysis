@@ -888,6 +888,7 @@ public abstract class ClassUtils {
 	/**
 	 * Return the user-defined class for the given class: usually simply the given
 	 * class, but the original class in case of a CGLIB-generated subclass.
+	 *一般返回给定的类 如果类的名字里包括 “$$” 则说明是 cglib 代理的类 返回这个代理类的父类
 	 * @param clazz the class to check
 	 * @return the user-defined class
 	 */

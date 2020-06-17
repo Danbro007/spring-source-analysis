@@ -116,9 +116,9 @@ public class RequestMappingHandlerMapping extends RequestMappingInfoHandlerMappi
 	}
 
 	/**
-	 * Configure path prefixes to apply to controller methods.
+	 * Configure path prefixes to apply to com.danbro.springmvc.controller methods.
 	 * <p>Prefixes are used to enrich the mappings of every {@code @RequestMapping}
-	 * method whose controller type is matched by the corresponding
+	 * method whose com.danbro.springmvc.controller type is matched by the corresponding
 	 * {@code Predicate}. The prefix for the first matching predicate is used.
 	 * <p>Consider using {@link org.springframework.web.method.HandlerTypePredicate
 	 * HandlerTypePredicate} to group controllers.
@@ -344,7 +344,7 @@ public class RequestMappingHandlerMapping extends RequestMappingInfoHandlerMappi
 		super.registerMapping(mapping, handler, method);
 		updateConsumesCondition(mapping, method);
 	}
-
+	//注册 HandlerMethod
 	@Override
 	protected void registerHandlerMethod(Object handler, Method method, RequestMappingInfo mapping) {
 		super.registerHandlerMethod(handler, method, mapping);

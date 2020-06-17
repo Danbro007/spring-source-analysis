@@ -56,7 +56,7 @@ public class ViewControllerRegistry {
 
 
 	/**
-	 * Map a view controller to the given URL path (or pattern) in order to render
+	 * Map a view com.danbro.springmvc.controller to the given URL path (or pattern) in order to render
 	 * a response with a pre-configured status code and view.
 	 * <p>Patterns like {@code "/admin/**"} or {@code "/articles/{articlename:\\w+}"}
 	 * are allowed. See {@link org.springframework.util.AntPathMatcher} for more details on the
@@ -70,7 +70,7 @@ public class ViewControllerRegistry {
 	}
 
 	/**
-	 * Map a view controller to the given URL path (or pattern) in order to redirect
+	 * Map a view com.danbro.springmvc.controller to the given URL path (or pattern) in order to redirect
 	 * to another URL. By default the redirect URL is expected to be relative to
 	 * the current ServletContext, i.e. as relative to the web application root.
 	 * @since 4.1
@@ -83,7 +83,7 @@ public class ViewControllerRegistry {
 	}
 
 	/**
-	 * Map a simple controller to the given URL path (or pattern) in order to
+	 * Map a simple com.danbro.springmvc.controller to the given URL path (or pattern) in order to
 	 * set the response status to the given code without rendering a body.
 	 * @since 4.1
 	 */
@@ -108,7 +108,7 @@ public class ViewControllerRegistry {
 
 	/**
 	 * Return the {@code HandlerMapping} that contains the registered view
-	 * controller mappings, or {@code null} for no registrations.
+	 * com.danbro.springmvc.controller mappings, or {@code null} for no registrations.
 	 * @since 4.3.12
 	 */
 	@Nullable

@@ -289,7 +289,7 @@ public class WebFluxConfigurationSupport implements ApplicationContextAware {
 	}
 
 	/**
-	 * Configure resolvers for custom controller method arguments.
+	 * Configure resolvers for custom com.danbro.springmvc.controller method arguments.
 	 */
 	protected void configureArgumentResolvers(ArgumentResolverConfigurer configurer) {
 	}

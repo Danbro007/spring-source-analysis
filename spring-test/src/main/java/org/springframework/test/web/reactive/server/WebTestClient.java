@@ -176,7 +176,7 @@ public interface WebTestClient {
 	 * There are builder methods to customize the Java config. The resulting
 	 * WebFlux application will be tested without an HTTP server using a mock
 	 * request and response.
-	 * @param controllers one or more controller instances to tests
+	 * @param controllers one or more com.danbro.springmvc.controller instances to tests
 	 * (specified {@code Class} will be turned into instance)
 	 * @return chained API to customize server and client config; use
 	 * {@link MockServerSpec#configureClient()} to transition to client config
@@ -296,7 +296,7 @@ public interface WebTestClient {
 
 
 	/**
-	 * Specification for customizing controller configuration equivalent to, and
+	 * Specification for customizing com.danbro.springmvc.controller configuration equivalent to, and
 	 * internally delegating to, a {@link WebFluxConfigurer}.
 	 */
 	interface ControllerSpec extends MockServerSpec<ControllerSpec> {
@@ -326,7 +326,7 @@ public interface WebTestClient {
 		ControllerSpec pathMatching(Consumer<PathMatchConfigurer> consumer);
 
 		/**
-		 * Configure resolvers for custom controller method arguments.
+		 * Configure resolvers for custom com.danbro.springmvc.controller method arguments.
 		 * @see WebFluxConfigurer#configureHttpMessageCodecs
 		 */
 		ControllerSpec argumentResolvers(Consumer<ArgumentResolverConfigurer> configurer);

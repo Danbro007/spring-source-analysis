@@ -37,10 +37,14 @@ import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
 /**
+ *
  * Adapter for live beans view exposure, building a snapshot of current beans
  * and their dependencies from either a local {@code ApplicationContext} (with a
  * local {@code LiveBeansView} bean definition) or all registered ApplicationContexts
  * (driven by the {@value #MBEAN_DOMAIN_PROPERTY_NAME} environment property).
+ *
+ * 活跃的 beans 视图曝光适配器，通过它创建当前 beans 和 他们的依赖快照，这个快照来自本地 ApplicationContext（带有本地 LiveBeansView BeanDefinition）
+ * 或者所有已注册的 ApplicationContexts（由 MBEAN_DOMAIN_PROPERTY_NAME 环境属性所驱动）
  *
  * <p>Note: This feature is still in beta and primarily designed for use with
  * Spring Tool Suite 3.1 and higher.
