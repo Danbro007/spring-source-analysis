@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletResponse;
  * @Date 2020/6/17 13:37
  * @Author Danrbo
  */
-@Component("/test")
+@Component("/t*")
 public class TestController implements Controller {
 	@Override
 	public ModelAndView handleRequest(HttpServletRequest request, HttpServletResponse response) throws Exception {

@@ -185,19 +185,22 @@ public abstract class AbstractUrlHandlerMapping extends AbstractHandlerMapping i
 			return buildPathExposingHandler(handler, urlPath, urlPath, null);
 		}
 
-		// 尝试 Ant 风格模式匹配
+		// 尝试 Ant 风格模式匹配 比如注册的是 "/t*" ，当请求的 url 是 "/test" 会找到 "/t*" 处理器
+		// 如果注册的 url 模式匹配上请求 url 则会把 url 模式放入 matchingPatterns 里
 		List<String> matchingPatterns = new ArrayList<>();
 		for (String registeredPattern : this.handlerMap.keySet()) {
 			if (getPathMatcher().match(registeredPattern, urlPath)) {
 				matchingPatterns.add(registeredPattern);
 			}
+			// 匹配请求url 尾部有“/”
 			else if (useTrailingSlashMatch()) {
+				// 如果匹配模式的 url 不是“/” 结尾、则在 url 模式尾部加上 “/” 并且匹配，如果匹配上则放入matchingPatterns
 				if (!registeredPattern.endsWith("/") && getPathMatcher().match(registeredPattern + "/", urlPath)) {
 					matchingPatterns.add(registeredPattern + "/");
 				}
 			}
 		}
-
+		// 给多个匹配结果排序，找到最匹配的一个
 		String bestMatch = null;
 		Comparator<String> patternComparator = getPathMatcher().getPatternComparator(urlPath);
 		if (!matchingPatterns.isEmpty()) {
@@ -207,18 +210,21 @@ public abstract class AbstractUrlHandlerMapping extends AbstractHandlerMapping i
 			}
 			bestMatch = matchingPatterns.get(0);
 		}
+		// 到 handlerMap 获取处理器
 		if (bestMatch != null) {
 			handler = this.handlerMap.get(bestMatch);
 			if (handler == null) {
+				// 如果没有找到相应的处理器并且最匹配的结果是“/” 结尾则把“/” 去掉在再尝试从handlerMap里去取
 				if (bestMatch.endsWith("/")) {
 					handler = this.handlerMap.get(bestMatch.substring(0, bestMatch.length() - 1));
 				}
+				// 如果还是找不到则抛出异常
 				if (handler == null) {
 					throw new IllegalStateException(
 							"Could not find handler for best pattern match [" + bestMatch + "]");
 				}
 			}
-			// Bean name or resolved handler?
+			// 如果处理器是 String 类型则到 IOC 容器里去取
 			if (handler instanceof String) {
 				String handlerName = (String) handler;
 				handler = obtainApplicationContext().getBean(handlerName);
@@ -340,6 +346,9 @@ public abstract class AbstractUrlHandlerMapping extends AbstractHandlerMapping i
 
 	/**
 	 * Register the specified handler for the given URL path.
+	 *
+	 * 为给定的 URL 路径注册特定的处理器
+	 *
 	 * @param urlPath the URL the bean should be mapped to
 	 * @param handler the handler instance or handler bean name String
 	 * (a bean name will automatically be resolved into the corresponding handler bean)
@@ -350,8 +359,8 @@ public abstract class AbstractUrlHandlerMapping extends AbstractHandlerMapping i
 		Assert.notNull(urlPath, "URL path must not be null");
 		Assert.notNull(handler, "Handler object must not be null");
 		Object resolvedHandler = handler;
-
 		// Eagerly resolve handler if referencing singleton via name.
+		// 如果处理器类型是 String、不懒加载处理器（默认是不懒加载）并且处理器是单例则从 IOC 容器获取
 		if (!this.lazyInitHandlers && handler instanceof String) {
 			String handlerName = (String) handler;
 			ApplicationContext applicationContext = obtainApplicationContext();
@@ -359,7 +368,7 @@ public abstract class AbstractUrlHandlerMapping extends AbstractHandlerMapping i
 				resolvedHandler = applicationContext.getBean(handlerName);
 			}
 		}
-
+		// 尝试从 handlerMap 里获取，如果获取不到则放入 handlerMap 里
 		Object mappedHandler = this.handlerMap.get(urlPath);
 		if (mappedHandler != null) {
 			if (mappedHandler != resolvedHandler) {
