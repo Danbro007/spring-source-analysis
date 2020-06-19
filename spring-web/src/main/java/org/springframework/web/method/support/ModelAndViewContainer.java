@@ -34,6 +34,9 @@ import org.springframework.web.bind.support.SimpleSessionStatus;
  * {@link HandlerMethodReturnValueHandler HandlerMethodReturnValueHandlers} during the course of invocation of
  * a com.danbro.springmvc.controller method.
  *
+ * 记录在调用一个 controller 方法过程中通过 HandlerMethodArgumentResolvers 和
+ * HandlerMethodReturnValueHandlers 做的与 ModelAndView 相关的决定
+ *
  * <p>The {@link #setRequestHandled} flag can be used to indicate the request
  * has been handled directly and view resolution is not required.
  *

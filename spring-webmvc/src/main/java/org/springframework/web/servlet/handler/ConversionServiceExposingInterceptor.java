@@ -31,7 +31,12 @@ import org.springframework.util.Assert;
  * "org.springframework.core.convert.ConversionService", the value of
  * {@code ConversionService.class.getName()}.
  *
+ * 在请求域中配置了 ConversionService 的拦截器，它在请求处理的过程中能被使用。 这个请求属性名是
+ * "org.springframework.core.convert.ConversionService"，它的属性值是通过 ConversionService.class.getName() 获取
+ *
  * <p>Mainly for use within JSP tags such as the spring:eval tag.
+ *
+ * 主要用于 JSP 标签中，如 spring:eval 标签。
  *
  * @author Keith Donald
  * @since 3.0.1

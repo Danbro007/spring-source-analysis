@@ -32,7 +32,6 @@ public class MyHandlerMethodArgumentResolver implements HandlerMethodArgumentRes
 	public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
 		Danbro danbro = parameter.getParameterAnnotation(Danbro.class);
 		String name = danbro.name();
-		String value = danbro.value();
 		String parameter1 = webRequest.getParameter(name);
 		System.out.println("this is myHandlerMethodArgumentResolver");
 		return parameter1.toUpperCase();

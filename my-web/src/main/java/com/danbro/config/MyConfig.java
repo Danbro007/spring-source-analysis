@@ -34,16 +34,17 @@ public class MyConfig implements WebMvcConfigurer {
 
 	@Autowired
 	AllInterceptor allInterceptor;
+
 	@Autowired
 	MyHandlerMethodArgumentResolver myHandlerMethodArgumentResolver;
 
 
-	@Override
-	public void addInterceptors(InterceptorRegistry registry) {
-		registry.addInterceptor(loginInterceptor).addPathPatterns("/login");
-		registry.addInterceptor(logoutInterceptor).addPathPatterns("/logout");
-		registry.addInterceptor(allInterceptor).addPathPatterns("/*");
-	}
+//	@Override
+//	public void addInterceptors(InterceptorRegistry registry) {
+//		registry.addInterceptor(loginInterceptor).addPathPatterns("/login");
+//		registry.addInterceptor(logoutInterceptor).addPathPatterns("/*");
+//		registry.addInterceptor(allInterceptor).addPathPatterns("/*");
+//	}
 
 	@Override
 	public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
