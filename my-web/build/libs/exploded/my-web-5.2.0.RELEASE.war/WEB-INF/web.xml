@@ -26,7 +26,7 @@
 		</init-param>
 		<init-param>
 			<param-name>contextConfigLocation</param-name>
-			<param-value>com.danbro.config.MyConfig</param-value>
+			<param-value>com.catchArg.config.MyConfig</param-value>
 		</init-param>
     </servlet>
 

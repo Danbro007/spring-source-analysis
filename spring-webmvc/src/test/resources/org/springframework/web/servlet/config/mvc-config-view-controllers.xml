@@ -8,14 +8,14 @@
 
 	<mvc:annotation-driven/>
 
-	<mvc:view-com.danbro.springmvc.controller path="/foo"/>
-	<mvc:view-com.danbro.springmvc.controller path="/bar" view-name="baz"/>
-	<mvc:view-com.danbro.springmvc.controller path="/" view-name="root"/>
+	<mvc:view-com.catchArg.springmvc.controller path="/foo"/>
+	<mvc:view-com.catchArg.springmvc.controller path="/bar" view-name="baz"/>
+	<mvc:view-com.catchArg.springmvc.controller path="/" view-name="root"/>
 
-	<mvc:redirect-view-com.danbro.springmvc.controller path="/old" redirect-url="/new"
+	<mvc:redirect-view-com.catchArg.springmvc.controller path="/old" redirect-url="/new"
 			context-relative="false" status-code="308" keep-query-params="true"/>
 
-	<mvc:status-com.danbro.springmvc.controller path="/bad" status-code="404"/>
+	<mvc:status-com.catchArg.springmvc.controller path="/bad" status-code="404"/>
 
 	<mvc:interceptors>
 		<bean class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor"/>

@@ -88,8 +88,14 @@ public class ServletModelAttributeMethodProcessor extends ModelAttributeMethodPr
 	/**
 	 * Obtain a value from the request that may be used to instantiate the
 	 * model attribute through type conversion from String to the target type.
+	 *
+	 * 通过从字符串到目标类型的类型转换，从可能用于实例化模型属性的请求中获取一个值
+	 *
 	 * <p>The default implementation looks for the attribute name to match
 	 * a URI variable first and then a request parameter.
+	 *
+	 * 默认实现首先查找要匹配 URI 变量的属性名，然后查找请求参数。
+	 *
 	 * @param attributeName the model attribute name
 	 * @param request the current request
 	 * @return the request value to try to convert, or {@code null} if none
@@ -155,6 +161,7 @@ public class ServletModelAttributeMethodProcessor extends ModelAttributeMethodPr
 		ServletRequest servletRequest = request.getNativeRequest(ServletRequest.class);
 		Assert.state(servletRequest != null, "No ServletRequest");
 		ServletRequestDataBinder servletBinder = (ServletRequestDataBinder) binder;
+		// 把请求里的模型参数的属性绑定到绑定器里
 		servletBinder.bind(servletRequest);
 	}
 

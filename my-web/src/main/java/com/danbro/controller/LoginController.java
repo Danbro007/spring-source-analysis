@@ -20,8 +20,8 @@ public class LoginController {
 		return "login";
 	}
 
-//	@GetMapping("/logout")
-//	public String next(){
-//		return "logout";
-//	}
+	@GetMapping("/logout")
+	public String next(){
+		return "logout";
+	}
 }

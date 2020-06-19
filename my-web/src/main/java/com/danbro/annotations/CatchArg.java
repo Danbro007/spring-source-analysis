@@ -15,7 +15,7 @@ import java.lang.annotation.Target;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.PARAMETER)
-public @interface Danbro {
+public @interface CatchArg {
 	@AliasFor("name")
 	String value() default "";
 

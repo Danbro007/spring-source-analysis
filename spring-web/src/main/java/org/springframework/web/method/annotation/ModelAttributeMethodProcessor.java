@@ -128,7 +128,7 @@ public class ModelAttributeMethodProcessor implements HandlerMethodArgumentResol
 		String name = ModelFactory.getNameForParameter(parameter);
 		ModelAttribute ann = parameter.getParameterAnnotation(ModelAttribute.class);
 		if (ann != null) {
-			// 把参数从未绑定的参数列表里删除
+			// 如果对模型进行数据绑定则把参数从不绑定的参数列表里删除
 			mavContainer.setBinding(name, ann.binding());
 		}
 
@@ -159,9 +159,10 @@ public class ModelAttributeMethodProcessor implements HandlerMethodArgumentResol
 		if (bindingResult == null) {
 			// Bean property binding and validation; Bean属性绑定和验证;
 			// skipped in case of binding failure on construction. 在构造绑定失败时跳过。
-			// 数据绑定器里面包含了我们的接收请求的模型属性
+			// 数据绑定器里面包含了我们的接收参数名获取的属性模型（还没有初始化）
 			WebDataBinder binder = binderFactory.createBinder(webRequest, attribute, name);
 			if (binder.getTarget() != null) {
+				// 如果允许绑定则开始对模型进行属性绑定
 				if (!mavContainer.isBindingDisabled(name)) {
 					bindRequestParameters(binder, webRequest);
 				}
@@ -177,10 +178,10 @@ public class ModelAttributeMethodProcessor implements HandlerMethodArgumentResol
 			}
 			bindingResult = binder.getBindingResult();
 		}
-
-		// Add resolved attribute and BindingResult at the end of the model
+		// 在模型的最后添加已解析的属性和BindingResult,BindingResult是校验使用。
 		Map<String, Object> bindingResultModel = bindingResult.getModel();
 		mavContainer.removeAttributes(bindingResultModel);
+		// 会把模型数据以 Map<对象,对象的类>形式放入 BindingAwareModelMap 对象里
 		mavContainer.addAllAttributes(bindingResultModel);
 
 		return attribute;
@@ -208,10 +209,10 @@ public class ModelAttributeMethodProcessor implements HandlerMethodArgumentResol
 	 */
 	protected Object createAttribute(String attributeName, MethodParameter parameter,
 			WebDataBinderFactory binderFactory, NativeWebRequest webRequest) throws Exception {
-
+		// 获取参数的类型
 		MethodParameter nestedParameter = parameter.nestedIfOptional();
 		Class<?> clazz = nestedParameter.getNestedParameterType();
-
+		// 通过反射获取参数的构造器
 		Constructor<?> ctor = BeanUtils.findPrimaryConstructor(clazz);
 		if (ctor == null) {
 			Constructor<?>[] ctors = clazz.getConstructors();
@@ -227,7 +228,7 @@ public class ModelAttributeMethodProcessor implements HandlerMethodArgumentResol
 				}
 			}
 		}
-
+		// 通过反射返回一个参数实例
 		Object attribute = constructAttribute(ctor, attributeName, parameter, binderFactory, webRequest);
 		if (parameter != nestedParameter) {
 			attribute = Optional.of(attribute);

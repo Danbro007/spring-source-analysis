@@ -26,6 +26,8 @@ import org.springframework.validation.BindingResult;
  * a {@link org.springframework.validation.BindingResult} object if the corresponding
  * target attribute gets replaced through regular {@link Map} operations.
  *
+ * BindingAwareModelMap 是 ExtendedModelMap 子类，如果通过常规的 Map 操作替换了对应的目标属性，则它会自动删除 BindingResult 对象。
+ *
  * <p>This is the class exposed to handler methods by Spring MVC, typically consumed through
  * a declaration of the {@link org.springframework.ui.Model} interface. There is no need to
  * build it within user code; a plain {@link org.springframework.ui.ModelMap} or even a just
@@ -38,6 +40,7 @@ import org.springframework.validation.BindingResult;
 @SuppressWarnings("serial")
 public class BindingAwareModelMap extends ExtendedModelMap {
 
+	// 自动删除 BindingResult 对象
 	@Override
 	public Object put(String key, Object value) {
 		removeBindingResultIfNecessary(key, value);

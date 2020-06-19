@@ -4,7 +4,7 @@
 	   xmlns:p="http://www.springframework.org/schema/p" xmlns:context="http://www.springframework.org/schema/context"
 	   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd">
 
-	<bean id="sampleBean2" class="com.danbro.springCoreAnalysis.entities.SampleBean" p:id="1" p:name="John"/>
+	<bean id="sampleBean2" class="com.catchArg.springCoreAnalysis.entities.SampleBean" p:id="1" p:name="John"/>
 	<!--包扫描-->
-	<context:component-scan base-package="com.danbro.springCoreAnalysis"/>
+	<context:component-scan base-package="com.catchArg.springCoreAnalysis"/>
 </beans>

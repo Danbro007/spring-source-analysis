@@ -3,19 +3,19 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
-	<bean id="orderServiceImpl" class="com.danbro.springAopAnalysis.service.OrderServiceImpl"/>
-	<bean id="userServiceImpl" class="com.danbro.springAopAnalysis.service.UserServiceImpl"/>
-	<bean id="logArgsAdvice" class="com.danbro.springAopAnalysis.advices.LogArgsAdvice"/>
-	<bean id="logResultAdvice" class="com.danbro.springAopAnalysis.advices.LogResultAdvice"/>
+	<bean id="orderServiceImpl" class="com.catchArg.springAopAnalysis.service.OrderServiceImpl"/>
+	<bean id="userServiceImpl" class="com.catchArg.springAopAnalysis.service.UserServiceImpl"/>
+	<bean id="logArgsAdvice" class="com.catchArg.springAopAnalysis.advices.LogArgsAdvice"/>
+	<bean id="logResultAdvice" class="com.catchArg.springAopAnalysis.advices.LogResultAdvice"/>
 
 	<bean id="logArgsAdvisor" class="org.springframework.aop.support.RegexpMethodPointcutAdvisor">
 		<property name="advice" ref="logArgsAdvice"/>
-		<property name="pattern" value="com.danbro.springAopAnalysis.service.*.create.*"/>
+		<property name="pattern" value="com.catchArg.springAopAnalysis.service.*.create.*"/>
 	</bean>
 
 	<bean id="logResultAdvisor" class="org.springframework.aop.support.RegexpMethodPointcutAdvisor">
 		<property name="advice" ref="logResultAdvice"/>
-		<property name="pattern" value="com.danbro.springAopAnalysis.service.*.query.*"/>
+		<property name="pattern" value="com.catchArg.springAopAnalysis.service.*.query.*"/>
 	</bean>
 	<bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator"/>
 </beans>

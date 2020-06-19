@@ -90,7 +90,7 @@ The following example shows how to configure FreeMarker as a view technology:
 ----
 
 Your templates need to be stored in the directory specified by the `FreeMarkerConfigurer`,
-shown in the preceding example. Given the preceding configuration, if your com.danbro.springmvc.controller
+shown in the preceding example. Given the preceding configuration, if your com.catchArg.springmvc.controller
 returns the view name, `welcome`, the resolver looks for the
 `classpath:/templates/freemarker/welcome.ftl` template.
 

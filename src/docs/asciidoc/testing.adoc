@@ -6374,12 +6374,12 @@ integration tests, see <<spring-mvc-test-vs-end-to-end-integration-tests>>.
 [[spring-mvc-test-server]]
 ==== Server-Side Tests
 
-You can write a plain unit test for a Spring MVC com.danbro.springmvc.controller by using JUnit or TestNG. To
-do so, instantiate the com.danbro.springmvc.controller, inject it with mocked or stubbed dependencies, and
+You can write a plain unit test for a Spring MVC com.catchArg.springmvc.controller by using JUnit or TestNG. To
+do so, instantiate the com.catchArg.springmvc.controller, inject it with mocked or stubbed dependencies, and
 call its methods (passing `MockHttpServletRequest`, `MockHttpServletResponse`, and
 others, as necessary). However, when writing such a unit test, much remains untested: for
 example, request mappings, data binding, type conversion, validation, and much more.
-Furthermore, other com.danbro.springmvc.controller methods such as `@InitBinder`, `@ModelAttribute`, and
+Furthermore, other com.catchArg.springmvc.controller methods such as `@InitBinder`, `@ModelAttribute`, and
 `@ExceptionHandler` may also be invoked as part of the request processing lifecycle.
 
 The goal of Spring MVC Test is to provide an effective way to test controllers by
@@ -6518,7 +6518,7 @@ configuration and injects a `WebApplicationContext` into the test to use to buil
 	}
 ----
 
-Your second option is to manually create a com.danbro.springmvc.controller instance without loading Spring
+Your second option is to manually create a com.catchArg.springmvc.controller instance without loading Spring
 configuration. Instead, basic default configuration, roughly comparable to that of the
 MVC JavaConfig or the MVC namespace, is automatically created. You can customize it to a
 degree. The following example shows how to do so:
@@ -6618,9 +6618,9 @@ expectations, as the following example shows:
 ----
 
 The `standaloneSetup`, on the other hand, is a little closer to a unit test. It tests one
-com.danbro.springmvc.controller at a time. You can manually inject the com.danbro.springmvc.controller with mock dependencies, and
+com.catchArg.springmvc.controller at a time. You can manually inject the com.catchArg.springmvc.controller with mock dependencies, and
 it does not involve loading Spring configuration. Such tests are more focused on style
-and make it easier to see which com.danbro.springmvc.controller is being tested, whether any specific Spring
+and make it easier to see which com.catchArg.springmvc.controller is being tested, whether any specific Spring
 MVC configuration is required to work, and so on. The `standaloneSetup` is also a very
 convenient way to write ad-hoc tests to verify specific behavior or to debug an issue.
 
@@ -6843,7 +6843,7 @@ properties of the response (for example, the response status, headers, and conte
 These are the most important results to assert.
 
 The second category of assertions goes beyond the response. These assertions let you
-inspect Spring MVC specific aspects, such as which com.danbro.springmvc.controller method processed the
+inspect Spring MVC specific aspects, such as which com.catchArg.springmvc.controller method processed the
 request, whether an exception was raised and handled, what the content of the model is,
 what view was selected, what flash attributes were added, and so on. They also let you
 inspect Servlet specific aspects, such as request and session attributes.
@@ -7004,7 +7004,7 @@ an async dispatch is made to complete processing on a Servlet container thread.
 
 In Spring MVC Test, async requests can be tested by asserting the produced async value
 first, then manually performing the async dispatch, and finally verifying the response.
-Below is an example test for com.danbro.springmvc.controller methods that return `DeferredResult`, `Callable`,
+Below is an example test for com.catchArg.springmvc.controller methods that return `DeferredResult`, `Callable`,
 or reactive type such as Reactor `Mono`:
 
 [source,java,indent=0,subs="verbatim,quotes",role="primary"]
@@ -7122,7 +7122,7 @@ testing, but they are a little closer to it. For example, you can isolate the we
 by injecting mocked services into controllers, in which case you are testing the web
 layer only through the `DispatcherServlet` but with actual Spring configuration, as you
 might test the data access layer in isolation from the layers above it. Also, you can use
-the stand-alone setup, focusing on one com.danbro.springmvc.controller at a time and manually providing the
+the stand-alone setup, focusing on one com.catchArg.springmvc.controller at a time and manually providing the
 configuration required to make it work.
 
 Another important distinction when using Spring MVC Test is that, conceptually, such
@@ -7243,9 +7243,9 @@ naive attempt might resemble the following:
 	}
 ----
 
-This test has some obvious drawbacks. If we update our com.danbro.springmvc.controller to use the parameter
+This test has some obvious drawbacks. If we update our com.catchArg.springmvc.controller to use the parameter
 `message` instead of `text`, our form test continues to pass, even though the HTML form
-is out of synch with the com.danbro.springmvc.controller. To resolve this we can combine our two tests, as
+is out of synch with the com.catchArg.springmvc.controller. To resolve this we can combine our two tests, as
 follows:
 
 [[spring-mvc-test-server-htmlunit-mock-mvc-test]]

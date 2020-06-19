@@ -95,9 +95,8 @@ public abstract class AbstractNamedValueMethodArgumentResolver implements Handle
 	@Nullable
 	public final Object resolveArgument(MethodParameter parameter, @Nullable ModelAndViewContainer mavContainer,
 			NativeWebRequest webRequest, @Nullable WebDataBinderFactory binderFactory) throws Exception {
-		// 找到参数名相关的信息
+		// 通过 parameter 返回一个 namedValueInfo 对象，里面包括在 @RequestParam 设置的参数如 name()、value()等
 		NamedValueInfo namedValueInfo = getNamedValueInfo(parameter);
-		// 返回一个 MethodParameter 变体
 		MethodParameter nestedParameter = parameter.nestedIfOptional();
 		// 解析出参数名
 		Object resolvedName = resolveStringValue(namedValueInfo.name);
@@ -143,6 +142,12 @@ public abstract class AbstractNamedValueMethodArgumentResolver implements Handle
 
 	/**
 	 * Obtain the named value for the given method parameter.
+	 *
+	 * 先尝试到缓存里取不到则通过参数 parameter 创建一个 namedValueInfo 对象。
+	 * 创建 namedValueInfo 对象就是获取参数的 @RequestParam 注解对象，然后通过这个注解对象得到 @RequestParam
+	 * 注解里的 annotation.name(), annotation.required(), annotation.defaultValue()这三个属性，然后来初始化 namedValueInfo 对象。
+	 *
+	 *
 	 */
 	private NamedValueInfo getNamedValueInfo(MethodParameter parameter) {
 		NamedValueInfo namedValueInfo = this.namedValueInfoCache.get(parameter);
@@ -166,6 +171,7 @@ public abstract class AbstractNamedValueMethodArgumentResolver implements Handle
 	 * Create a new NamedValueInfo based on the given NamedValueInfo with sanitized values.
 	 */
 	private NamedValueInfo updateNamedValueInfo(MethodParameter parameter, NamedValueInfo info) {
+		// 找到 namedValueInfo 对象的参数名如果没有则抛出异常
 		String name = info.name;
 		if (info.name.isEmpty()) {
 			name = parameter.getParameterName();
@@ -175,6 +181,7 @@ public abstract class AbstractNamedValueMethodArgumentResolver implements Handle
 						"] not available, and parameter name information not found in class file either.");
 			}
 		}
+		// 如果在 @RequestParam 注解的默认值为ValueConstants.DEFAULT_NONE 则设置为 null，有的话更新默认值
 		String defaultValue = (ValueConstants.DEFAULT_NONE.equals(info.defaultValue) ? null : info.defaultValue);
 		return new NamedValueInfo(name, info.required, defaultValue);
 	}

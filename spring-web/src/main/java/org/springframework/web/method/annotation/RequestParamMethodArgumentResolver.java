@@ -58,6 +58,11 @@ import org.springframework.web.util.UriComponentsBuilder;
  * {@link RequestParam @RequestParam} are also treated as request parameters with
  * the parameter name derived from the argument name.
  *
+ * 解析被 @RequestParam 注解的参数， MultipartFile 类型与 MultipartResolver 抽象类结合的参数，
+ * 类型是 javax.servlet.http.Part 与 Servlet 3.0 多部件请求结合的参数。这个解析器也可以在默认的解析模式下创建，
+ * 在这种模式下，没有被 @RequestParam 注解的简单类型(比如：int, long等)也被视为请求参数，参数名派生自参数名。
+ *
+ *
  * <p>If the method parameter type is {@link Map}, the name specified in the
  * annotation is used to resolve the request parameter String value. The value is
  * then converted to a {@link Map} via type conversion assuming a suitable
@@ -171,6 +176,7 @@ public class RequestParamMethodArgumentResolver extends AbstractNamedValueMethod
 		// 尝试解析参数是不是上传文件请求
 		if (servletRequest != null) {
 			Object mpArg = MultipartResolutionDelegate.resolveMultipartArgument(name, parameter, servletRequest);
+			// 如果请求解析出的参数是能解析的则返回参数
 			if (mpArg != MultipartResolutionDelegate.UNRESOLVABLE) {
 				return mpArg;
 			}
@@ -178,14 +184,16 @@ public class RequestParamMethodArgumentResolver extends AbstractNamedValueMethod
 
 		Object arg = null;
 		MultipartRequest multipartRequest = request.getNativeRequest(MultipartRequest.class);
+		// 如果是上传文件的请求通过参数名获取文件
 		if (multipartRequest != null) {
 			List<MultipartFile> files = multipartRequest.getFiles(name);
 			if (!files.isEmpty()) {
 				arg = (files.size() == 1 ? files.get(0) : files);
 			}
 		}
+		// 如果不是文件上传请求
 		if (arg == null) {
-			// 真正解析参数的方法
+			// 通过request解析出参数
 			String[] paramValues = request.getParameterValues(name);
 			if (paramValues != null) {
 				arg = (paramValues.length == 1 ? paramValues[0] : paramValues);

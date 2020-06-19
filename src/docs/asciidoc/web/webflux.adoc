@@ -117,7 +117,7 @@ the Servlet API but with non-blocking contracts.
 
 On that foundation, Spring WebFlux provides a choice of two programming models:
 
-* <<webflux-com.danbro.springmvc.controller>>: Consistent with Spring MVC and based on the same annotations
+* <<webflux-com.catchArg.springmvc.controller>>: Consistent with Spring MVC and based on the same annotations
 from the `spring-web` module. Both Spring MVC and WebFlux controllers support reactive
 (Reactor and RxJava) return types, and, as a result, it is not easy to tell them apart. One notable
 difference is that WebFlux also supports reactive `@RequestBody` arguments.
@@ -172,7 +172,7 @@ most of a non-blocking web stack.
 
 * If you have a Spring MVC application with calls to remote services, try the reactive `WebClient`.
 You can return reactive types (Reactor, RxJava, <<webflux-reactive-libraries, or other>>)
-directly from Spring MVC com.danbro.springmvc.controller methods. The greater the latency per call or the
+directly from Spring MVC com.catchArg.springmvc.controller methods. The greater the latency per call or the
 interdependency among calls, the more dramatic the benefits. Spring MVC controllers
 can call other reactive components too.
 
@@ -619,7 +619,7 @@ multipart requests. It is enabled through the `ServerCodecConfigurer` bean
 (see the <<webflux-web-handler-api, Web Handler API>>).
 
 To parse multipart data in streaming fashion, you can use the `Flux<Part>` returned from an
-`HttpMessageReader<Part>` instead. For example, in an annotated com.danbro.springmvc.controller, use of
+`HttpMessageReader<Part>` instead. For example, in an annotated com.catchArg.springmvc.controller, use of
 `@RequestPart` implies `Map`-like access to individual parts by name and, hence, requires
 parsing multipart data in full. By contrast, you can use `@RequestBody` to decode the
 content to `Flux<Part>` without collecting to a `MultiValueMap`.
@@ -944,7 +944,7 @@ The following example shows how to do so for client-side requests:
 == `DispatcherHandler`
 [.small]#<<web.adoc#mvc-servlet, Same as in Spring MVC>>#
 
-Spring WebFlux, similarly to Spring MVC, is designed around the front com.danbro.springmvc.controller pattern,
+Spring WebFlux, similarly to Spring MVC, is designed around the front com.catchArg.springmvc.controller pattern,
 where a central `WebHandler`, the `DispatcherHandler`, provides a shared algorithm for
 request processing, while actual work is performed by configurable, delegate components.
 This model is flexible and supports diverse workflows.
@@ -1013,7 +1013,7 @@ there are also some other beans detected at a lower level (see
 
 | `HandlerAdapter`
 | Help the `DispatcherHandler` to invoke a handler mapped to a request regardless of
-  how the handler is actually invoked. For example, invoking an annotated com.danbro.springmvc.controller
+  how the handler is actually invoked. For example, invoking an annotated com.catchArg.springmvc.controller
   requires resolving annotations. The main purpose of a `HandlerAdapter` is to shield the
   `DispatcherHandler` from such details.
 
@@ -1109,7 +1109,7 @@ By contrast, support for the same in Spring MVC is built on a `HandlerExceptionR
 This generally should not matter. However, keep in mind that, in WebFlux, you cannot use a
 `@ControllerAdvice` to handle exceptions that occur before a handler is chosen.
 
-See also <<webflux-ann-com.danbro.springmvc.controller-exceptions>> in the "`Annotated Controller`" section or
+See also <<webflux-ann-com.catchArg.springmvc.controller-exceptions>> in the "`Annotated Controller`" section or
 <<webflux-exception-handler>> in the WebHandler API section.
 
 
@@ -1169,8 +1169,8 @@ The special `redirect:` prefix in a view name lets you perform a redirect. The
 `UrlBasedViewResolver` (and sub-classes) recognize this as an instruction that a
 redirect is needed. The rest of the view name is the redirect URL.
 
-The net effect is the same as if the com.danbro.springmvc.controller had returned a `RedirectView` or
-`Rendering.redirectTo("abc").build()`, but now the com.danbro.springmvc.controller itself can
+The net effect is the same as if the com.catchArg.springmvc.controller had returned a `RedirectView` or
+`Rendering.redirectTo("abc").build()`, but now the com.catchArg.springmvc.controller itself can
 operate in terms of logical view names. A view name such as
 `redirect:/some/resource` is relative to the current application, while a view name such as
 `redirect:https://example.com/arbitrary/path` redirects to an absolute URL.
@@ -1193,9 +1193,9 @@ always selected and used if they match the requested media type.
 
 
 
-[[webflux-com.danbro.springmvc.controller]]
+[[webflux-com.catchArg.springmvc.controller]]
 == Annotated Controllers
-[.small]#<<web.adoc#mvc-com.danbro.springmvc.controller, Same as in Spring MVC>>#
+[.small]#<<web.adoc#mvc-com.catchArg.springmvc.controller, Same as in Spring MVC>>#
 
 Spring WebFlux provides an annotation-based programming model, where `@Controller` and
 `@RestController` components use annotations to express request mappings, request input,
@@ -1231,11 +1231,11 @@ In the preceding example, the method returns a `String` to be written to the res
 
 
 
-[[webflux-ann-com.danbro.springmvc.controller]]
+[[webflux-ann-com.catchArg.springmvc.controller]]
 === `@Controller`
-[.small]#<<web.adoc#mvc-ann-com.danbro.springmvc.controller, Same as in Spring MVC>>#
+[.small]#<<web.adoc#mvc-ann-com.catchArg.springmvc.controller, Same as in Spring MVC>>#
 
-You can define com.danbro.springmvc.controller beans by using a standard Spring bean definition.
+You can define com.catchArg.springmvc.controller beans by using a standard Spring bean definition.
 The `@Controller` stereotype allows for auto-detection and is aligned with Spring general support
 for detecting `@Component` classes in the classpath and auto-registering bean definitions
 for them. It also acts as a stereotype for the annotated class, indicating its role as
@@ -1269,7 +1269,7 @@ your Java configuration, as the following example shows:
 <1> Scan the `org.example.web` package.
 
 `@RestController` is a <<core.adoc#beans-meta-annotations, composed annotation>> that is
-itself meta-annotated with `@Controller` and `@ResponseBody`, indicating a com.danbro.springmvc.controller whose
+itself meta-annotated with `@Controller` and `@ResponseBody`, indicating a com.catchArg.springmvc.controller whose
 every method inherits the type-level `@ResponseBody` annotation and, therefore, writes
 directly to the response body versus view resolution and rendering with an HTML template.
 
@@ -1293,7 +1293,7 @@ There are also HTTP method specific shortcut variants of `@RequestMapping`:
 * `@PatchMapping`
 
 The preceding annotations are <<webflux-ann-requestmapping-composed>> that are provided
-because, arguably, most com.danbro.springmvc.controller methods should be mapped to a specific HTTP method versus
+because, arguably, most com.catchArg.springmvc.controller methods should be mapped to a specific HTTP method versus
 using `@RequestMapping`, which, by default, matches to all HTTP methods. At the same time, a
 `@RequestMapping` is still needed at the class level to express shared mappings.
 
@@ -1508,7 +1508,7 @@ TIP: `MediaType` provides constants for commonly used media types -- for example
 [.small]#<<web.adoc#mvc-ann-requestmapping-produces, Same as in Spring MVC>>#
 
 You can narrow the request mapping based on the `Accept` request header and the list of
-content types that a com.danbro.springmvc.controller method produces, as the following example shows:
+content types that a com.catchArg.springmvc.controller method produces, as the following example shows:
 
 [source,java,indent=0,subs="verbatim,quotes",role="primary"]
 .Java
@@ -1624,7 +1624,7 @@ attributes with a narrower, more specific purpose.
 
 `@GetMapping`, `@PostMapping`, `@PutMapping`, `@DeleteMapping`, and `@PatchMapping` are
 examples of composed annotations. They are provided, because, arguably, most
-com.danbro.springmvc.controller methods should be mapped to a specific HTTP method versus using `@RequestMapping`,
+com.catchArg.springmvc.controller methods should be mapped to a specific HTTP method versus using `@RequestMapping`,
 which, by default, matches to all HTTP methods. If you need an example of composed
 annotations, look at how those are declared.
 
@@ -1695,14 +1695,14 @@ under different URLs. The following example shows how to do so:
 [.small]#<<web.adoc#mvc-ann-methods, Same as in Spring MVC>>#
 
 `@RequestMapping` handler methods have a flexible signature and can choose from a range of
-supported com.danbro.springmvc.controller method arguments and return values.
+supported com.catchArg.springmvc.controller method arguments and return values.
 
 
 [[webflux-ann-arguments]]
 ==== Method Arguments
 [.small]#<<web.adoc#mvc-ann-arguments, Same as in Spring MVC>>#
 
-The following table shows the supported com.danbro.springmvc.controller method arguments.
+The following table shows the supported com.catchArg.springmvc.controller method arguments.
 
 Reactive types (Reactor, RxJava, <<webflux-reactive-libraries, or other>>) are
 supported on arguments that require blocking I/O (for example, reading the request body) to
@@ -1823,7 +1823,7 @@ and others) and is equivalent to `required=false`.
 ==== Return Values
 [.small]#<<web.adoc#mvc-ann-return-types, Same as in Spring MVC>>#
 
-The following table shows the supported com.danbro.springmvc.controller method return values. Note that reactive
+The following table shows the supported com.catchArg.springmvc.controller method return values. Note that reactive
 types from libraries such as Reactor, RxJava, <<webflux-reactive-libraries, or other>> are
 generally supported for all return values.
 
@@ -1873,7 +1873,7 @@ generally supported for all return values.
 | A method with a `void`, possibly asynchronous (for example, `Mono<Void>`), return type (or a `null` return
   value) is considered to have fully handled the response if it also has a `ServerHttpResponse`,
   a `ServerWebExchange` argument, or an `@ResponseStatus` annotation. The same is also true
-  if the com.danbro.springmvc.controller has made a positive ETag or `lastModified` timestamp check.
+  if the com.catchArg.springmvc.controller has made a positive ETag or `lastModified` timestamp check.
   // TODO: See <<webflux-caching-etag-lastmodified>> for details.
 
   If none of the above is true, a `void` return type can also indicate "`no response body`" for
@@ -1897,7 +1897,7 @@ generally supported for all return values.
 ==== Type Conversion
 [.small]#<<web.adoc#mvc-ann-typeconversion, Same as in Spring MVC>>#
 
-Some annotated com.danbro.springmvc.controller method arguments that represent String-based request input (for example,
+Some annotated com.catchArg.springmvc.controller method arguments that represent String-based request input (for example,
 `@RequestParam`, `@RequestHeader`, `@PathVariable`, `@MatrixVariable`, and `@CookieValue`)
 can require type conversion if the argument is declared as something other than `String`.
 
@@ -1924,7 +1924,7 @@ values can also be specified through repeated variable names -- for example,
 Unlike Spring MVC, in WebFlux, the presence or absence of matrix variables in a URL does
 not affect request mappings. In other words, you are not required to use a URI variable
 to mask variable content. That said, if you want to access matrix variables from a
-com.danbro.springmvc.controller method, you need to add a URI variable to the path segment where matrix
+com.catchArg.springmvc.controller method, you need to add a URI variable to the path segment where matrix
 variables are expected. The following example shows how to do so:
 
 [source,java,indent=0,subs="verbatim,quotes",role="primary"]
@@ -2047,7 +2047,7 @@ To get all matrix variables, use a `MultiValueMap`, as the following example sho
 [.small]#<<web.adoc#mvc-ann-requestparam, Same as in Spring MVC>>#
 
 You can use the `@RequestParam` annotation to bind query parameters to a method argument in a
-com.danbro.springmvc.controller. The following code snippet shows the usage:
+com.catchArg.springmvc.controller. The following code snippet shows the usage:
 
 [source,java,indent=0,subs="verbatim,quotes",role="primary"]
 .Java
@@ -2122,7 +2122,7 @@ with `@RequestParam`.
 [.small]#<<web.adoc#mvc-ann-requestheader, Same as in Spring MVC>>#
 
 You can use the `@RequestHeader` annotation to bind a request header to a method argument in a
-com.danbro.springmvc.controller.
+com.catchArg.springmvc.controller.
 
 The following example shows a request with headers:
 
@@ -2183,7 +2183,7 @@ example, a method parameter annotated with `@RequestHeader("Accept")` may be of 
 [.small]#<<web.adoc#mvc-ann-cookievalue, Same as in Spring MVC>>#
 
 You can use the `@CookieValue` annotation to bind the value of an HTTP cookie to a method argument
-in a com.danbro.springmvc.controller.
+in a com.catchArg.springmvc.controller.
 
 The following example shows a request with a cookie:
 
@@ -2262,7 +2262,7 @@ where necessary. For more on data binding (and validation), see
 <<webflux-ann-initbinder>>.
 
 Data binding can result in errors. By default, a `WebExchangeBindException` is raised, but,
-to check for such errors in the com.danbro.springmvc.controller method, you can add a `BindingResult` argument
+to check for such errors in the com.catchArg.springmvc.controller method, you can add a `BindingResult` argument
 immediately next to the `@ModelAttribute`, as the following example shows:
 
 [source,java,indent=0,subs="verbatim,quotes",role="primary"]
@@ -2372,7 +2372,7 @@ with `@ModelAttribute`.
 
 `@SessionAttributes` is used to store model attributes in the `WebSession` between
 requests. It is a type-level annotation that declares session attributes used by a
-specific com.danbro.springmvc.controller. This typically lists the names of model attributes or types of
+specific com.catchArg.springmvc.controller. This typically lists the names of model attributes or types of
 model attributes that should be transparently stored in the session for subsequent
 requests to access.
 
@@ -2402,7 +2402,7 @@ Consider the following example:
 
 On the first request, when a model attribute with the name, `pet`, is added to the model,
 it is automatically promoted to and saved in the `WebSession`. It remains there until
-another com.danbro.springmvc.controller method uses a `SessionStatus` method argument to clear the storage,
+another com.catchArg.springmvc.controller method uses a `SessionStatus` method argument to clear the storage,
 as the following example shows:
 
 [source,java,indent=0,subs="verbatim,quotes",role="primary"]
@@ -2456,7 +2456,7 @@ as the following example shows:
 [.small]#<<web.adoc#mvc-ann-sessionattribute, Same as in Spring MVC>>#
 
 If you need access to pre-existing session attributes that are managed globally
-(that is, outside the com.danbro.springmvc.controller -- for example, by a filter) and may or may not be present,
+(that is, outside the com.catchArg.springmvc.controller -- for example, by a filter) and may or may not be present,
 you can use the `@SessionAttribute` annotation on a method parameter, as the following example shows:
 
 [source,java,indent=0,subs="verbatim,quotes",role="primary"]
@@ -2480,9 +2480,9 @@ you can use the `@SessionAttribute` annotation on a method parameter, as the fol
 <1> Using `@SessionAttribute`.
 
 For use cases that require adding or removing session attributes, consider injecting
-`WebSession` into the com.danbro.springmvc.controller method.
+`WebSession` into the com.catchArg.springmvc.controller method.
 
-For temporary storage of model attributes in the session as part of a com.danbro.springmvc.controller
+For temporary storage of model attributes in the session as part of a com.catchArg.springmvc.controller
 workflow, consider using `SessionAttributes`, as described in
 <<webflux-ann-sessionattributes>>.
 
@@ -2521,7 +2521,7 @@ as the following example shows:
 [.small]#<<web.adoc#mvc-multipart-forms, Same as in Spring MVC>>#
 
 As explained in <<webflux-multipart>>, `ServerWebExchange` provides access to multipart
-content. The best way to handle a file upload form (for example, from a browser) in a com.danbro.springmvc.controller
+content. The best way to handle a file upload form (for example, from a browser) in a com.catchArg.springmvc.controller
 is through data binding to a <<webflux-ann-modelattrib-method-args, command object>>,
 as the following example shows:
 
@@ -2643,7 +2643,7 @@ You can use `@RequestPart` combination with `javax.validation.Valid` or Spring's
 `@Validated` annotation, which causes Standard Bean Validation to be applied.
 By default, validation errors cause a `WebExchangeBindException`, which is turned
 into a 400 (`BAD_REQUEST`) response. Alternatively, you can handle validation errors locally
-within the com.danbro.springmvc.controller through an `Errors` or `BindingResult` argument, as the following example shows:
+within the com.catchArg.springmvc.controller through an `Errors` or `BindingResult` argument, as the following example shows:
 
 [source,java,indent=0,subs="verbatim,quotes",role="primary"]
 .Java
@@ -2770,7 +2770,7 @@ You can use `@RequestBody` in combination with `javax.validation.Valid` or Sprin
 `@Validated` annotation, which causes Standard Bean Validation to be applied.
 By default, validation errors cause a `WebExchangeBindException`, which is turned
 into a 400 (`BAD_REQUEST`) response. Alternatively, you can handle validation errors locally
-within the com.danbro.springmvc.controller through an `Errors` or a `BindingResult` argument. The following
+within the com.catchArg.springmvc.controller through an `Errors` or a `BindingResult` argument. The following
 example uses a `BindingResult` argument`:
 
 [source,java,indent=0,subs="verbatim,quotes",role="primary"]
@@ -2845,7 +2845,7 @@ example shows how to do so:
 ----
 
 `@ResponseBody` is also supported at the class level, in which case it is inherited by
-all com.danbro.springmvc.controller methods. This is the effect of `@RestController`, which is nothing more
+all com.catchArg.springmvc.controller methods. This is the effect of `@RestController`, which is nothing more
 than a meta-annotation marked with `@Controller` and `@ResponseBody`.
 
 `@ResponseBody` supports reactive types, which means you can return Reactor or RxJava
@@ -2904,7 +2904,7 @@ Spring offers support for the Jackson JSON library.
 Spring WebFlux provides built-in support for
 https://www.baeldung.com/jackson-json-view-annotation[Jackson's Serialization Views],
 which allows rendering only a subset of all fields in an `Object`. To use it with
-`@ResponseBody` or `ResponseEntity` com.danbro.springmvc.controller methods, you can use Jackson's
+`@ResponseBody` or `ResponseEntity` com.catchArg.springmvc.controller methods, you can use Jackson's
 `@JsonView` annotation to activate a serialization view class, as the following example shows:
 
 [source,java,indent=0,subs="verbatim,quotes",role="primary"]
@@ -2971,7 +2971,7 @@ which allows rendering only a subset of all fields in an `Object`. To use it wit
 ----
 
 NOTE: `@JsonView` allows an array of view classes but you can only specify only one per
-com.danbro.springmvc.controller method. Use a composite interface if you need to activate multiple views.
+com.catchArg.springmvc.controller method. Use a composite interface if you need to activate multiple views.
 
 
 
@@ -2989,10 +2989,10 @@ to initialize the model prior to any `@RequestMapping` method invocation.
 * On a `@RequestMapping` method to mark its return value as a model attribute.
 
 This section discusses `@ModelAttribute` methods, or the second item from the preceding list.
-A com.danbro.springmvc.controller can have any number of `@ModelAttribute` methods. All such methods are
-invoked before `@RequestMapping` methods in the same com.danbro.springmvc.controller. A `@ModelAttribute`
+A com.catchArg.springmvc.controller can have any number of `@ModelAttribute` methods. All such methods are
+invoked before `@RequestMapping` methods in the same com.catchArg.springmvc.controller. A `@ModelAttribute`
 method can also be shared across controllers through `@ControllerAdvice`. See the section on
-<<webflux-ann-com.danbro.springmvc.controller-advice>> for more details.
+<<webflux-ann-com.catchArg.springmvc.controller-advice>> for more details.
 
 `@ModelAttribute` methods have flexible method signatures. They support many of the same
 arguments as `@RequestMapping` methods (except for `@ModelAttribute` itself and anything
@@ -3123,10 +3123,10 @@ initialize instances of `WebDataBinder`. Those, in turn, are used to:
 
 * Bind request parameters (that is, form data or query) to a model object.
 * Convert `String`-based request values (such as request parameters, path variables,
-headers, cookies, and others) to the target type of com.danbro.springmvc.controller method arguments.
+headers, cookies, and others) to the target type of com.catchArg.springmvc.controller method arguments.
 * Format model object values as `String` values when rendering HTML forms.
 
-`@InitBinder` methods can register com.danbro.springmvc.controller-specific `java.bean.PropertyEditor` or
+`@InitBinder` methods can register com.catchArg.springmvc.controller-specific `java.bean.PropertyEditor` or
 Spring `Converter` and `Formatter` components. In addition, you can use the
 <<webflux-config-conversion, WebFlux Java configuration>> to register `Converter` and
 `Formatter` types in a globally shared `FormattingConversionService`.
@@ -3173,7 +3173,7 @@ The following example uses the `@InitBinder` annotation:
 
 Alternatively, when using a `Formatter`-based setup through a shared
 `FormattingConversionService`, you could re-use the same approach and register
-com.danbro.springmvc.controller-specific `Formatter` instances, as the following example shows:
+com.catchArg.springmvc.controller-specific `Formatter` instances, as the following example shows:
 
 [source,java,indent=0,subs="verbatim,quotes",role="primary"]
 .Java
@@ -3209,12 +3209,12 @@ com.danbro.springmvc.controller-specific `Formatter` instances, as the following
 
 
 
-[[webflux-ann-com.danbro.springmvc.controller-exceptions]]
+[[webflux-ann-com.catchArg.springmvc.controller-exceptions]]
 === Managing Exceptions
 [.small]#<<web.adoc#mvc-ann-exceptionhandler, Same as in Spring MVC>>#
 
-`@Controller` and <<mvc-ann-com.danbro.springmvc.controller-advice, @ControllerAdvice>> classes can have
-`@ExceptionHandler` methods to handle exceptions from com.danbro.springmvc.controller methods. The following
+`@Controller` and <<mvc-ann-com.catchArg.springmvc.controller-advice, @ControllerAdvice>> classes can have
+`@ExceptionHandler` methods to handle exceptions from com.catchArg.springmvc.controller methods. The following
 example includes such a handler method:
 
 [source,java,indent=0,subs="verbatim,quotes",role="primary"]
@@ -3288,9 +3288,9 @@ an HTTP status code.
 
 
 
-[[webflux-ann-com.danbro.springmvc.controller-advice]]
+[[webflux-ann-com.catchArg.springmvc.controller-advice]]
 === Controller Advice
-[.small]#<<web.adoc#mvc-ann-com.danbro.springmvc.controller-advice, Same as in Spring MVC>>#
+[.small]#<<web.adoc#mvc-ann-com.catchArg.springmvc.controller-advice, Same as in Spring MVC>>#
 
 Typically, the `@ExceptionHandler`, `@InitBinder`, and `@ModelAttribute` methods apply
 within the `@Controller` class (or class hierarchy) in which they are declared. If you
@@ -3456,7 +3456,7 @@ use case-oriented approach that focuses on the common scenarios, as the followin
 
 Controllers can add explicit support for HTTP caching. We recommend doing so, since the
 `lastModified` or `ETag` value for a resource needs to be calculated before it can be compared
-against conditional request headers. A com.danbro.springmvc.controller can add an `ETag` and `Cache-Control`
+against conditional request headers. A com.catchArg.springmvc.controller can add an `ETag` and `Cache-Control`
 settings to a `ResponseEntity`, as the following example shows:
 
 [source,java,indent=0,subs="verbatim,quotes",role="primary"]
@@ -3497,7 +3497,7 @@ The preceding example sends a 304 (NOT_MODIFIED) response with an empty body if 
 to the conditional request headers indicates the content has not changed. Otherwise, the
 `ETag` and `Cache-Control` headers are added to the response.
 
-You can also make the check against conditional request headers in the com.danbro.springmvc.controller,
+You can also make the check against conditional request headers in the com.catchArg.springmvc.controller,
 as the following example shows:
 
 [source,java,indent=0,subs="verbatim,quotes",role="primary"]

@@ -10,15 +10,15 @@
 <!--	<mvc:interceptors>-->
 <!--		<mvc:interceptor>-->
 <!--			<mvc:mapping path="/login"/>-->
-<!--			<bean class="com.danbro.interceptor.LoginInterceptor"/>-->
+<!--			<bean class="com.catchArg.interceptor.LoginInterceptor"/>-->
 <!--		</mvc:interceptor>-->
 <!--		<mvc:interceptor>-->
 <!--			<mvc:mapping path="/login"/>-->
-<!--			<bean class="com.danbro.interceptor.AllInterceptor"/>-->
+<!--			<bean class="com.catchArg.interceptor.AllInterceptor"/>-->
 <!--		</mvc:interceptor>-->
 <!--		<mvc:interceptor>-->
 <!--			<mvc:mapping path="/login"/>-->
-<!--			<bean class="com.danbro.interceptor.LogoutInterceptor"/>-->
+<!--			<bean class="com.catchArg.interceptor.LogoutInterceptor"/>-->
 <!--		</mvc:interceptor>-->
 <!--	</mvc:interceptors>-->
 
