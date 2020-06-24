@@ -87,6 +87,9 @@ public final class MethodIntrospector {
 	/**
 	 * Select methods on the given target type based on a filter.
 	 * <p>Callers define methods of interest through the {@code MethodFilter} parameter.
+	 *
+	 * 选择给定的目标类型是过滤器的方法
+	 *
 	 * @param targetType the target type to search methods on
 	 * @param methodFilter a {@code MethodFilter} to help
 	 * recognize handler methods of interest

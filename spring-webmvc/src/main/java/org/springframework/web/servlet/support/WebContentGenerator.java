@@ -391,7 +391,7 @@ public abstract class WebContentGenerator extends WebApplicationObjectSupport {
 	 * Prepare the given response according to the settings of this generator.
 	 * Applies the number of cache seconds specified for this generator.、
 	 *
-	 * 根据这个 generator 的设置准备指定的响应。
+	 * 根据这个生成器的设置准备指定的响应。
 	 *
 	 *
 	 * @param response current HTTP response

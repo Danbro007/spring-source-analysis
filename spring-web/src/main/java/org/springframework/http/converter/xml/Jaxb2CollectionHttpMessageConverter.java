@@ -52,9 +52,13 @@ import org.springframework.util.xml.StaxUtils;
 /**
  * An {@code HttpMessageConverter} that can read XML collections using JAXB2.
  *
+ * 能通过使用 JAXB2 来读取 xml 集合的 HttpMessageConverter。
+ *
  * <p>This converter can read {@linkplain Collection collections} that contain classes
  * annotated with {@link XmlRootElement} and {@link XmlType}. Note that this converter
  * does not support writing.
+ *
+ * 这个转换器能读取包含被 @XmlRootElement 和 @XmlType 注解的类 。这个转换器不支持写操作。
  *
  * @author Arjen Poutsma
  * @author Rossen Stoyanchev

@@ -29,11 +29,18 @@ import org.springframework.util.CollectionUtils;
  * both to make it possible for a com.danbro.springmvc.controller to return both model
  * and view in a single return value.
  *
+ *  在 web MVC 框架中存储模型和视图的容器。注意它们是完全不同的。
+ *  这个类让仅仅从 controller 返回的单个返回值里存储模型和视图成为可能。
+ *
  * <p>Represents a model and view returned by a handler, to be resolved
  * by a DispatcherServlet. The view can take the form of a String
  * view name which will need to be resolved by a ViewResolver object;
  * alternatively a View object can be specified directly. The model
  * is a Map, allowing the use of multiple objects keyed by name.
+ *
+ * 通过处理器的返回值呈现出模型和视图，这个返回值会被 DispatcherServlet 解析。
+ * 视图能采用 String 类型的格式，这种格式会被视图解析器解析，或者，可以直接指定视图对象。
+ * 模型是一个 Map，允许使用多个按 key-value 的对象。
  *
  * @author Rod Johnson
  * @author Juergen Hoeller
@@ -218,6 +225,9 @@ public class ModelAndView {
 	/**
 	 * Indicate whether or not this {@code ModelAndView} has a view, either
 	 * as a view name or as a direct {@link View} instance.
+	 *
+	 * 指示这个 ModelAndView 是否有视图，可以作为视图名，也可以作为一个直接的视图实例。
+	 *
 	 */
 	public boolean hasView() {
 		return (this.view != null);
@@ -227,6 +237,9 @@ public class ModelAndView {
 	 * Return whether we use a view reference, i.e. {@code true}
 	 * if the view has been specified via a name to be resolved by the
 	 * DispatcherServlet via a ViewResolver.
+	 *
+	 * 返回是否是视图引用。返回 true 是如果视图是通过名称指定的，则由 DispatcherServlet 通过视图解析器解析。
+	 *
 	 */
 	public boolean isReference() {
 		return (this.view instanceof String);
@@ -280,6 +293,9 @@ public class ModelAndView {
 
 	/**
 	 * Add an attribute to the model.
+	 *
+	 * 给模型添加一个属性
+	 *
 	 * @param attributeName name of the object to add to the model (never {@code null})
 	 * @param attributeValue object to add to the model (can be {@code null})
 	 * @see ModelMap#addAttribute(String, Object)
@@ -292,6 +308,9 @@ public class ModelAndView {
 
 	/**
 	 * Add an attribute to the model using parameter name generation.
+	 *
+	 * 添加一个使用参数名生成的属性到模型
+	 *
 	 * @param attributeValue the object to add to the model (never {@code null})
 	 * @see ModelMap#addAttribute(Object)
 	 * @see #getModelMap()
@@ -303,6 +322,9 @@ public class ModelAndView {
 
 	/**
 	 * Add all attributes contained in the provided Map to the model.
+	 *
+	 * 将提供的 Map 中包含的所有属性添加到模型中。
+	 *
 	 * @param modelMap a Map of attributeName -> attributeValue pairs
 	 * @see ModelMap#addAllAttributes(Map)
 	 * @see #getModelMap()
@@ -330,6 +352,9 @@ public class ModelAndView {
 	/**
 	 * Return whether this ModelAndView object is empty,
 	 * i.e. whether it does not hold any view and does not contain a model.
+	 *
+	 * 返回是否 ModelAndView 对象是空的。例如：是否 ModelAndView 对象没存储任何视图对象和不包含任何模型
+	 *
 	 */
 	public boolean isEmpty() {
 		return (this.view == null && CollectionUtils.isEmpty(this.model));
@@ -338,8 +363,14 @@ public class ModelAndView {
 	/**
 	 * Return whether this ModelAndView object is empty as a result of a call to {@link #clear}
 	 * i.e. whether it does not hold any view and does not contain a model.
+	 *
+	 * 返回是否这个 ModelAndView 对象是一个空对象，与调用 clear() 效果一样。既它是否不存储任何视图和不包含模型。
+	 *
 	 * <p>Returns {@code false} if any additional state was added to the instance
 	 * <strong>after</strong> the call to {@link #clear}.
+	 *
+	 * 如果任何附加的状态被添加到调用好 clear() 之后的实例则返回 false
+	 *
 	 * @see #clear()
 	 */
 	public boolean wasCleared() {

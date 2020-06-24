@@ -67,7 +67,7 @@ public class ViewNameMethodReturnValueHandler implements HandlerMethodReturnValu
 		return this.redirectPatterns;
 	}
 
-
+	// 判断返回值处理器的是否支持的依据是是不是 void 或者 返回值类型是不是 CharSequence 接口的实现
 	@Override
 	public boolean supportsReturnType(MethodParameter returnType) {
 		Class<?> paramType = returnType.getParameterType();
@@ -77,7 +77,7 @@ public class ViewNameMethodReturnValueHandler implements HandlerMethodReturnValu
 	@Override
 	public void handleReturnValue(@Nullable Object returnValue, MethodParameter returnType,
 			ModelAndViewContainer mavContainer, NativeWebRequest webRequest) throws Exception {
-
+		// 先给 mav 设置视图名为 controller 的返回值，如果返回值的开头是 "redirect:" 则设置为重定向模型场景
 		if (returnValue instanceof CharSequence) {
 			String viewName = returnValue.toString();
 			mavContainer.setViewName(viewName);

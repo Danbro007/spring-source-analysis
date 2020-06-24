@@ -19,7 +19,7 @@ package org.springframework.web.servlet;
 /**
  * Provides additional information about a View such as whether it
  * performs redirects.
- *
+ * 提供关于视图的附加信息，比如视图是否执行重定向。
  * @author Rossen Stoyanchev
  * @since 3.1
  */

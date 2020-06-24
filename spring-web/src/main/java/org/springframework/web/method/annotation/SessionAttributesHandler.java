@@ -80,6 +80,9 @@ public class SessionAttributesHandler {
 	/**
 	 * Whether the com.danbro.springmvc.controller represented by this instance has declared any
 	 * session attributes through an {@link SessionAttributes} annotation.
+	 *
+	 * 这个实例所代表的 controller 是否已经通过 @SessionAttributes 注解声明了所有的 session 属性。
+	 *
 	 */
 	public boolean hasSessionAttributes() {
 		return (!this.attributeNames.isEmpty() || !this.attributeTypes.isEmpty());
@@ -107,7 +110,10 @@ public class SessionAttributesHandler {
 
 	/**
 	 * Store a subset of the given attributes in the session. Attributes not
-	 * declared as session attributes via {@code @SessionAttributes} are ignored.
+	 * declared as session attributes via {@code @} are ignored.
+	 *
+	 * 在会话中存储给定属性的子集。未通过 @SessionAttributes 注解的属性会被忽略。
+	 *
 	 * @param request the current request
 	 * @param attributes candidate attributes for session storage
 	 */
@@ -140,6 +146,9 @@ public class SessionAttributesHandler {
 	/**
 	 * Remove "known" attributes from the session, i.e. attributes listed
 	 * by name in {@code @SessionAttributes} or attributes previously stored
+	 *
+	 * 从会话中删除“已知的”属性既在 @SessionAttributes 中按名称列出的属性或先前存储的属性。
+	 *
 	 * in the model that matched by type.
 	 * @param request the current request
 	 */

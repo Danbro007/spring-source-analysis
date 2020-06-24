@@ -29,6 +29,9 @@ import org.springframework.lang.Nullable;
  * into a target object of a specified generic type and a source object of a specified
  * generic type into an HTTP response.
  *
+ * 一个特殊化的 HttpMessageConverter，他能将 HTTP 请求转换为指定泛型类型的目标对象，以及把 HTTP 响应转换为指定的泛型的源对象。
+ *
+ *
  * @author Arjen Poutsma
  * @author Rossen Stoyanchev
  * @author Sebastien Deleuze
@@ -72,6 +75,11 @@ public interface GenericHttpMessageConverter<T> extends HttpMessageConverter<T> 
 	 * <p>This method should perform the same checks than
 	 * {@link HttpMessageConverter#canWrite(Class, MediaType)} with additional ones
 	 * related to the generic type.
+	 *
+	 * 表明这个转换器是否能编写给定的类。
+	 * 这个应该执行与 HttpMessageConverter 的 canWrite(Class, MediaType) 方法相同的检查。
+	 * 另外还有与泛型类型相关的检查。
+	 *
 	 * @param type the (potentially generic) type to test for writability
 	 * (can be {@code null} if not specified)
 	 * @param clazz the source object class to test for writability

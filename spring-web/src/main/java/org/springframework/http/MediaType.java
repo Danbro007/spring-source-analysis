@@ -39,6 +39,18 @@ import org.springframework.util.StringUtils;
  * A subclass of {@link MimeType} that adds support for quality parameters
  * as defined in the HTTP specification.
  *
+ * 添加了对 HTTP 规范中定义的质量参数（q 质量参数表示权重来设定优先级）支持的 MineType 子类
+ *
+ * q质量值的应用场景：
+ *
+ *     假设客户端的Accept-Language指定的是西班牙语，但是服务端只有英语与法语版本，
+ *     这个客户端希望在没有西班牙语的时候优先返回英语。这就意味着，我们需要一种HTTP机制更详细的描述偏好。
+ *     这种机制就是质量值（q值）。示例如下：
+ *
+ *     Accept-Language: en;q=0.5, fr;q=0.0, nl;q=1.0, tr;q=0.0
+ *
+ *     这个首部表示：用户最愿意接受荷兰语（nl），英文也行（en）,就是不愿意接受法语（fr）或者土耳其语（tr）；
+ *
  * @author Arjen Poutsma
  * @author Juergen Hoeller
  * @author Rossen Stoyanchev
@@ -536,6 +548,9 @@ public class MediaType extends MimeType implements Serializable {
 	 * Return a replica of this instance with its quality value removed.
 	 * @return the same instance if the media type doesn't contain a quality value,
 	 * or a new one otherwise
+	 *
+	 * 返回已经删除 q 参数值的实例副本。
+	 *
 	 */
 	public MediaType removeQualityValue() {
 		if (!getParameters().containsKey(PARAM_QUALITY_FACTOR)) {

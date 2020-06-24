@@ -116,7 +116,7 @@ public class RequestMappingHandlerAdapter extends AbstractHandlerMethodAdapter
 		implements BeanFactoryAware, InitializingBean {
 
 	/**
-	 * MethodFilter that matches {@link InitBinder @InitBinder} methods.
+	 * MethodFilter that matches {@link InitBinder @InitBinder} methods. 过滤出有 @InitBinder 的方法
 	 */
 	public static final MethodFilter INIT_BINDER_METHODS = method ->
 			AnnotatedElementUtils.hasAnnotation(method, InitBinder.class);
@@ -566,6 +566,7 @@ public class RequestMappingHandlerAdapter extends AbstractHandlerMethodAdapter
 			List<HandlerMethodArgumentResolver> resolvers = getDefaultInitBinderArgumentResolvers();
 			this.initBinderArgumentResolvers = new HandlerMethodArgumentResolverComposite().addResolvers(resolvers);
 		}
+		// 配置默认的返回值处理器
 		if (this.returnValueHandlers == null) {
 			List<HandlerMethodReturnValueHandler> handlers = getDefaultReturnValueHandlers();
 			this.returnValueHandlers = new HandlerMethodReturnValueHandlerComposite().addHandlers(handlers);
@@ -902,12 +903,12 @@ public class RequestMappingHandlerAdapter extends AbstractHandlerMethodAdapter
 				});
 				invocableMethod = invocableMethod.wrapConcurrentResult(result);
 			}
-			// 执行处理器里的方法
+			// 执行处理器里的方法,如果有返回值把返回值处理下放入 mavContainer 里。
 			invocableMethod.invokeAndHandle(webRequest, mavContainer);
 			if (asyncManager.isConcurrentHandlingStarted()) {
 				return null;
 			}
-
+			// 返回值都放入 mavContainer 里，创建一个 ModelAndView 对象。
 			return getModelAndView(mavContainer, modelFactory, webRequest);
 		}
 		finally {
@@ -960,17 +961,20 @@ public class RequestMappingHandlerAdapter extends AbstractHandlerMethodAdapter
 		attrMethod.setDataBinderFactory(factory);
 		return attrMethod;
 	}
-
+	// 通过处理器获取属性绑定工厂
 	private WebDataBinderFactory getDataBinderFactory(HandlerMethod handlerMethod) throws Exception {
 		Class<?> handlerType = handlerMethod.getBeanType();
 		Set<Method> methods = this.initBinderCache.get(handlerType);
 		if (methods == null) {
+			// 尝试获取带有 @InitBinder 注解的方法，找到后放入缓存里。
 			methods = MethodIntrospector.selectMethods(handlerType, INIT_BINDER_METHODS);
 			this.initBinderCache.put(handlerType, methods);
 		}
 		List<InvocableHandlerMethod> initBinderMethods = new ArrayList<>();
 		// Global methods first
+		// 尝试获取带有 @ControllerAdvice 注解的 controller
 		this.initBinderAdviceCache.forEach((clazz, methodSet) -> {
+			// 检查给定的类的类型是否应该被 ControllerAdviceBean 通知
 			if (clazz.isApplicableToBeanType(handlerType)) {
 				Object bean = clazz.resolveBean();
 				for (Method method : methodSet) {
@@ -997,8 +1001,14 @@ public class RequestMappingHandlerAdapter extends AbstractHandlerMethodAdapter
 
 	/**
 	 * Template method to create a new InitBinderDataBinderFactory instance.
+	 *
+	 * 创建一个 InitBinderDataBinderFactory 实例的模板方法。
+	 *
 	 * <p>The default implementation creates a ServletRequestDataBinderFactory.
 	 * This can be overridden for custom ServletRequestDataBinder subclasses.
+	 *
+	 * 默认实现会创建一个 ServletRequestDataBinderFactory。它能被自定义的 ServletRequestDataBinder 子类重写。
+	 *
 	 * @param binderMethods {@code @InitBinder} methods
 	 * @return the InitBinderDataBinderFactory instance to use
 	 * @throws Exception in case of invalid state or arguments
@@ -1012,19 +1022,21 @@ public class RequestMappingHandlerAdapter extends AbstractHandlerMethodAdapter
 	@Nullable
 	private ModelAndView getModelAndView(ModelAndViewContainer mavContainer,
 			ModelFactory modelFactory, NativeWebRequest webRequest) throws Exception {
-
+		// 先判断会话是不是已完成，如果成了把 session 里的属性清除，如果没有则把被 @SessionAttribute 标注的属性存入 session 里
+		// 最后如果不是重定向请求则给所有属性创建一个 BindingResult 对象放入模型里
 		modelFactory.updateModel(webRequest, mavContainer);
 		if (mavContainer.isRequestHandled()) {
 			return null;
 		}
-		//返回模式，默认或者重定向模式。
+		//从 mavContainer 获取存储属性的模型
 		ModelMap model = mavContainer.getModel();
-		//通过视图名、模式和状态码创建 ModelAndView 对象
+		//通过视图名、模型和状态码创建 ModelAndView 对象
 		ModelAndView mav = new ModelAndView(mavContainer.getViewName(), model, mavContainer.getStatus());
+		// 给 ModelAndView 设置视图名
 		if (!mavContainer.isViewReference()) {
 			mav.setView((View) mavContainer.getView());
 		}
-		//如果是重定向
+		//如果是重定向则把属性放到重定向的请求里
 		if (model instanceof RedirectAttributes) {
 			Map<String, ?> flashAttributes = ((RedirectAttributes) model).getFlashAttributes();
 			HttpServletRequest request = webRequest.getNativeRequest(HttpServletRequest.class);

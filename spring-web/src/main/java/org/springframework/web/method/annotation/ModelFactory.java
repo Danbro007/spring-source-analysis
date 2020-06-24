@@ -37,6 +37,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.HttpSessionRequiredException;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.HandlerMethod;
@@ -184,6 +185,9 @@ public final class ModelFactory {
 
 	/**
 	 * Promote model attributes listed as {@code @SessionAttributes} to the session.
+	 *
+	 * 将被 @SessionAttributes 注解的属性提升到会话级别。
+	 *
 	 * Add {@link BindingResult} attributes where necessary.
 	 * @param request the current request
 	 * @param container contains the model to update
@@ -191,26 +195,36 @@ public final class ModelFactory {
 	 */
 	public void updateModel(NativeWebRequest request, ModelAndViewContainer container) throws Exception {
 		ModelMap defaultModel = container.getDefaultModel();
+		// 如果当前处理器的 session 处理已完成。删除 session 里的属性表明这些属性不会再被用
 		if (container.getSessionStatus().isComplete()){
 			this.sessionAttributesHandler.cleanupAttributes(request);
 		}
 		else {
+			//存储被 @SessionAttributes 注解的属性到 session 中
 			this.sessionAttributesHandler.storeAttributes(request, defaultModel);
 		}
+		// 如果请求还没有被完全的处理并且容器里模型不是重定向模型
 		if (!container.isRequestHandled() && container.getModel() == defaultModel) {
+			// 为模型里的所有属性创建数据绑定器然后再放入模型里
 			updateBindingResult(request, defaultModel);
 		}
 	}
 
 	/**
 	 * Add {@link BindingResult} attributes to the model for attributes that require it.
+	 *
+	 * 把模型里属性的属性名开头添加 “org.springframework.validation.BindingResult.”，添加完毕后再通过修改好的属性名到
+	 * 模型里查看是否有，没有的话则为这个属性创建一个数据绑定器然后存入模型里。
+	 *
 	 */
 	private void updateBindingResult(NativeWebRequest request, ModelMap model) throws Exception {
 		List<String> keyNames = new ArrayList<>(model.keySet());
 		for (String name : keyNames) {
 			Object value = model.get(name);
+			// 如果属性名的开头不是 “org.springframework.validation.BindingResult.”则给属性名加上
 			if (value != null && isBindingCandidate(name, value)) {
 				String bindingResultKey = BindingResult.MODEL_KEY_PREFIX + name;
+				// 如果模型里没有这个属性则创建一个这个属性的绑定器放入模型里
 				if (!model.containsAttribute(bindingResultKey)) {
 					WebDataBinder dataBinder = this.dataBinderFactory.createBinder(request, value, name);
 					model.put(bindingResultKey, dataBinder.getBindingResult());

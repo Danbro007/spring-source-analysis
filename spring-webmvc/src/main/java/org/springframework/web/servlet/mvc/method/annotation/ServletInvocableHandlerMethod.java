@@ -109,10 +109,11 @@ public class ServletInvocableHandlerMethod extends InvocableHandlerMethod {
 	 */
 	public void invokeAndHandle(ServletWebRequest webRequest, ModelAndViewContainer mavContainer,
 			Object... providedArgs) throws Exception {
-		//是用 HandlerMethodArgumentResolver 解析参数
+		//是用参数解析器解析出参数
 		Object returnValue = invokeForRequest(webRequest, mavContainer, providedArgs);
 		setResponseStatus(webRequest);
-
+		// 如果没有参数则判断是否满足这三个情况中的一个：响应状态是不是存在、请求是不是被完整处理、请求是否符合“未修改”
+		// 如果满足其中一个则禁用缓存并把请求设置为已经被完整处理
 		if (returnValue == null) {
 			if (isRequestNotModified(webRequest) || getResponseStatus() != null || mavContainer.isRequestHandled()) {
 				disableContentCachingIfNecessary(webRequest);
@@ -120,11 +121,12 @@ public class ServletInvocableHandlerMethod extends InvocableHandlerMethod {
 				return;
 			}
 		}
+		// 如果有的话，返回相关的响应状态原因
 		else if (StringUtils.hasText(getResponseStatusReason())) {
 			mavContainer.setRequestHandled(true);
 			return;
 		}
-
+		// 请求设置为还没有被完整处理，尝试处理返回值
 		mavContainer.setRequestHandled(false);
 		Assert.state(this.returnValueHandlers != null, "No return value handlers");
 		try {

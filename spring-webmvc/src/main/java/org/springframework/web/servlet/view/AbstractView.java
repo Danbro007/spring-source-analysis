@@ -300,6 +300,10 @@ public abstract class AbstractView extends WebApplicationObjectSupport implement
 	 * Prepares the view given the specified model, merging it with static
 	 * attributes and a RequestContext attribute, if necessary.
 	 * Delegates to renderMergedOutputModel for the actual rendering.
+	 *
+	 * 根据指定的模型准备视图，如果必要的话将其与静态属性和 RequestContext 属性合并。
+	 * 委托给 renderMergedOutputModel 进行实际的渲染工作
+	 *
 	 * @see #renderMergedOutputModel
 	 */
 	@Override
@@ -311,15 +315,20 @@ public abstract class AbstractView extends WebApplicationObjectSupport implement
 					", model " + (model != null ? model : Collections.emptyMap()) +
 					(this.staticAttributes.isEmpty() ? "" : ", static attributes " + this.staticAttributes));
 		}
-
+		// 获取一个包含动态值和静态属性的 Map
 		Map<String, Object> mergedModel = createMergedOutputModel(model, request, response);
+		// 如果是下载文件的响应给它设置响应头：Pragma、Cache-Control
 		prepareResponse(request, response);
+		// 委托给 renderMergedOutputModel 进行实际的渲染工作
 		renderMergedOutputModel(mergedModel, getRequestToExpose(request), response);
 	}
 
 	/**
 	 * Creates a combined output Map (never {@code null}) that includes dynamic values and static attributes.
 	 * Dynamic values take precedence over static attributes.
+	 *
+	 * 创建一个组合输出的 Map（不会是 null）它包括动态数值和静态属性。动态数值的优先级高于静态属性。
+	 *
 	 */
 	protected Map<String, Object> createMergedOutputModel(@Nullable Map<String, ?> model,
 			HttpServletRequest request, HttpServletResponse response) {
@@ -369,8 +378,14 @@ public abstract class AbstractView extends WebApplicationObjectSupport implement
 
 	/**
 	 * Prepare the given response for rendering.
+	 *
+	 * 准备渲染给定的响应
+	 *
 	 * <p>The default implementation applies a workaround for an IE bug
 	 * when sending download content via HTTPS.
+	 *
+	 * 当通过 HTTPS 发送下载内容时，默认的实现会应用一个解决 IE bug 的方法。
+	 *
 	 * @param request current HTTP request
 	 * @param response current HTTP response
 	 */
@@ -434,6 +449,11 @@ public abstract class AbstractView extends WebApplicationObjectSupport implement
 	 * Expose the model objects in the given map as request attributes.
 	 * Names will be taken from the model Map.
 	 * This method is suitable for all resources reachable by {@link javax.servlet.RequestDispatcher}.
+	 *
+	 * 将给定 Map 中的模型对象作为请求属性公开。
+	 * 名称将取自 模型 Map。
+	 *
+	 * 这个方法适用于所有由 RequestDispatcher 可获得的资源。
 	 * @param model a Map of model objects to expose
 	 * @param request current HTTP request
 	 */

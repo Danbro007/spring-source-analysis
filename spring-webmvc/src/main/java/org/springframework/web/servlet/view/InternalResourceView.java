@@ -33,17 +33,26 @@ import org.springframework.web.util.WebUtils;
  * Exposes model objects as request attributes and forwards the request to
  * the specified resource URL using a {@link javax.servlet.RequestDispatcher}.
  *
+ * 同一 web 应用程序中的 JSP 或其他资源的包装类。将模型对象作为请求属性公开，并使用请求分发器将请求转发给指定的资源 URL。
+ *
  * <p>A URL for this view is supposed to specify a resource within the web
  * application, suitable for RequestDispatcher's {@code forward} or
  * {@code include} method.
+ *
+ * 此视图的 URL 应该指定 web 应用程序中的资源，适合请求分发器的 forward() 或 include() 方法。
  *
  * <p>If operating within an already included request or within a response that
  * has already been committed, this view will fall back to an include instead of
  * a forward. This can be enforced by calling {@code response.flushBuffer()}
  * (which will commit the response) before rendering the view.
  *
+ * 如果在已包含的请求或已提交的响应中操作，这个视图将退回到 include() 而不是 forward()。在渲染视图对象前通过调用
+ * response.flushBuffer()（这将会提交响应）来实现
+ *
  * <p>Typical usage with {@link InternalResourceViewResolver} looks as follows,
  * from the perspective of the DispatcherServlet context definition:
+ *
+ * InternalResourceViewResolver 的典型用法如下，从 DispatcherServlet 上下文定义的角度来看：
  *
  * <pre class="code">&lt;bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver"&gt;
  *   &lt;property name="prefix" value="/WEB-INF/jsp/"/&gt;
@@ -53,6 +62,8 @@ import org.springframework.web.util.WebUtils;
  * Every view name returned from a handler will be translated to a JSP
  * resource (for example: "myView" -> "/WEB-INF/jsp/myView.jsp"), using
  * this view class by default.
+ *
+ * 从处理器返回的每个视图名将被转换为 JSP 资源（例如："myView" -> "/WEB-INF/jsp/myView.jsp"）默认使用这个视图类。
  *
  * @author Rod Johnson
  * @author Juergen Hoeller
@@ -128,26 +139,30 @@ public class InternalResourceView extends AbstractUrlBasedView {
 	protected boolean isContextRequired() {
 		return false;
 	}
-
-
 	/**
 	 * Render the internal resource given the specified model.
 	 * This includes setting the model as request attributes.
+	 *
+	 * 渲染给定的模型的 JSP 。这包括将模型设置为请求属性。
 	 */
 	@Override
 	protected void renderMergedOutputModel(
 			Map<String, Object> model, HttpServletRequest request, HttpServletResponse response) throws Exception {
 
-		// Expose the model object as request attributes.
+		// Expose the model object as request attributes. 、
+		// 把模型里的所有属性放入请求里
 		exposeModelAsRequestAttributes(model, request);
 
 		// Expose helpers as request attributes, if any.
+		// 公开渲染方式的 helper
 		exposeHelpers(request);
 
 		// Determine the path for the request dispatcher.
+		// 渲染的jsp文件路径
 		String dispatcherPath = prepareForRendering(request, response);
 
 		// Obtain a RequestDispatcher for the target resource (typically a JSP).
+		// 从目标资源那里获取一个请求分发器（通常是从 JSP 那里获取）
 		RequestDispatcher rd = getRequestDispatcher(request, dispatcherPath);
 		if (rd == null) {
 			throw new ServletException("Could not get RequestDispatcher for [" + getUrl() +
@@ -155,6 +170,7 @@ public class InternalResourceView extends AbstractUrlBasedView {
 		}
 
 		// If already included or response already committed, perform include, else forward.
+		// 如果 alwaysInclude 属性是 true 或者响应已经被提交会使用 include() 其他情况使用 forward()
 		if (useInclude(request, response)) {
 			response.setContentType(getContentType());
 			if (logger.isDebugEnabled()) {
@@ -178,6 +194,11 @@ public class InternalResourceView extends AbstractUrlBasedView {
 	 * <p>Called by {@link #renderMergedOutputModel(Map, HttpServletRequest, HttpServletResponse)}.
 	 * The default implementation is empty. This method can be overridden to add
 	 * custom helpers as request attributes.
+	 *
+	 * 对每个渲染方式公开唯一的 helper。不同的渲染方式不能重写彼此的 context 是必要的。
+	 * 由 renderMergedOutputModel(Map, HttpServletRequest, HttpServletResponse) 方法调用
+	 * 这个默认实现是空的。可以通过添加自定义的 helper 当做请求属性的方式来重写这个方法。
+	 *
 	 * @param request current HTTP request
 	 * @throws Exception if there's a fatal error while we're adding attributes
 	 * @see #renderMergedOutputModel
@@ -232,9 +253,48 @@ public class InternalResourceView extends AbstractUrlBasedView {
 	/**
 	 * Determine whether to use RequestDispatcher's {@code include} or
 	 * {@code forward} method.
+	 *
+	 * 确定使用请求分发器的方法， true 是 include()，false 是 forward()。
+	 *
+	 * forward()：将请求从一个 servlet 转发到服务器上的另一个资源( servlet 、JSP 文件或 HTML 文件)。
+	 * 			  该方法允许一个 servlet 对请求进行初步处理，而另一个资源生成响应。
+	 *
+	 * 			对于通过 getRequestDispatcher() 获取的 RequestDispatcher（请求分发器）,
+	 * 			ServletRequest 对象有它的路径元素和参数来调整匹配目标资源的路径。
+	 *
+	 * 			forward() 应该在响应被提交给客户端（在响应体输出被刷新之前）之前调用。如果响应
+	 * 			已经被提交了将会抛出 IllegalStateException 异常.
+	 *
+	 * 			在 forward() 之前响应体里未提交的输出会被清空。
+	 *
+	 *
+	 * include():在响应中包含资源(servlet、JSP页面、HTML 文件)的内容。本质上，这个方法包括支持编程的服务器端。
+	 * 			ServletResponse 对象有与调用者相同的路径元素和参数。包含的 servlet 不能更改响应状态码或设置报头;
+	 * 			任何试图改变的尝试都被忽略了。
+	 *
+	 * 			请求和响应参数必须是传递给调用 servlet 的服务方法的对象，或者是包装它们的 ServletRequestWrapper
+	 * 			或 ServletResponseWrapper 类的子类。
+	 *
+	 * 			这个方法将给定请求的 dispatcher（分发器） 类型设置为 DispatcherType.INCLUDE。
+	 *
+	 *
+	 *
+	 * forward方法和include方法的区别：
+	 *
+	 *                1、forward() 方法调用后在响应中的没有提交的内容被自动消除。将请求转发给其他的 Servlet 后，
+	 *                由被调用的 Servlet 负责对请求做出响应，而原先 Servlet 的执行则终止。
+	 *
+	 *                2、include() 方法使原先的 Servlet 和转发到的 Servlet 都可以输出响应信息，即原先的 Servlet 还可以继续输出响应信息
+	 *
 	 * <p>Performs a check whether an include URI attribute is found in the request,
 	 * indicating an include request, and whether the response has already been committed.
 	 * In both cases, an include will be performed, as a forward is not possible anymore.
+	 *
+	 * 检查在是否在请求找到包含 URI 的属性，这个属性表示是一个 include 请求、是否已经提交响应。
+	 * 在这两种情况下，都将执行 include()，因为 forward()不可能。
+	 *
+	 *
+	 *
 	 * @param request current HTTP request
 	 * @param response current HTTP response
 	 * @return {@code true} for include, {@code false} for forward

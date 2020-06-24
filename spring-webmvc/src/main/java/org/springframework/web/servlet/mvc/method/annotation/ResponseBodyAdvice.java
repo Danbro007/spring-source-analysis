@@ -28,6 +28,8 @@ import org.springframework.lang.Nullable;
  * or a {@code ResponseEntity} com.danbro.springmvc.controller method but before the body is written
  * with an {@code HttpMessageConverter}.
  *
+ * 允许自定义响应在执行一个 ResponseBody 或者 ResponseEntity controller 方法之后但是在响应体被 HttpMessageConverter 写入前
+ *
  * <p>Implementations may be registered directly with
  * {@code RequestMappingHandlerAdapter} and {@code ExceptionHandlerExceptionResolver}
  * or more likely annotated with {@code @ControllerAdvice} in which case they
@@ -52,6 +54,9 @@ public interface ResponseBodyAdvice<T> {
 	/**
 	 * Invoked after an {@code HttpMessageConverter} is selected and just before
 	 * its write method is invoked.
+	 *
+	 * 在选中消息转换器之后和在写入操作之前调用这个方法
+	 *
 	 * @param body the body to be written
 	 * @param returnType the return type of the com.danbro.springmvc.controller method
 	 * @param selectedContentType the content type selected through content negotiation

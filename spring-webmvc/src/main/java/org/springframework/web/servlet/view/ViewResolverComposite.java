@@ -36,7 +36,7 @@ import org.springframework.web.servlet.ViewResolver;
 
 /**
  * A {@link org.springframework.web.servlet.ViewResolver} that delegates to others.
- *
+ * 来委托其他的视图解析器
  * @author Sebastien Deleuze
  * @author Rossen Stoyanchev
  * @since 4.1

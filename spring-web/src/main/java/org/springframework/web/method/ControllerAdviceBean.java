@@ -35,6 +35,8 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
  * Encapsulates information about an {@link ControllerAdvice @ControllerAdvice}
  * Spring-managed bean without necessarily requiring it to be instantiated.
  *
+ * 封装关于 @ControllerAdvice 注解的 spring管理 bean 的信息，而不需要实例化它。
+ *
  * <p>The {@link #findAnnotatedBeans(ApplicationContext)} method can be used to
  * discover such beans. However, a {@code ControllerAdviceBean} may be created
  * from any object, including ones without an {@code @ControllerAdvice} annotation.
@@ -183,6 +185,9 @@ public class ControllerAdviceBean implements Ordered {
 	/**
 	 * Check whether the given bean type should be advised by this
 	 * {@code ControllerAdviceBean}.
+	 *
+	 * 检查是否给定的类的类型应该被 ControllerAdviceBean 通知
+	 *
 	 * @param beanType the type of the bean to check
 	 * @since 4.0
 	 * @see ControllerAdvice

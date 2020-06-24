@@ -35,13 +35,20 @@ import org.springframework.lang.Nullable;
  * Represents a MIME Type, as originally defined in RFC 2046 and subsequently
  * used in other Internet protocols including HTTP.
  *
+ * 表示一个 MIME（Multipurpose Internet Mail Extensions） 类，最初在 RFC 2046中定义，随后用于其他互联网协议，包括HTTP。
+ *
  * <p>This class, however, does not contain support for the q-parameters used
  * in HTTP content negotiation. Those can be found in the subclass
  * {@code org.springframework.http.MediaType} in the {@code spring-web} module.
  *
+ * 然而，这个类不包含对 HTTP 内容协商中使用的 q-parameters 的支持。这些可以在 org.springframework.http 子类中找到，
+ * 这个类在 spring-web 模块中的 MediaType 。
+ *
  * <p>Consists of a {@linkplain #getType() type} and a {@linkplain #getSubtype() subtype}.
  * Also has functionality to parse MIME Type values from a {@code String} using
  * {@link #valueOf(String)}. For more parsing options see {@link MimeTypeUtils}.
+ *
+ * 由 getType() 返回的类和 getSubtype() 返回的子类组成。使用  valueOf(String) 方法从字符串中解析 MIME 类型值
  *
  * @author Arjen Poutsma
  * @author Juergen Hoeller
@@ -252,6 +259,9 @@ public class MimeType implements Comparable<MimeType>, Serializable {
 	/**
 	 * Indicates whether this MIME Type is concrete, i.e. whether neither the type
 	 * nor the subtype is a wildcard character <code>&#42;</code>.
+	 *
+	 * 指示此 MIME 类型是否是具体类。即类和子类是否都是通配符。
+	 *
 	 * @return whether this MIME Type is concrete
 	 */
 	public boolean isConcrete() {

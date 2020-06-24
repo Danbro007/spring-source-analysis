@@ -74,7 +74,7 @@ class WebMvcConfigurerComposite implements WebMvcConfigurer {
 			delegate.configureDefaultServletHandling(configurer);
 		}
 	}
-
+	// 加载默认的类型转换器和配置的自定义的类型转换器
 	@Override
 	public void addFormatters(FormatterRegistry registry) {
 		for (WebMvcConfigurer delegate : this.delegates) {

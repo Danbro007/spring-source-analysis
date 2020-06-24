@@ -172,12 +172,14 @@ public class RequestResponseBodyMethodProcessor extends AbstractMessageConverter
 	public void handleReturnValue(@Nullable Object returnValue, MethodParameter returnType,
 			ModelAndViewContainer mavContainer, NativeWebRequest webRequest)
 			throws IOException, HttpMediaTypeNotAcceptableException, HttpMessageNotWritableException {
-
+		// 把请求标记为已处理，表示后面不需要 ModelAndView 策略处理视图，直接结束后续处理。在后面的渲染 ModelAndView
+		// getModelAndView() 方法里,通过判断 mavContainer 对象 requestHandled 属性，如果为 true 则返回 null，如果为 false 则
+		// 返回新的 ModelAndView 对象
 		mavContainer.setRequestHandled(true);
 		ServletServerHttpRequest inputMessage = createInputMessage(webRequest);
 		ServletServerHttpResponse outputMessage = createOutputMessage(webRequest);
-
 		// Try even with null return value. ResponseBodyAdvice could get involved.
+		// 通过消息转换器把返回值写入输出消息里
 		writeWithMessageConverters(returnValue, returnType, inputMessage, outputMessage);
 	}
 

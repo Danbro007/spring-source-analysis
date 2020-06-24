@@ -34,17 +34,21 @@ import org.springframework.web.bind.support.SimpleSessionStatus;
  * {@link HandlerMethodReturnValueHandler HandlerMethodReturnValueHandlers} during the course of invocation of
  * a com.danbro.springmvc.controller method.
  *
- * 记录在调用一个 controller 方法过程中通过 HandlerMethodArgumentResolvers 和
- * HandlerMethodReturnValueHandlers 做的与 ModelAndView 相关的决定
+ * 记录在调用一个 controller 方法过程中通过参数解析器和返回值处理器做的与 ModelAndView 相关的决定
  *
  * <p>The {@link #setRequestHandled} flag can be used to indicate the request
  * has been handled directly and view resolution is not required.
+ *
+ * setRequestHandled() 标记被用来表明当前请求已经被直接处理，不需要视图解析。
  *
  * <p>A default {@link Model} is automatically created at instantiation.
  * An alternate model instance may be provided via {@link #setRedirectModel}
  * for use in a redirect scenario. When {@link #setRedirectModelScenario} is set
  * to {@code true} signalling a redirect scenario, the {@link #getModel()}
  * returns the redirect model instead of the default model.
+ *
+ * 一个默认模型在实例化时能被自动创建。可以通过 setRedirectModel() 提供另一个用于重定向场景的模型实例。
+ * 当 setRedirectModelScenario() 被设置为 true 时表示这是一个重定向场景，这时使用 getModel() 方法会返回一个重定向模型代替默认的模型。
  *
  * @author Rossen Stoyanchev
  * @author Juergen Hoeller
@@ -56,14 +60,15 @@ public class ModelAndViewContainer {
 
 	@Nullable
 	private Object view;
-
+	// 默认模型 是 BindingAwareModelMap 对象
 	private final ModelMap defaultModel = new BindingAwareModelMap();
 
 	@Nullable
 	private ModelMap redirectModel;
-
+	// 是否是重定向模型 默认为 false ，通过 setRedirectModelScenario() 修改为 true
 	private boolean redirectModelScenario = false;
 
+	// 状态码
 	@Nullable
 	private HttpStatus status;
 
@@ -86,7 +91,18 @@ public class ModelAndViewContainer {
 	 * is not declared. Setting it to {@code false} means the "default" model
 	 * may be used in a redirect if the com.danbro.springmvc.controller method doesn't declare a
 	 * RedirectAttributes argument.
+	 *
+	 * 在渲染和重定向场景中使用的默认模型的内容。另外 controller 的方法能声明一个类型为 RedirectAttributes 的参数
+	 * 并且使用它提供来准备重定向的 URl 属性。
+	 *
+	 * 设置 ignoreDefaultModelOnRedirect 这个标志位为 true 保证默认模型永远不会在重定向场景中使用，即使 RedirectAttributes 参数没有被声明。
+	 * 把它设置为 false 意味着默认模式可以在重定向中使用如果 controller 方法没有声明一个
+	 * RedirectAttributes 参数。
+	 *
 	 * <p>The default setting is {@code false}.
+	 *
+	 * 默认是 false
+	 *
 	 */
 	public void setIgnoreDefaultModelOnRedirect(boolean ignoreDefaultModelOnRedirect) {
 		this.ignoreDefaultModelOnRedirect = ignoreDefaultModelOnRedirect;
@@ -133,7 +149,7 @@ public class ModelAndViewContainer {
 	 * Whether the view is a view reference specified via a name to be
 	 * resolved by the DispatcherServlet via a ViewResolver.
 	 *
-	 * 视图是否是通过名称指定的视图引用，由 DispatcherServlet 通过视图解析器解析。
+	 * 视图对象是否是通过名称指定的视图引用，由 DispatcherServlet 通过视图解析器解析。
 	 */
 	public boolean isViewReference() {
 		return (this.view instanceof String);
@@ -176,6 +192,11 @@ public class ModelAndViewContainer {
 	 * model (redirect URL preparation). Use of this method may be needed for
 	 * advanced cases when access to the "default" model is needed regardless,
 	 * e.g. to save model attributes specified via {@code @SessionAttributes}.
+	 *
+	 * 在实例化时返回一个默认模型。一般来说推荐使用 getModel() 来替代返回的默认模型（渲染模板）
+	 * 或者重定向模型（用来准备重定向 URL）。在高级情况下可能需要通过 @SessionAttributes
+	 * 保存指定的模型属性的方法来访问默认模型。
+	 *
 	 * @return the default model (never {@code null})
 	 * @since 4.1.4
 	 */
@@ -188,6 +209,10 @@ public class ModelAndViewContainer {
 	 * <p>The provided additional model however is not used unless
 	 * {@link #setRedirectModelScenario} gets set to {@code true}
 	 * to signal an actual redirect scenario.
+	 *
+	 * 在使用重定向场景下提供一个单独的模型实例。
+	 * 但是，除非 setRedirectModelScenario() 被设置为 true 以表示一个实际的重定向场景，否则不会使用所提供的附加模型。
+	 *
 	 */
 	public void setRedirectModel(ModelMap redirectModel) {
 		this.redirectModel = redirectModel;
@@ -196,6 +221,9 @@ public class ModelAndViewContainer {
 	/**
 	 * Whether the com.danbro.springmvc.controller has returned a redirect instruction, e.g. a
 	 * "redirect:" prefixed view name, a RedirectView instance, etc.
+	 *
+	 * 当 controller 已经返回一个重定向指令。例如：以 "redirect:"  开头的视图名，表示是一个重定向视图的实例。
+	 *
 	 */
 	public void setRedirectModelScenario(boolean redirectModelScenario) {
 		this.redirectModelScenario = redirectModelScenario;
@@ -222,6 +250,9 @@ public class ModelAndViewContainer {
 	/**
 	 * Programmatically register an attribute for which data binding should not occur,
 	 * not even for a subsequent {@code @ModelAttribute} declaration.
+	 *
+	 * 以编程的方式注册一个不需要绑定的属性，即使这个属性后面用 @ModelAttribute 注解的也不行。
+	 *
 	 * @param attributeName the name of the attribute
 	 * @since 4.3
 	 */
@@ -231,6 +262,9 @@ public class ModelAndViewContainer {
 
 	/**
 	 * Whether binding is disabled for the given model attribute.
+	 *
+	 * 是否对给定的模型属性解除绑定
+	 *
 	 * @since 4.3
 	 */
 	public boolean isBindingDisabled(String name) {
@@ -243,8 +277,10 @@ public class ModelAndViewContainer {
 	 * <p>Note: While this flag will be taken into account by {@link #isBindingDisabled},
 	 * a hard {@link #setBindingDisabled} declaration will always override it.
 	 *
-	 * 注解 @ModelAttribute(binding=true/false) 表名是否应该对相应的模型属性进行数据绑定，
-	 * 注意：虽然这个标志会被 isBindingDisabled 考虑在内，一个 setBindingDisabled 声明将覆盖它。
+	 * 注解 @ModelAttribute(binding=true/false) 表明是否应该对相应的模型属性进行数据绑定，
+	 * 注意：虽然这个标志会被 isBindingDisabled 考虑在内。
+	 * 如果一个属性同时被 setBindingDisabled() 和 @ModelAttribute 作用，
+	 * 则这个属性不会被绑定，既让 @ModelAttribute 失效。
 	 *
 	 * @param attributeName the name of the attribute
 	 * @since 4.3.13
@@ -261,6 +297,9 @@ public class ModelAndViewContainer {
 	/**
 	 * Return the {@link SessionStatus} instance to use that can be used to
 	 * signal that session processing is complete.
+	 *
+	 * 返回 SessionStatus 实例，这个实例能表明会话处理已完成
+	 *
 	 */
 	public SessionStatus getSessionStatus() {
 		return this.sessionStatus;
@@ -272,6 +311,10 @@ public class ModelAndViewContainer {
 	 * necessary. This flag can also be set when com.danbro.springmvc.controller methods declare an
 	 * argument of type {@code ServletResponse} or {@code OutputStream}).
 	 * <p>The default value is {@code false}.
+	 *
+	 * 请求是否已经被处理器完整处理。例如：@ResponseBody 方法，因此视图解析就不是很必要。当 controller 方法声明一个
+	 * ServletResponse 或者 OutputStream 类型参数时能设置这个标志。
+	 *
 	 */
 	public void setRequestHandled(boolean requestHandled) {
 		this.requestHandled = requestHandled;

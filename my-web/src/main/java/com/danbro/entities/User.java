@@ -1,5 +1,7 @@
 package com.danbro.entities;
 
+import com.sun.istack.internal.NotNull;
+
 /**
  * @Classname User
  * @Description TODO
@@ -7,30 +9,51 @@ package com.danbro.entities;
  * @Author Danrbo
  */
 public class User {
-	private int userId;
-	private String userName;
+	private int id;
 
-	public int getUserId() {
-		return userId;
+	private String username;
+	private String password;
+
+	public User(int id, String username, String password) {
+		this.id = id;
+		this.username = username;
+		this.password = password;
 	}
 
-	public void setUserId(int userId) {
-		this.userId = userId;
+	public User() {
 	}
 
-	public String getUserName() {
-		return userName;
+
+	public String getPassword() {
+		return password;
 	}
 
-	public void setUserName(String userName) {
-		this.userName = userName;
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
 	}
 
 	@Override
 	public String toString() {
 		return "User{" +
-				"userId=" + userId +
-				", userName='" + userName + '\'' +
+				"userId=" + id +
+				", userName='" + username + '\'' +
+				", password='" + password + '\'' +
 				'}';
 	}
 }

@@ -361,6 +361,9 @@ public class DataBinder implements PropertyEditorRegistry, TypeConverter {
 	 * Return the BindingResult instance created by this DataBinder.
 	 * This allows for convenient access to the binding results after
 	 * a bind operation.
+	 *
+	 * 返回数据绑定器创建的 BindingResult 实例。运行在一个绑定操作后方便地访问绑定结果。
+	 *
 	 * @return the BindingResult instance, to be treated as BindingResult
 	 * or as Errors instance (Errors is a super-interface of BindingResult)
 	 * @see Errors

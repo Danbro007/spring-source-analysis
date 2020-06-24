@@ -236,6 +236,9 @@ public abstract class RequestContextUtils {
 
 	/**
 	 * Return "output" FlashMap to save attributes for request after redirect.
+	 *
+	 * 返回 “输出”的 FlashMap 保存属性，以供重定向后请求。
+	 *
 	 * @param request current request
 	 * @return a {@link FlashMap} instance, never {@code null} within a
 	 * {@code DispatcherServlet}-handled request

@@ -131,9 +131,15 @@ public interface HandlerMapping {
 	/**
 	 * Name of the {@link HttpServletRequest} attribute that contains the set of
 	 * producible MediaTypes applicable to the mapped handler.
+	 *
+	 * HttpServletRequest 属性名，它包括可用于映射处理器的可生成 MediaType 类型集合。
+	 *
 	 * <p>Note: This attribute is not required to be supported by all
 	 * HandlerMapping implementations. Handlers should not necessarily expect
 	 * this request attribute to be present in all scenarios.
+	 *
+	 * 记住：所有的 HandlerMapping 实现都不需要支持该属性。处理器不应该期望这个请求属性出现在所有场景中。
+	 *
 	 */
 	String PRODUCIBLE_MEDIA_TYPES_ATTRIBUTE = HandlerMapping.class.getName() + ".producibleMediaTypes";
 

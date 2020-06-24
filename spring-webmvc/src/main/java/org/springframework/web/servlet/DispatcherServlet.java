@@ -258,6 +258,9 @@ public class DispatcherServlet extends FrameworkServlet {
 	 * Name of request attribute that exposes an Exception resolved with a
 	 * {@link HandlerExceptionResolver} but where no view was rendered
 	 * (e.g. setting the status code).
+	 *
+	 * 请求属性名，它公开一个处理器异常解析器来处理一个异常但是没有视图去渲染（例如：设置状态码）。
+	 *
 	 */
 	public static final String EXCEPTION_ATTRIBUTE = DispatcherServlet.class.getName() + ".EXCEPTION";
 
@@ -1167,7 +1170,7 @@ public class DispatcherServlet extends FrameworkServlet {
 	 * Handle the result of handler selection and handler invocation, which is
 	 * either a ModelAndView or an Exception to be resolved to a ModelAndView.
 	 *
-	 * 处理handler的选择和处理器的调用结果，它要么是一个 ModelAndView，要么是一个要解析为 ModelAndView 的异常。
+	 * 处理处理器的选择和处理器的调用结果，它要么是一个 ModelAndView，要么是一个要解析为 ModelAndView 的异常。
 	 *
 	 */
 	private void processDispatchResult(HttpServletRequest request, HttpServletResponse response,
@@ -1175,24 +1178,26 @@ public class DispatcherServlet extends FrameworkServlet {
 			@Nullable Exception exception) throws Exception {
 
 		boolean errorView = false;
-		// 判断之前过程有没有异常
+		// 判断之前过程有没有异常，有的话则设置错误页面
 		if (exception != null) {
 			if (exception instanceof ModelAndViewDefiningException) {
 				logger.debug("ModelAndViewDefiningException encountered", exception);
 				mv = ((ModelAndViewDefiningException) exception).getModelAndView();
 			}
 			else {
+				// 获取处理器调用异常处理器处理异常并返回一个错误页面
 				Object handler = (mappedHandler != null ? mappedHandler.getHandler() : null);
 				mv = processHandlerException(request, response, handler, exception);
 				errorView = (mv != null);
 			}
 		}
 
-		// Did the handler return a view to render? 处理器是否返回一个要渲染的视图?
+		//处理器是否返回一个要渲染的视图?如果是返回的是 Json 则不会渲染。
 		if (mv != null && !mv.wasCleared()) {
 			// 渲染ModelAndView
 			render(mv, request, response);
 			if (errorView) {
+				// 清除请求上的一些错误属性
 				WebUtils.clearErrorRequestAttributes(request);
 			}
 		}
@@ -1361,6 +1366,9 @@ public class DispatcherServlet extends FrameworkServlet {
 
 	/**
 	 * Determine an error ModelAndView via the registered HandlerExceptionResolvers.
+	 *
+	 * 通过已注册的处理器异常处理器确定一个错误 ModelAndView
+	 *
 	 * @param request current HTTP request
 	 * @param response current HTTP response
 	 * @param handler the executed handler, or {@code null} if none chosen at the time of the exception
@@ -1372,11 +1380,12 @@ public class DispatcherServlet extends FrameworkServlet {
 	@Nullable
 	protected ModelAndView processHandlerException(HttpServletRequest request, HttpServletResponse response,
 			@Nullable Object handler, Exception ex) throws Exception {
-
-		// Success and error responses may use different content types
+		//成功和错误响应可能使用不同的内容类型
+		// 删除在请求里的属性：org.springframework.web.servlet.HandlerMapping.producibleMediaTypes
 		request.removeAttribute(HandlerMapping.PRODUCIBLE_MEDIA_TYPES_ATTRIBUTE);
 
-		// Check registered HandlerExceptionResolvers...
+		// 遍历查找处理器异常解析器
+		// 找到后调用找到的那个异常处理器的 resolveException() ，这个方法会返回一个错误的 ModelAndView
 		ModelAndView exMv = null;
 		if (this.handlerExceptionResolvers != null) {
 			for (HandlerExceptionResolver resolver : this.handlerExceptionResolvers) {
@@ -1386,13 +1395,19 @@ public class DispatcherServlet extends FrameworkServlet {
 				}
 			}
 		}
+		// 说明没有异常处理器能处理异常
 		if (exMv != null) {
+			//如果 exMv 里面是空的
 			if (exMv.isEmpty()) {
+				// 把异常信息放入请求属性里
 				request.setAttribute(EXCEPTION_ATTRIBUTE, ex);
 				return null;
 			}
 			// We might still need view name translation for a plain error model...
+			// 对于纯错误模型，我们可能仍然需要转换视图名……
+			// 如果 exMv 没有视图对象
 			if (!exMv.hasView()) {
+				// 通过请求获取一个默认的视图名把获取的视图名赋给 exMv
 				String defaultViewName = getDefaultViewName(request);
 				if (defaultViewName != null) {
 					exMv.setViewName(defaultViewName);
@@ -1421,15 +1436,15 @@ public class DispatcherServlet extends FrameworkServlet {
 	 * @throws Exception if there's a problem rendering the view
 	 */
 	protected void render(ModelAndView mv, HttpServletRequest request, HttpServletResponse response) throws Exception {
-		// Determine locale for request and apply it to the response.
+		// 给响应设置当前的语言环境。
 		Locale locale =
 				(this.localeResolver != null ? this.localeResolver.resolveLocale(request) : request.getLocale());
 		response.setLocale(locale);
-
+		//
 		View view;
 		String viewName = mv.getViewName();
 		if (viewName != null) {
-			// We need to resolve the view name.
+			// 通过视图解析器解析出视图对象
 			view = resolveViewName(viewName, mv.getModelInternal(), locale, request);
 			if (view == null) {
 				throw new ServletException("Could not resolve view with name '" + mv.getViewName() +
@@ -1445,7 +1460,7 @@ public class DispatcherServlet extends FrameworkServlet {
 			}
 		}
 
-		// Delegate to the View object for rendering.
+		// 委托给视图对象进行渲染。
 		if (logger.isTraceEnabled()) {
 			logger.trace("Rendering view [" + view + "] ");
 		}
@@ -1453,6 +1468,7 @@ public class DispatcherServlet extends FrameworkServlet {
 			if (mv.getStatus() != null) {
 				response.setStatus(mv.getStatus().value());
 			}
+			// 渲染视图
 			view.render(mv.getModelInternal(), request, response);
 		}
 		catch (Exception ex) {
@@ -1476,9 +1492,16 @@ public class DispatcherServlet extends FrameworkServlet {
 
 	/**
 	 * Resolve the given view name into a View object (to be rendered).
+	 *
+	 * 通过视图名解析视图对象（将被渲染的）
+	 *
 	 * <p>The default implementations asks all ViewResolvers of this dispatcher.
 	 * Can be overridden for custom resolution strategies, potentially based on
 	 * specific model attributes or request parameters.
+	 *
+	 * 默认的实现是遍历 dispatcher 所有的视图解析器。
+	 * 基于特定的模型属性或请求参数，自定义的解决策略可以重写这个方法。
+	 *
 	 * @param viewName the name of the view to resolve
 	 * @param model the model to be passed to the view
 	 * @param locale the current locale

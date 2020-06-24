@@ -35,8 +35,8 @@ import org.springframework.web.multipart.MultipartFile;
  * such as {@link org.springframework.web.bind.ServletRequestDataBinder}.
  *
  * 特殊的 DataBinder 用于从 web 请求参数到 JavaBean 对象的数据绑定。
- * 为web环境设计，但不依赖于Servlet API。
- * 作为更具体的 DataBinder 变体的基类，org.springframework.web.bind.ServletRequestDataBinder
+ * 为 web 环境设计，但不依赖于Servlet API。
+ * ServletRequestDataBinder 作为更具体的 DataBinder 变体的基类
  *
  * <p>Includes support for field markers which address a common problem with
  * HTML checkboxes and select options: detecting that a field was part of

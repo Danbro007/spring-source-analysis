@@ -44,7 +44,9 @@ import org.springframework.util.StringValueResolver;
 
 /**
  * A {@link org.springframework.core.convert.ConversionService} implementation
- * designed to be configured as a {@link FormatterRegistry}.
+ * designed to be configured as a {@link formatterregistry}.
+ *
+ * 一个 ConversionService 的实现类被设计当做 formatterregistry
  *
  * @author Keith Donald
  * @author Juergen Hoeller

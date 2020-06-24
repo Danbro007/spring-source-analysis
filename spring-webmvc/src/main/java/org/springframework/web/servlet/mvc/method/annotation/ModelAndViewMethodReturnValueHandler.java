@@ -77,12 +77,12 @@ public class ModelAndViewMethodReturnValueHandler implements HandlerMethodReturn
 	@Override
 	public void handleReturnValue(@Nullable Object returnValue, MethodParameter returnType,
 			ModelAndViewContainer mavContainer, NativeWebRequest webRequest) throws Exception {
-
+		//
 		if (returnValue == null) {
 			mavContainer.setRequestHandled(true);
 			return;
 		}
-
+		// 如果处理器的返回值是视图引用则把视图引用的视图名设置为 mavContainer 的视图名，再判断是不是重定向
 		ModelAndView mav = (ModelAndView) returnValue;
 		if (mav.isReference()) {
 			String viewName = mav.getViewName();
@@ -98,7 +98,9 @@ public class ModelAndViewMethodReturnValueHandler implements HandlerMethodReturn
 				mavContainer.setRedirectModelScenario(true);
 			}
 		}
+		// 设置状态码
 		mavContainer.setStatus(mav.getStatus());
+		// 把模型的所有属性放入 mavContainer
 		mavContainer.addAllAttributes(mav.getModel());
 	}
 

@@ -68,12 +68,14 @@ public abstract class AbstractCachingViewResolver extends WebApplicationObjectSu
 	private volatile int cacheLimit = DEFAULT_CACHE_LIMIT;
 
 	/** Whether we should refrain from resolving views again if unresolved once. */
+	/** 一次未解决的问题，是否应该避免再次解决 */
 	private boolean cacheUnresolved = true;
 
 	/** Filter function that determines if view should be cached. */
 	private CacheFilter cacheFilter = DEFAULT_CACHE_FILTER;
 
 	/** Fast access cache for Views, returning already cached instances without a global lock. */
+	/** 视图的快速访问缓存，返回已经缓存的实例而不使用全局锁 **/
 	private final Map<Object, View> viewAccessCache = new ConcurrentHashMap<>(DEFAULT_CACHE_LIMIT);
 
 	/** Map from view key to View instance, synchronized for View creation. */
@@ -170,11 +172,15 @@ public abstract class AbstractCachingViewResolver extends WebApplicationObjectSu
 	@Override
 	@Nullable
 	public View resolveViewName(String viewName, Locale locale) throws Exception {
+		// 如果没有开启缓存则创建一个新的视图对象并返回
 		if (!isCache()) {
 			return createView(viewName, locale);
 		}
 		else {
+			// 通过 视图名 + 语言环境前缀 的组合获取一个缓存 key
 			Object cacheKey = getCacheKey(viewName, locale);
+			// 由于我们开启了缓存，先尝试到快速缓存里找视图对象，如果快速缓存里没有的话则自己再到已创建的视图对象缓存里找
+			// 再没有的话只能自己创建一个。
 			View view = this.viewAccessCache.get(cacheKey);
 			if (view == null) {
 				synchronized (this.viewCreationCache) {
@@ -182,9 +188,12 @@ public abstract class AbstractCachingViewResolver extends WebApplicationObjectSu
 					if (view == null) {
 						// Ask the subclass to create the View object.
 						view = createView(viewName, locale);
+						// 如果创建视图对象失败则指定一个未解析的视图对象，这个对象是一个空的视图对象，
+						// 之后通过判断是不是空的视图对象返回不同的结果
 						if (view == null && this.cacheUnresolved) {
 							view = UNRESOLVED_VIEW;
 						}
+						// 如果需要缓存视图对象则放到快速缓存和已创建的视图缓存里
 						if (view != null && this.cacheFilter.filter(view, viewName, locale)) {
 							this.viewAccessCache.put(cacheKey, view);
 							this.viewCreationCache.put(cacheKey, view);
@@ -209,8 +218,15 @@ public abstract class AbstractCachingViewResolver extends WebApplicationObjectSu
 	 * Return the cache key for the given view name and the given locale.
 	 * <p>Default is a String consisting of view name and locale suffix.
 	 * Can be overridden in subclasses.
+	 *
+	 * 通过视图名和给定的语言环境的返回一个缓存 key。
+	 * 默认是使用 视图名 + 语言环境 的前缀组合的字符串。在子类中可以重写。
+	 *
 	 * <p>Needs to respect the locale in general, as a different locale can
 	 * lead to a different view resource.
+	 *
+	 * 需要尊重语言环境，因为不同的语言环境会导致看到不同的视图资源（国际化）。
+	 *
 	 */
 	protected Object getCacheKey(String viewName, Locale locale) {
 		return viewName + '_' + locale;

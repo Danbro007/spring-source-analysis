@@ -4,6 +4,7 @@ import com.danbro.entities.Book;
 import com.danbro.entities.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.Map;
 
 /**
@@ -15,13 +16,13 @@ import java.util.Map;
 @Controller
 public class BookController {
 	@RequestMapping("/book")
-	public String getBook(@RequestParam("author")String author,
+	public String getBook(@RequestParam("author") String author,
 						  Map<String, Object> bookMap,
 						  @ModelAttribute("book") Book book,
-						  @ModelAttribute("user")User user){
-		System.out.println("author:"+author);
+						  @ModelAttribute("user") User user) {
+		System.out.println("author:" + author);
 		System.out.println("bookMap:" + bookMap);
-		System.out.println("haha:"+book);
+		System.out.println("haha:" + book);
 		return "book";
 	}
 }

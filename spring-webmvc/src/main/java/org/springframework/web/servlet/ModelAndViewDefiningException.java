@@ -24,10 +24,15 @@ import org.springframework.util.Assert;
  * Exception to be thrown on error conditions that should forward
  * to a specific view with a specific model.
  *
+ * 在错误条件下抛出的异常应该将转发给具有特定模型的特定视图。
+ *
  * <p>Can be thrown at any time during handler processing.
  * This includes any template methods of pre-built controllers.
  * For example, a form com.danbro.springmvc.controller might abort to a specific error page
  * if certain parameters do not allow to proceed with the normal workflow.
+ *
+ * 在处理器处理时的任意时间抛出异常。这包括任意 pre-built 控制器的任意模板方法。
+ * 例如：如果某些参数不允许继续正常工作流程，控制器中的一个方法可以中止跳转到特定的错误页
  *
  * @author Juergen Hoeller
  * @since 22.11.2003
