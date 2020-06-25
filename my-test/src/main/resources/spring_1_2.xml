@@ -2,7 +2,7 @@
 <!--基于接口的配置-->
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+       xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd">
 	<bean id="orderServiceImpl" class="com.danbro.springAopAnalysis.service.OrderServiceImpl"/>
 	<bean id="userServiceImpl" class="com.danbro.springAopAnalysis.service.UserServiceImpl"/>
 	<bean id="logArgsAdvice" class="com.danbro.springAopAnalysis.advices.LogArgsAdvice"/>
