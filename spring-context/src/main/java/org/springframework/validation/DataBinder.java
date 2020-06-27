@@ -243,6 +243,12 @@ public class DataBinder implements PropertyEditorRegistry, TypeConverter {
 	/**
 	 * Initialize standard JavaBean property access for this DataBinder.
 	 * <p>This is the default; an explicit call just leads to eager initialization.
+	 *
+	 * 为这个数据绑定器初始化标准的JavaBean属性访问。
+	 *
+	 * 这是默认的；显式调用只会导致提前初始化（createBeanPropertyBindingResult()、initDirectFieldAccess()）
+	 *
+	 *
 	 * @see #initDirectFieldAccess()
 	 * @see #createBeanPropertyBindingResult()
 	 */
@@ -274,6 +280,9 @@ public class DataBinder implements PropertyEditorRegistry, TypeConverter {
 	/**
 	 * Initialize direct field access for this DataBinder,
 	 * as alternative to the default bean property access.
+	 *
+	 * 初始化这个数据绑定器的直接字段访问，作为默认bean属性访问的替代方法
+	 *
 	 * @see #initBeanPropertyAccess()
 	 * @see #createDirectFieldBindingResult()
 	 */
@@ -876,7 +885,13 @@ public class DataBinder implements PropertyEditorRegistry, TypeConverter {
 
 	/**
 	 * Invoke the specified Validators, if any, with the given validation hints.
+	 *
+	 * 使用给定的验证提示调用指定的验证器(如果有的话)
+	 *
 	 * <p>Note: Validation hints may get ignored by the actual target Validator.
+	 *
+	 * 注意:验证提示可能会被实际的目标验证器忽略。
+	 *
 	 * @param validationHints one or more hint objects to be passed to a {@link SmartValidator}
 	 * @since 3.1
 	 * @see #setValidator(Validator)
@@ -886,7 +901,7 @@ public class DataBinder implements PropertyEditorRegistry, TypeConverter {
 		Object target = getTarget();
 		Assert.state(target != null, "No target to validate");
 		BindingResult bindingResult = getBindingResult();
-		// Call each validator with the same binding result
+		// 对相同的 bindingResult 调用每个校验器，如果被校验的对象有校验失败的属性，则把有错误消息添加到 bindingResult 上
 		for (Validator validator : getValidators()) {
 			if (!ObjectUtils.isEmpty(validationHints) && validator instanceof SmartValidator) {
 				((SmartValidator) validator).validate(target, bindingResult, validationHints);

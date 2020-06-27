@@ -58,6 +58,10 @@ public class InitBinderDataBinderFactory extends DefaultDataBinderFactory {
 	 * Initialize a WebDataBinder with {@code @InitBinder} methods.
 	 * <p>If the {@code @InitBinder} annotation specifies attributes names,
 	 * it is invoked only if the names include the target object name.
+	 *
+	 * 通过 @InitBinder 方法初始化一个 WebDataBinder
+	 * 如果 @InitBinder 注解来指定属性名，只有在名称包含目标对象名称时才调用它。
+	 *
 	 * @throws Exception if one of the invoked @{@link InitBinder} methods fails
 	 * @see #isBinderMethodApplicable
 	 */

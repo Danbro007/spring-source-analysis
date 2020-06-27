@@ -56,7 +56,8 @@ public class ErrorsMethodArgumentResolver implements HandlerMethodArgumentResolv
 
 		Assert.state(mavContainer != null,
 				"Errors/BindingResult argument only supported on regular handler methods");
-
+		// 获取 ModelMap 里的最后一个元素判断这个元素的 key 是不是 org.springframework.validation.BindingResult. 开头
+		// 如果是则通过这个 key 获取 这个参数对应的 BindingResult 对象并返回
 		ModelMap model = mavContainer.getModel();
 		String lastKey = CollectionUtils.lastElement(model.keySet());
 		if (lastKey != null && lastKey.startsWith(BindingResult.MODEL_KEY_PREFIX)) {

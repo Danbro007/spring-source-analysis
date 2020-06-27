@@ -1,11 +1,19 @@
 package com.danbro.controller;
 
 import com.danbro.data.UserMap;
+import com.danbro.entities.CodeEnum;
+import com.danbro.entities.Result;
 import com.danbro.entities.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+import java.util.List;
 
 /**
  * @Classname UserController
@@ -22,17 +30,23 @@ public class UserController {
 	@GetMapping("/user/{id}")
 	public String getUser(@PathVariable("id") int id) throws Exception {
 		User user = (User) userMap.get(id);
-		if (user != null){
+		if (user != null) {
 			System.out.println(user);
 			return "user";
 		}
 		throw new Exception("没有此用户");
 	}
 
+	@ResponseBody
 	@PostMapping("/user")
-	public String insertUser(@RequestBody User user) {
+	public Result insertUser(@Valid @RequestBody User user, BindingResult bindingResult) {
+		if(bindingResult.hasErrors()){
+			List<ObjectError> allErrors = bindingResult.getAllErrors();
+			return Result.resultOfFailure(CodeEnum.FAILURE,allErrors);
+		}
+		System.out.println(user);
 		userMap.put(user.getId(), user);
-		return "success";
+		return Result.resultOfSuccess(CodeEnum.SUCCESS);
 	}
 
 	@GetMapping("/user")
@@ -41,13 +55,13 @@ public class UserController {
 		return "success";
 	}
 
-	@InitBinder()
+	@InitBinder("user")
 	public void initUserBinder(WebDataBinder binder) {
 		binder.setDisallowedFields("username");
 	}
 
 	@GetMapping
-	public String userIndex(){
+	public String userIndex() {
 		return "index";
 	}
 

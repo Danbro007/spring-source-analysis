@@ -88,36 +88,36 @@ public class MyConfig implements ApplicationContextAware, WebMvcConfigurer {
 		return viewResolver;
 	}
 
-	/**
-	 * 配置 ThymeleafViewResolver
-	 *
-	 * @return ThymeleafViewResolver 视图解析器
-	 */
-	@Bean
-	public ThymeleafViewResolver viewResolver() {
-		ThymeleafViewResolver viewResolver = new ThymeleafViewResolver();
-		viewResolver.setTemplateEngine(templateEngine());
-		return viewResolver;
-	}
-
-	@Bean
-	public SpringResourceTemplateResolver templateResolver() {
-		SpringResourceTemplateResolver templateResolver = new SpringResourceTemplateResolver();
-		templateResolver.setApplicationContext(this.applicationContext);
-		templateResolver.setPrefix("/WEB-INF/templates/");
-		templateResolver.setSuffix(".html");
-		templateResolver.setTemplateMode(TemplateMode.HTML);
-		templateResolver.setCacheable(true);
-		return templateResolver;
-	}
-
-	@Bean
-	public SpringTemplateEngine templateEngine() {
-		SpringTemplateEngine templateEngine = new SpringTemplateEngine();
-		templateEngine.setTemplateResolver(templateResolver());
-		templateEngine.setEnableSpringELCompiler(true);
-		return templateEngine;
-	}
+//	/**
+//	 * 配置 ThymeleafViewResolver
+//	 *
+//	 * @return ThymeleafViewResolver 视图解析器
+//	 */
+//	@Bean
+//	public ThymeleafViewResolver viewResolver() {
+//		ThymeleafViewResolver viewResolver = new ThymeleafViewResolver();
+//		viewResolver.setTemplateEngine(templateEngine());
+//		return viewResolver;
+//	}
+//
+//	@Bean
+//	public SpringResourceTemplateResolver templateResolver() {
+//		SpringResourceTemplateResolver templateResolver = new SpringResourceTemplateResolver();
+//		templateResolver.setApplicationContext(this.applicationContext);
+//		templateResolver.setPrefix("/WEB-INF/templates/");
+//		templateResolver.setSuffix(".html");
+//		templateResolver.setTemplateMode(TemplateMode.HTML);
+//		templateResolver.setCacheable(true);
+//		return templateResolver;
+//	}
+//
+//	@Bean
+//	public SpringTemplateEngine templateEngine() {
+//		SpringTemplateEngine templateEngine = new SpringTemplateEngine();
+//		templateEngine.setTemplateResolver(templateResolver());
+//		templateEngine.setEnableSpringELCompiler(true);
+//		return templateEngine;
+//	}
 
 	@Override
 	public void setApplicationContext(final ApplicationContext applicationContext)

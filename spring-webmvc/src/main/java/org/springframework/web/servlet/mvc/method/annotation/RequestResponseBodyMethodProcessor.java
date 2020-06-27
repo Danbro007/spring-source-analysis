@@ -118,7 +118,7 @@ public class RequestResponseBodyMethodProcessor extends AbstractMessageConverter
 	}
 
 	/**
-	 * Throws MethodArgumentNotValidException if validation fails.
+	 * Throws MethodArgumentNotValidException if validation fails. 如果验证失败则会抛出 MethodArgumentNotValidException 异常
 	 * @throws HttpMessageNotReadableException if {@link RequestBody#required()}
 	 * is {@code true} and there is no body content or if there is no suitable
 	 * converter to read the content with.
@@ -128,18 +128,24 @@ public class RequestResponseBodyMethodProcessor extends AbstractMessageConverter
 			NativeWebRequest webRequest, @Nullable WebDataBinderFactory binderFactory) throws Exception {
 
 		parameter = parameter.nestedIfOptional();
+		// 参数值
 		Object arg = readWithMessageConverters(webRequest, parameter, parameter.getNestedGenericParameterType());
+		// 参数名
 		String name = Conventions.getVariableNameForParameter(parameter);
 
 		if (binderFactory != null) {
+			// 通过绑定工厂创建一个数据绑定器
 			WebDataBinder binder = binderFactory.createBinder(webRequest, arg, name);
 			if (arg != null) {
+				// 对参数进行校验如果有检验失败的把失败消息放入 bindingResult 上。
 				validateIfApplicable(binder, parameter);
+				// 如果是致命错误则抛出异常
 				if (binder.getBindingResult().hasErrors() && isBindExceptionRequired(binder, parameter)) {
 					throw new MethodArgumentNotValidException(parameter, binder.getBindingResult());
 				}
 			}
 			if (mavContainer != null) {
+				// 把 bindingResult 放入容器内
 				mavContainer.addAttribute(BindingResult.MODEL_KEY_PREFIX + name, binder.getBindingResult());
 			}
 		}

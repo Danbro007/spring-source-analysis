@@ -113,6 +113,7 @@ public class SpringValidatorAdapter implements SmartValidator, javax.validation.
 	@Override
 	public void validate(Object target, Errors errors, Object... validationHints) {
 		if (this.targetValidator != null) {
+			// 先对目标对象进行校验然后把校验失败的信息添加到 BindingResult 对象上。
 			processConstraintViolations(
 					this.targetValidator.validate(target, asValidationGroups(validationHints)), errors);
 		}
@@ -146,6 +147,9 @@ public class SpringValidatorAdapter implements SmartValidator, javax.validation.
 	/**
 	 * Process the given JSR-303 ConstraintViolations, adding corresponding errors to
 	 * the provided Spring {@link Errors} object.
+	 *
+	 * 处理给定的 JSR-303 的约束，添加显性错误给提供的 Spring 错误对象。
+	 *
 	 * @param violations the JSR-303 ConstraintViolation results
 	 * @param errors the Spring errors object to register to
 	 */

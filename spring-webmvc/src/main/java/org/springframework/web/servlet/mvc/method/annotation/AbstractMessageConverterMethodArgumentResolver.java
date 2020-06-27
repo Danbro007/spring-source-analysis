@@ -251,6 +251,14 @@ public abstract class AbstractMessageConverterMethodArgumentResolver implements 
 	 * <p>The default implementation checks for {@code @javax.validation.Valid},
 	 * Spring's {@link org.springframework.validation.annotation.Validated},
 	 * and custom annotations whose name starts with "Valid".
+	 *
+	 * 如果可以对绑定目标进行数据校验。
+	 *
+	 * 默认实现是查找 :
+	 * 		1、@javax.validation.Valid 注解2
+	 * 	 	2、Spring 的 @Validated
+	 * 	 	3、自定义的注解开头是 Valid
+	 *
 	 * @param binder the DataBinder to be used
 	 * @param parameter the method parameter descriptor
 	 * @since 4.1.5
@@ -261,6 +269,7 @@ public abstract class AbstractMessageConverterMethodArgumentResolver implements 
 		for (Annotation ann : annotations) {
 			Validated validatedAnn = AnnotationUtils.getAnnotation(ann, Validated.class);
 			if (validatedAnn != null || ann.annotationType().getSimpleName().startsWith("Valid")) {
+				// 获取注解里的value
 				Object hints = (validatedAnn != null ? validatedAnn.value() : AnnotationUtils.getValue(ann));
 				Object[] validationHints = (hints instanceof Object[] ? (Object[]) hints : new Object[] {hints});
 				binder.validate(validationHints);
@@ -285,6 +294,9 @@ public abstract class AbstractMessageConverterMethodArgumentResolver implements 
 
 	/**
 	 * Adapt the given argument against the method parameter, if necessary.
+	 *
+	 * 如果需要，根据方法参数调整给定的参数。
+	 *
 	 * @param arg the resolved argument
 	 * @param parameter the method parameter descriptor
 	 * @return the adapted argument, or the original resolved argument as-is

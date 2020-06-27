@@ -1,6 +1,7 @@
 package com.danbro.entities;
 
-import com.sun.istack.internal.NotNull;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
 
 /**
  * @Classname User
@@ -11,7 +12,10 @@ import com.sun.istack.internal.NotNull;
 public class User {
 	private int id;
 
+	@NotEmpty(message = "用户名不能为空！")
 	private String username;
+
+	@Size(min = 8,max = 10, message = "密码不能长度不能低于8位高于10位！")
 	private String password;
 
 	public User(int id, String username, String password) {
@@ -51,8 +55,8 @@ public class User {
 	@Override
 	public String toString() {
 		return "User{" +
-				"userId=" + id +
-				", userName='" + username + '\'' +
+				"id=" + id +
+				", username='" + username + '\'' +
 				", password='" + password + '\'' +
 				'}';
 	}
