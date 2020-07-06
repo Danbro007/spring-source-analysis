@@ -31,15 +31,22 @@ import org.springframework.util.ErrorHandler;
 /**
  * Simple implementation of the {@link ApplicationEventMulticaster} interface.
  *
+ * ApplicationEventMulticaster 接口的简单实现。
+ *
  * <p>Multicasts all events to all registered listeners, leaving it up to
  * the listeners to ignore events that they are not interested in.
  * Listeners will usually perform corresponding {@code instanceof}
  * checks on the passed-in event object.
  *
+ * 广播全部事件给所有已注册的监听器，让监听器忽略它们不感兴趣的事件。
+ *
  * <p>By default, all listeners are invoked in the calling thread.
  * This allows the danger of a rogue listener blocking the entire application,
  * but adds minimal overhead. Specify an alternative task executor to have
  * listeners executed in different threads, for example from a thread pool.
+ *
+ * 默认情况下，所有的监听器都在调用线程中被调用。这就造成了流氓监听器阻塞整个应用程序的危险，但是添加了最小的开销。
+ * 指定另一个任务执行器，让监听器在不同的线程中执行，例如从线程池中执行。
  *
  * @author Rod Johnson
  * @author Juergen Hoeller
@@ -129,8 +136,11 @@ public class SimpleApplicationEventMulticaster extends AbstractApplicationEventM
 
 	@Override
 	public void multicastEvent(final ApplicationEvent event, @Nullable ResolvableType eventType) {
+		// 获取事件类型
 		ResolvableType type = (eventType != null ? eventType : resolveDefaultEventType(event));
+		// 获取任务执行器
 		Executor executor = getTaskExecutor();
+		// 遍历所有的监听器，让所有的监听器执行
 		for (ApplicationListener<?> listener : getApplicationListeners(event, type)) {
 			if (executor != null) {
 				executor.execute(() -> invokeListener(listener, event));
@@ -171,6 +181,7 @@ public class SimpleApplicationEventMulticaster extends AbstractApplicationEventM
 	}
 
 	@SuppressWarnings({"rawtypes", "unchecked"})
+	// 调用监听器
 	private void doInvokeListener(ApplicationListener listener, ApplicationEvent event) {
 		try {
 			listener.onApplicationEvent(event);

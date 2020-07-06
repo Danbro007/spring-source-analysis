@@ -22,6 +22,8 @@ import java.util.EventObject;
  * Class to be extended by all application events. Abstract as it
  * doesn't make sense for generic events to be published directly.
  *
+ * ApplicationEvent 是被所有的应用事件扩展的。抽象是因为他直接发布通用事件是没有意义的。
+ *
  * @author Rod Johnson
  * @author Juergen Hoeller
  * @see org.springframework.context.ApplicationListener

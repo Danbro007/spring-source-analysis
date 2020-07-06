@@ -90,6 +90,7 @@ import org.springframework.util.StringUtils;
  * any number of ConfigurationClass objects because one Configuration class may import
  * another using the {@link Import} annotation).
  *
+ *
  * <p>This class helps separate the concern of parsing the structure of a Configuration
  * class from the concern of registering BeanDefinition objects based on the content of
  * that model (with the exception of {@code @ComponentScan} annotations which need to be
@@ -867,6 +868,9 @@ class ConfigurationClassParser {
 
 		/**
 		 * Return the imports defined by the group.
+		 *
+		 * 返回要导入的配置类
+		 *
 		 * @return each import with its associated configuration class
 		 */
 		public Iterable<Group.Entry> getImports() {

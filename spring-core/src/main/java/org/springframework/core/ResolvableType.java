@@ -48,11 +48,19 @@ import org.springframework.util.StringUtils;
  * {@link #getGeneric(int...) generic parameters} along with the ability to ultimately
  * {@link #resolve() resolve} to a {@link java.lang.Class}.
  *
+ * ResolvableType 是对 java.lang.reflect.Type 的封装，提供对超类（getSuperType()）、
+ * 接口（getInterfaces()）、泛型参数（getGeneric(int...)）的访问以及解析（resolve()）类的能力
+ *
  * <p>{@code ResolvableTypes} may be obtained from {@link #forField(Field) fields},
  * {@link #forMethodParameter(Method, int) method parameters},
  * {@link #forMethodReturnType(Method) method returns} or
  * {@link #forClass(Class) classes}. Most methods on this class will themselves return
  * {@link ResolvableType ResolvableTypes}, allowing easy navigation. For example:
+ *
+ * 可以通过 forField(Field)、forMethodParameter(Method, int)、forMethodReturnType(Method) 或者
+ * forClass(Class) 这几个方法获得 ResolvableType。这个类中的大多数方法将会返回 ResolvableType 。
+ * 比如：
+ *
  * <pre class="code">
  * private HashMap&lt;Integer, List&lt;String&gt;&gt; myMap;
  *

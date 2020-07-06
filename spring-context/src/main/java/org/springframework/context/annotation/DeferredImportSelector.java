@@ -26,12 +26,19 @@ import org.springframework.lang.Nullable;
  * have been processed. This type of selector can be particularly useful when the selected
  * imports are {@code @Conditional}.
  *
+ * DeferredImportSelector 是 ImportSelector 的变种，在所有配置类 bean 被处理后运行。
+ * 这个类型的选择器 当选择导入的是 @Conditional 这类选择器特别有用。
+ *
  * <p>Implementations can also extend the {@link org.springframework.core.Ordered}
  * interface or use the {@link org.springframework.core.annotation.Order} annotation to
  * indicate a precedence against other {@link DeferredImportSelector DeferredImportSelectors}.
  *
+ * 实现类能扩展 Ordered 接口或者使用 @Order 注解来优先于其他的 DeferredImportSelectors。
+ *
  * <p>Implementations may also provide an {@link #getImportGroup() import group} which
  * can provide additional sorting and filtering logic across different selectors.
+ *
+ * 实现类也可以提供 getImportGroup() 方法来导入组，它可以提供跨不同选择器的额外排序和过滤逻辑。
  *
  * @author Phillip Webb
  * @author Stephane Nicoll
@@ -59,6 +66,9 @@ public interface DeferredImportSelector extends ImportSelector {
 		/**
 		 * Process the {@link AnnotationMetadata} of the importing @{@link Configuration}
 		 * class using the specified {@link DeferredImportSelector}.
+		 *
+		 * 使用指定的 DeferredImportSelector 来处理导入的配置类的注解元数据
+		 *
 		 */
 		void process(AnnotationMetadata metadata, DeferredImportSelector selector);
 

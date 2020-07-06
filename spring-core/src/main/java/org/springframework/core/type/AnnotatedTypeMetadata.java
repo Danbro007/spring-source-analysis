@@ -33,6 +33,8 @@ import org.springframework.util.MultiValueMap;
  * or {@link MethodMetadata method}), in a form that does not necessarily require the
  * class-loading.
  *
+ * 定义对特定类型 AnnotationMetadata class 或 MethodMetadata method} 的注解的访问，其形式不一定需要类加载。
+ *
  * @author Juergen Hoeller
  * @author Mark Fisher
  * @author Mark Pollack
@@ -58,6 +60,10 @@ public interface AnnotatedTypeMetadata {
 	 * of the given type defined.
 	 * <p>If this method returns {@code true}, then
 	 * {@link #getAnnotationAttributes} will return a non-null Map.
+	 *
+	 * 确定基础元素是否有给定类型的注解或元注解。
+	 * 如果这个方法返回的是 true 则 getAnnotationAttributes() 将会返回一个非空 Map。
+	 *
 	 * @param annotationName the fully qualified class name of the annotation
 	 * type to look for
 	 * @return whether a matching annotation is defined

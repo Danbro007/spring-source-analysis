@@ -42,6 +42,8 @@ import org.springframework.util.StringUtils;
 /**
  * General purpose factory loading mechanism for internal use within the framework.
  *
+ * 在框架内部使用的通用工厂加载机制。
+ *
  * <p>{@code SpringFactoriesLoader} {@linkplain #loadFactories loads} and instantiates
  * factories of a given type from {@value #FACTORIES_RESOURCE_LOCATION} files which
  * may be present in multiple JAR files in the classpath. The {@code spring.factories}
@@ -53,6 +55,13 @@ import org.springframework.util.StringUtils;
  *
  * where {@code example.MyService} is the name of the interface, and {@code MyServiceImpl1}
  * and {@code MyServiceImpl2} are two implementations.
+ *
+ *  SpringFactoriesLoader 通过 loadFactories() 加载和实例化 来自 FACTORIES_RESOURCE_LOCATION 文件给定的类型。
+ *  这个文件可能存在于类路径中的多个JAR文件中。spring.factories 文件必须是 Properties 格式，其中 key 是接口或抽象类完全合格的名，
+ *  value 是一个逗号分隔的实现类名列表。
+ *  例如：
+ *  	example.MyService=example.MyServiceImpl1,example.MyServiceImpl2
+ *  	这里面的 example.MyService 是接口名，并且 MyServiceImpl1 和 MyServiceImpl2 是两个实现。
  *
  * @author Arjen Poutsma
  * @author Juergen Hoeller
@@ -83,23 +92,33 @@ public final class SpringFactoriesLoader {
 	 * <p>The returned factories are sorted through {@link AnnotationAwareOrderComparator}.
 	 * <p>If a custom instantiation strategy is required, use {@link #loadFactoryNames}
 	 * to obtain all registered factory names.
+	 *
+	 * 	使用给定的类加载器，从 FACTORIES_RESOURCE_LOCATION 加载并实例化给定类型的工厂实现。
+	 * 	这个返回的工厂是通过 AnnotationAwareOrderComparator 排序的。如果需要自定义的实例化策略，
+	 * 	可以使用 loadFactoryNames() 方法来获取所有的已注册的工厂名。
+	 *
 	 * @param factoryType the interface or abstract class representing the factory
 	 * @param classLoader the ClassLoader to use for loading (can be {@code null} to use the default)
 	 * @throws IllegalArgumentException if any factory implementation class cannot
 	 * be loaded or if an error occurs while instantiating any factory
 	 * @see #loadFactoryNames
+	 *
+	 *
 	 */
 	public static <T> List<T> loadFactories(Class<T> factoryType, @Nullable ClassLoader classLoader) {
 		Assert.notNull(factoryType, "'factoryType' must not be null");
+		// 从 Spring 工厂获取类加载器
 		ClassLoader classLoaderToUse = classLoader;
 		if (classLoaderToUse == null) {
 			classLoaderToUse = SpringFactoriesLoader.class.getClassLoader();
 		}
+		// 到 META-INF/spring.factories 文件获取指定类型的资源名
 		List<String> factoryImplementationNames = loadFactoryNames(factoryType, classLoaderToUse);
 		if (logger.isTraceEnabled()) {
 			logger.trace("Loaded [" + factoryType.getName() + "] names: " + factoryImplementationNames);
 		}
 		List<T> result = new ArrayList<>(factoryImplementationNames.size());
+		// 遍历所有获取的指定类型的资源名然后实例化它们，完毕后放入列表里，最后对这些实例排序
 		for (String factoryImplementationName : factoryImplementationNames) {
 			result.add(instantiateFactory(factoryImplementationName, factoryType, classLoaderToUse));
 		}
@@ -111,6 +130,9 @@ public final class SpringFactoriesLoader {
 	 * Load the fully qualified class names of factory implementations of the
 	 * given type from {@value #FACTORIES_RESOURCE_LOCATION}, using the given
 	 * class loader.
+	 *
+	 * 使用给定的类加载器从 FACTORIES_RESOURCE_LOCATION 中加载给定类型的工厂实现的完全合格类名
+	 *
 	 * @param factoryType the interface or abstract class representing the factory
 	 * @param classLoader the ClassLoader to use for loading resources; can be
 	 * {@code null} to use the default
@@ -118,24 +140,31 @@ public final class SpringFactoriesLoader {
 	 * @see #loadFactories
 	 */
 	public static List<String> loadFactoryNames(Class<?> factoryType, @Nullable ClassLoader classLoader) {
+		// 获取工厂类的名
 		String factoryTypeName = factoryType.getName();
 		return loadSpringFactories(classLoader).getOrDefault(factoryTypeName, Collections.emptyList());
 	}
 
 	private static Map<String, List<String>> loadSpringFactories(@Nullable ClassLoader classLoader) {
+		// 先从缓存获取当前类加载器加载的类，如果成功获取到则直接返回
 		MultiValueMap<String, String> result = cache.get(classLoader);
 		if (result != null) {
 			return result;
 		}
 
 		try {
+			// 从 META-INF/spring.factories 资源路径
 			Enumeration<URL> urls = (classLoader != null ?
 					classLoader.getResources(FACTORIES_RESOURCE_LOCATION) :
 					ClassLoader.getSystemResources(FACTORIES_RESOURCE_LOCATION));
 			result = new LinkedMultiValueMap<>();
 			while (urls.hasMoreElements()) {
+				// 资源完全路径
 				URL url = urls.nextElement();
+				// 获取资源的 UrlResource 对象，包括资源的 Url、Uri
 				UrlResource resource = new UrlResource(url);
+				// META-INF/spring.factories 里的工厂类型名为 key，对应的类名为 value
+				// 之后在遍历里面的 key，通过key 获取 value，存入 result。
 				Properties properties = PropertiesLoaderUtils.loadProperties(resource);
 				for (Map.Entry<?, ?> entry : properties.entrySet()) {
 					String factoryTypeName = ((String) entry.getKey()).trim();
@@ -144,6 +173,7 @@ public final class SpringFactoriesLoader {
 					}
 				}
 			}
+			// 存入缓存
 			cache.put(classLoader, result);
 			return result;
 		}

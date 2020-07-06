@@ -23,6 +23,8 @@ import org.springframework.core.type.AnnotationMetadata;
  * class(es) should be imported based on a given selection criteria, usually one or
  * more annotation attributes.
  *
+ * 根据给定的选择标准，通常是一个或多个注解属性，来决定应该导入哪个配置类的类型来实现。
+ *
  * <p>An {@link ImportSelector} may implement any of the following
  * {@link org.springframework.beans.factory.Aware Aware} interfaces,
  * and their respective methods will be called prior to {@link #selectImports}:
@@ -33,6 +35,10 @@ import org.springframework.core.type.AnnotationMetadata;
  * <li>{@link org.springframework.context.ResourceLoaderAware ResourceLoaderAware}</li>
  * </ul>
  *
+ *
+ * 一个 ImportSelector 可以实现以下任何 Aware 接口并且在 selectImports 之前它们各自的方法会被调用：
+ * EnvironmentAware、BeanFactoryAware、BeanClassLoaderAware、ResourceLoaderAware。
+ *
  * <p>Alternatively, the class may provide a single constructor with one or more of
  * the following supported parameter types:
  * <ul>
@@ -42,10 +48,17 @@ import org.springframework.core.type.AnnotationMetadata;
  * <li>{@link org.springframework.core.io.ResourceLoader ResourceLoader}</li>
  * </ul>
  *
+ * 或者，类可以提供一个单一的构造函数，带有一个或多个以下支持的参数类型:
+ * 	Environment、BeanFactory、ClassLoader、ResourceLoader
+ *
+ *
  * <p>{@code ImportSelector} implementations are usually processed in the same way
  * as regular {@code @Import} annotations, however, it is also possible to defer
  * selection of imports until all {@code @Configuration} classes have been processed
  * (see {@link DeferredImportSelector} for details).
+ *
+ * ImportSelector 实现的处理方式和常规的 @Import 注解相同，但是也可以推迟导入的选择，直到 @Configuration 已经被处理。
+ *
  *
  * @author Chris Beams
  * @since 3.1

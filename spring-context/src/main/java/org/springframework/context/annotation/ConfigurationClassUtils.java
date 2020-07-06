@@ -147,14 +147,18 @@ abstract class ConfigurationClassUtils {
 	 * @param metadata the metadata of the annotated class
 	 * @return {@code true} if the given class is to be registered for
 	 * configuration class processing; {@code false} otherwise
+	 *
+	 * 如果元数据的接口或者注解则说明不是配置类返回 false ，其余则认为它是配置类。
+	 *
 	 */
 	public static boolean isConfigurationCandidate(AnnotationMetadata metadata) {
-		// Do not consider an interface or an annotation...
+		// 如果是接口则返回 false
 		if (metadata.isInterface()) {
 			return false;
 		}
 
-		// Any of the typical annotations found?
+		// 如果有以下注解则返回 true
+		// @Component、@ComponentScan、@Import 和 @ImportResource
 		for (String indicator : candidateIndicators) {
 			if (metadata.isAnnotated(indicator)) {
 				return true;
@@ -162,6 +166,7 @@ abstract class ConfigurationClassUtils {
 		}
 
 		// Finally, let's look for @Bean methods...
+		// 元数据里有没有 @Bean 方法
 		try {
 			return metadata.hasAnnotatedMethods(Bean.class.getName());
 		}

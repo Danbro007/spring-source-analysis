@@ -64,6 +64,10 @@ class ConditionEvaluator {
 	 * Determine if an item should be skipped based on {@code @Conditional} annotations.
 	 * The {@link ConfigurationPhase} will be deduced from the type of item (i.e. a
 	 * {@code @Configuration} class will be {@link ConfigurationPhase#PARSE_CONFIGURATION})
+	 *
+	 *  根据 @Conditional 注解决定这个类是否应该被跳过
+	 *  将从类的类型推导出它的 ConfigurationPhase（例如：一个 @Configuration 配置类将会是 PARSE_CONFIGURATION 类型）
+	 *
 	 * @param metadata the meta data
 	 * @return if the item should be skipped
 	 */
@@ -73,23 +77,30 @@ class ConditionEvaluator {
 
 	/**
 	 * Determine if an item should be skipped based on {@code @Conditional} annotations.
-	 * @param metadata the meta data
-	 * @param phase the phase of the call
+	 *
+	 * 根据 @Conditional 注解决定这个类是否应该被跳过
+	 *
+	 * @param metadata the meta data 元数据
+	 * @param phase the phase of the call 调用阶段
 	 * @return if the item should be skipped
 	 */
 	public boolean shouldSkip(@Nullable AnnotatedTypeMetadata metadata, @Nullable ConfigurationPhase phase) {
+		// 若元数据里没有被 @Conditional 或其派生注解所标注，则不会跳过
 		if (metadata == null || !metadata.isAnnotated(Conditional.class.getName())) {
 			return false;
 		}
-
+		// 如果此时的配置阶段为null
 		if (phase == null) {
+			// 若标有@Component、@Import、@ImportResource、@ComponentScan、@Bean 和 @Configuration 等注解的话，则说明是PARSE_CONFIGURATION类型
 			if (metadata instanceof AnnotationMetadata &&
 					ConfigurationClassUtils.isConfigurationCandidate((AnnotationMetadata) metadata)) {
 				return shouldSkip(metadata, ConfigurationPhase.PARSE_CONFIGURATION);
 			}
+			// 其余认为类型是 REGISTER_BEAN
 			return shouldSkip(metadata, ConfigurationPhase.REGISTER_BEAN);
 		}
-
+		// 获取所有标有 @Conditional 注解的类然后实例化它们并放入 conditions 里
+		// 比如：@Conditional(ResourceBundleCondition.class) 则会实例化 ResourceBundleCondition 这个类。
 		List<Condition> conditions = new ArrayList<>();
 		for (String[] conditionClasses : getConditionClasses(metadata)) {
 			for (String conditionClass : conditionClasses) {
@@ -98,8 +109,10 @@ class ConditionEvaluator {
 			}
 		}
 
+		// 对 conditions 里的 condition 进行排序
 		AnnotationAwareOrderComparator.sort(conditions);
-
+		// 遍历所有的 condition 并获取对 bean 是解析还是注册
+		// 如果配置阶段为 null 或者 获取的阶段类型正是当前阶段类型 并且 条件匹配失败则跳过
 		for (Condition condition : conditions) {
 			ConfigurationPhase requiredPhase = null;
 			if (condition instanceof ConfigurationCondition) {
@@ -114,7 +127,9 @@ class ConditionEvaluator {
 	}
 
 	@SuppressWarnings("unchecked")
+	//
 	private List<String[]> getConditionClasses(AnnotatedTypeMetadata metadata) {
+		// 获取 @Conditional 注解里的属性
 		MultiValueMap<String, Object> attributes = metadata.getAllAnnotationAttributes(Conditional.class.getName(), true);
 		Object values = (attributes != null ? attributes.get("value") : null);
 		return (List<String[]>) (values != null ? values : Collections.emptyList());
