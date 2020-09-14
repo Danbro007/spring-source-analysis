@@ -906,7 +906,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	 * 完成BeanFactory的实例化，初始化剩余的单例Bean。
 	 */
 	protected void finishBeanFactoryInitialization(ConfigurableListableBeanFactory beanFactory) {
-		// Initialize conversion service for this context.
+		// 初始化转换器
 		if (beanFactory.containsBean(CONVERSION_SERVICE_BEAN_NAME) &&
 				/**
 				 * 	ConversionService接口最有用的场景就是，它用来将前端传过来的参数和后端的 com.danbro.springmvc.controller 方法上的参数进行绑定的时候用。

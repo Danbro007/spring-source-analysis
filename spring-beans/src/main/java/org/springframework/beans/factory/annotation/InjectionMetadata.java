@@ -114,7 +114,7 @@ public class InjectionMetadata {
 				if (logger.isTraceEnabled()) {
 					logger.trace("Processing injected element of bean '" + beanName + "': " + element);
 				}
-				//注入
+				//属性注入
 				element.inject(target, beanName, pvs);
 			}
 		}

@@ -15,6 +15,40 @@
 
 	<bean id="myInstantiationAwareBeanPostProcessor"
 		  class="com.danbro.springLifeCycleAnalysis.processor.MyInstantiationAwareBeanPostProcessor"/>
+	<!-- setter 注入-->
+	<bean id="a" class="com.danbro.springCircularReference.Bean.A">
+		<property name="objB" ref="b"/>
+	</bean>
+	<bean id="b" class="com.danbro.springCircularReference.Bean.B">
+		<property name="objA" ref="a"/>
+	</bean>
 
+	<!-- 构造器注入-->
+<!--		<bean id="objC" class="com.danbro.springCircularReference.Bean.C">-->
+<!--			<constructor-arg name="d" ref="objD"/>-->
+<!--		</bean>-->
+<!--		<bean id="objD" class="com.danbro.springCircularReference.Bean.D">-->
+<!--			<constructor-arg name="c" ref="objC"/>-->
+<!--		</bean>-->
+
+	<!-- E 注入 F 采用构造器，F 注入 E 采用 setter-->
+<!--	<bean id="objE" class="com.danbro.springCircularReference.Bean.E">-->
+<!--		<constructor-arg name="f" ref="objF"/>-->
+<!--	</bean>-->
+<!--	<bean id="objF" class="com.danbro.springCircularReference.Bean.F">-->
+<!--		<property name="e" ref="objE"/>-->
+<!--	</bean>-->
+
+	<!-- G 注入 H 是 setter 注入， H 注入 G 是构造器注入-->
+
+	<bean id="objG" class="com.danbro.springCircularReference.Bean.G">
+		<property name="h" ref="objH"/>
+	</bean>
+	<bean id="objH" class="com.danbro.springCircularReference.Bean.H">
+		<constructor-arg name="g" ref="objG"/>
+	</bean>
+
+
+	<!--scope="singleton"(默认就是单例方式)  -->
 	<context:component-scan base-package="com.danbro.springLifeCycleAnalysis"/>
 </beans>

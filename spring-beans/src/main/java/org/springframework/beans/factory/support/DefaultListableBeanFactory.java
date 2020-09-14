@@ -1324,11 +1324,11 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 			}
 
 			if (autowiredBeanNames != null) {
-				//把要注入的beanName放入autowiredBeanNames里
+				//把要注入的 beanName 放入 autowiredBeanNames 里
 				autowiredBeanNames.add(autowiredBeanName);
 			}
 			if (instanceCandidate instanceof Class) {
-				//到BeanFactory里getBean
+				//到 BeanFactory 里getBean
 				instanceCandidate = descriptor.resolveCandidate(autowiredBeanName, type, this);
 			}
 			Object result = instanceCandidate;

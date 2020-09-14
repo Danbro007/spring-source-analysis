@@ -247,6 +247,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 		Object bean;
 		// Eagerly check singleton cache for manually registered singletons.
 		//尝试到单例池里查找，如果已经初始化过了则从容器里直接返回。
+		// 第一次的话单例池里没有肯定获取不到,如果是第二次则会到单例工厂创建一个 bean 并返回。
 		Object sharedInstance = getSingleton(beanName);
 		// 这里说下 args 呗，虽然看上去一点不重要。前面我们一路进来的时候都是 getBean(beanName)，
 		// 所以 args 传参其实是 null 的，但是如果 args 不为空的时候，那么意味着调用方不是希望获取 Bean，而是创建 Bean。
@@ -279,7 +280,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 			}
 
 			// Check if bean definition exists in this factory.
-			//如果当前容器不存在这个BeanDefinition，则尝试在父容器查查看。
+			//如果当前容器不存在这个 BeanDefinition，则尝试在父容器查查看。
 			BeanFactory parentBeanFactory = getParentBeanFactory();
 			if (parentBeanFactory != null && !containsBeanDefinition(beanName)) {
 				// Not found -> check parent.
@@ -305,9 +306,9 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 					return (T) parentBeanFactory.getBean(nameToLookup);
 				}
 			}
-			//默认获取bean是不对实例进行检查
+			//默认对获取的 bean 是不对实例进行检查
 			if (!typeCheckOnly) {
-				//把这个Bean标记为已创建
+				//把这个 Bean 标记为已创建
 				markBeanAsCreated(beanName);
 			}
 
@@ -318,7 +319,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 
 				// Guarantee initialization of beans that the current bean depends on.
 				//获取当前bean的所有@DependsOn注解里的bean
-				//dependsOn里的bean要在当前bean之前初始化，给bean的初始化排序，不加则没有初始化顺序
+				//dependsOn里的bean要在当前bean之前初始化，给 bean 的初始化排序，不加则没有初始化顺序
 				String[] dependsOn = mbd.getDependsOn();
 				if (dependsOn != null) {
 					for (String dep : dependsOn) {
@@ -340,12 +341,12 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 					}
 				}
 
-				//通过BeanDefinition判断是否是单例
+				//通过 BeanDefinition 判断是否是单例
 				if (mbd.isSingleton()) {
-					//是单例的话则尝试从单例池里获取，获取不到则初始化bean。
+					//是单例的话则再次尝试从单例池里获取，获取不到则用单例工厂创建一个。
 					sharedInstance = getSingleton(beanName, () -> {
 						try {
-							//创建Bean
+							//创建 Bean
 							return createBean(beanName, mbd, args);
 						}
 						catch (BeansException ex) {
@@ -1109,7 +1110,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 			return (beanInstance instanceof FactoryBean);
 		}
 		// No singleton instance found -> check bean definition.
-		//如果单例池里找不到bean则用父BeanFactory来判断是不是FactoryBean
+		//如果单例池里找不到 bean 则用父 BeanFactory 来判断是不是 FactoryBean
 		if (!containsBeanDefinition(beanName) && getParentBeanFactory() instanceof ConfigurableBeanFactory) {
 			// No bean definition found in this factory -> delegate to parent.
 			//
@@ -1126,6 +1127,9 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 	/**
 	 * Return whether the specified prototype bean is currently in creation
 	 * (within the current thread).
+	 *
+	 * 判断 bean 是不是在原型创建中
+	 *
 	 * @param beanName the name of the bean
 	 */
 	protected boolean isPrototypeCurrentlyInCreation(String beanName) {
@@ -1905,6 +1909,10 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 	 * Add the given bean to the list of disposable beans in this factory,
 	 * registering its DisposableBean interface and/or the given destroy method
 	 * to be called on factory shutdown (if applicable). Only applies to singletons.
+	 *
+	 * 添加给定的 bean 到这个工厂的一次性 bean 列表里，注册它的一次性 Bean 接口 或者/并且
+	 * 给定的销毁方法为了工厂关闭时能被调用（如果可以的话）。只能用在单例上。
+	 *
 	 * @param beanName the name of the bean
 	 * @param bean the bean instance
 	 * @param mbd the bean definition for the bean

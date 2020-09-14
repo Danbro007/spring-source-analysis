@@ -18,6 +18,4 @@ public class OrderService {
 	public OrderService() {
 		System.out.println("OrderService 构造器");
 	}
-
-
 }

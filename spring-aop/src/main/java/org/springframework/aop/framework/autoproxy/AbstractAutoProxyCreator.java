@@ -236,11 +236,11 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 
 	@Override
 	public Object getEarlyBeanReference(Object bean, String beanName) {
-		//通过beanClass和beanName创建一个缓存key
+		//通过 beanClass 和 beanName 创建一个缓存 key
 		Object cacheKey = getCacheKey(bean.getClass(), beanName);
-		//把key和bean实例放到earlyProxyReferences这个map里
+		//把 key 和 bean 实例放到 earlyProxyReferences 这个 Map 里
 		this.earlyProxyReferences.put(cacheKey, bean);
-		//进行代理
+		//如果需要代理返回一个代理对象，如果不需要则返回对象本身。
 		return wrapIfNecessary(bean, beanName, cacheKey);
 	}
 
@@ -332,6 +332,9 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 
 	/**
 	 * Wrap the given bean if necessary, i.e. if it is eligible for being proxied.
+	 *
+	 *  如果需要的话包装指定的类既如果有资格被代理的话。
+	 *
 	 * @param bean the raw bean instance
 	 * @param beanName the name of the bean
 	 * @param cacheKey the cache key for metadata access
@@ -344,14 +347,14 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 		if (Boolean.FALSE.equals(this.advisedBeans.get(cacheKey))) {
 			return bean;
 		}
-		//判断当前bean是不是一个不应该被代理的基础类或者应该跳过的类
+		//判断当前 bean 是不是一个不应该被代理的基础类或者应该跳过的类
 		if (isInfrastructureClass(bean.getClass()) || shouldSkip(bean.getClass(), beanName)) {
 			this.advisedBeans.put(cacheKey, Boolean.FALSE);
 			return bean;
 		}
 
 		// Create proxy if we have advice.
-		//如果有advice则创建代理
+		//如果有 advice 则创建代理
 
 		//返回作用于当前bean的所有advisor、advice、interceptor（拦截器是AOP增强器的实现）
 		Object[] specificInterceptors = getAdvicesAndAdvisorsForBean(bean.getClass(), beanName, null);
